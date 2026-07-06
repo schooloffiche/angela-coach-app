@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1A2E2B">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>Coach — Angela</title>
+<style>
+:root {
+  --teal: #0F6E56;
+  --teal-mid: #1D9E75;
+  --teal-lt: #E1F5EE;
+  --dark: #1A2E2B;
+  --amber: #B07D2A;
+  --amber-lt: #FDF3E3;
+  --red: #C0392B;
+  --red-lt: #FCEBEB;
+  --purple: #3C3489;
+  --purple-lt: #EEEDFE;
+  --white: #ffffff;
+  --off: #f7f7f5;
+  --border: #e8e8e8;
+  --gray: #888;
+  --dark-gray: #444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, Arial, sans-serif; background: var(--off); color: var(--dark-gray); min-height: 100vh; max-width: 430px; margin: 0 auto; }
+
+/* AUTH SCREEN */
+.auth-screen { min-height: 100vh; background: var(--dark); display: flex; flex-direction: column; justify-content: center; padding: 28px 24px; }
+.auth-screen.hidden { display: none; }
+.auth-logo { font-size: 34px; margin-bottom: 6px; }
+.auth-title { font-size: 22px; font-weight: 700; color: white; margin-bottom: 4px; }
+.auth-sub { font-size: 13px; color: #7aaa99; margin-bottom: 26px; line-height: 1.5; }
+.auth-screen input { margin-bottom: 12px; }
+.auth-error { color: #ff9d8f; font-size: 12px; margin-bottom: 10px; min-height: 16px; }
+.auth-btn-row { display: flex; gap: 10px; margin-top: 4px; }
+.auth-btn { flex: 1; border: none; border-radius: 10px; padding: 13px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.auth-btn.primary { background: var(--teal-mid); color: white; }
+.auth-btn.secondary { background: rgba(255,255,255,0.08); color: white; }
+.auth-note { font-size: 11px; color: #557; color: #6b8f81; margin-top: 18px; text-align: center; line-height: 1.5; }
+
+#app.hidden { display: none; }
+
+/* NAV */
+.nav { background: var(--dark); color: white; padding: 16px 20px 0; position: sticky; top: 0; z-index: 100; }
+.nav-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.nav-title { font-size: 18px; font-weight: 700; }
+.nav-date { font-size: 11px; color: #7aaa99; }
+.nav-day { font-size: 12px; color: #ffd080; font-weight: 600; }
+.nav-tabs { display: flex; gap: 2px; }
+.nav-tab { flex: 1; padding: 8px 4px; font-size: 10px; font-weight: 700; text-align: center; color: #7aaa99; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; }
+.nav-tab.active { color: var(--teal-mid); border-bottom-color: var(--teal-mid); }
+
+/* PAGES */
+.page { display: none; padding: 16px 14px 80px; }
+.page.active { display: block; }
+
+/* COACH BANNER */
+.coach-banner { background: var(--dark); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.coach-banner::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: rgba(29,158,117,0.15); border-radius: 50%; }
+.coach-emoji { font-size: 28px; margin-bottom: 6px; }
+.coach-label { font-size: 10px; font-weight: 700; color: var(--teal-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.coach-msg { font-size: 14px; color: white; line-height: 1.6; font-weight: 500; }
+.coach-sub { font-size: 11px; color: #7aaa99; margin-top: 6px; }
+
+/* NOTIFICATION BANNER */
+.notif-banner { background: var(--amber-lt); border: 0.5px solid #f0dfb8; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 12px; color: var(--dark-gray); display: flex; align-items: center; gap: 10px; }
+.notif-banner.hidden { display: none; }
+.notif-banner button { background: var(--amber); color: white; border: none; border-radius: 8px; padding: 8px 12px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.notif-ok { background: var(--teal-lt); border-color: #bfe6d8; color: var(--teal); }
+
+/* STREAK ROW */
+.streak-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.streak-card { flex: 1; background: white; border-radius: 12px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; }
+.streak-num { font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 3px; }
+.streak-label { font-size: 9px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
+.streak-icon { font-size: 14px; margin-bottom: 4px; }
+
+/* SCORE */
+.score-card { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+.score-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 0; border: 3px solid var(--border); }
+.score-num { font-size: 22px; font-weight: 700; line-height: 1; }
+.score-denom { font-size: 10px; color: var(--gray); }
+.score-body { flex: 1; }
+.score-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.score-detail { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+/* CHECKLIST */
+.section-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; margin-top: 4px; }
+.check-card { background: white; border-radius: 14px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+.check-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid #f5f5f5; cursor: pointer; transition: background 0.1s; }
+.check-item:last-child { border-bottom: none; }
+.check-item:active { background: #f8f8f8; }
+.check-box { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 13px; }
+.check-box.done { background: var(--teal); border-color: var(--teal); color: white; }
+.check-box.failed { background: var(--red); border-color: var(--red); color: white; }
+.check-body { flex: 1; }
+.check-title { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 1px; }
+.check-sub { font-size: 11px; color: var(--gray); }
+.check-icon { font-size: 18px; flex-shrink: 0; }
+
+/* CRAVING BUTTON */
+.craving-btn { background: var(--red); color: white; border: none; border-radius: 14px; padding: 16px; width: 100%; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.craving-btn:active { opacity: 0.85; }
+
+/* CRAVING PANEL */
+.craving-panel { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: none; }
+.craving-panel.open { display: block; }
+.craving-panel h3 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.craving-panel p { font-size: 12px; color: var(--gray); margin-bottom: 12px; line-height: 1.5; }
+.drink-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid #f5f5f5; font-size: 12px; }
+.drink-item:last-child { border-bottom: none; }
+.drink-emoji { font-size: 18px; flex-shrink: 0; width: 24px; }
+.drink-body { flex: 1; }
+.drink-name { font-weight: 600; color: var(--dark); margin-bottom: 1px; font-size: 13px; }
+.drink-detail { color: var(--gray); }
+.craving-msg { background: var(--teal-lt); border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--teal); line-height: 1.6; font-weight: 600; }
+.craving-count { font-size: 11px; color: var(--gray); margin-top: 8px; text-align: center; }
+
+/* INPUT */
+.input-card { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
+.input-card h3 { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+.input-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 0.5px solid #f5f5f5; }
+.input-row:last-child { border-bottom: none; }
+.input-label { font-size: 12px; color: var(--dark-gray); flex: 1; font-weight: 500; }
+.input-val { font-size: 13px; font-weight: 700; color: var(--teal); min-width: 50px; text-align: right; }
+input[type=number], input[type=text], input[type=email], input[type=password], textarea, select {
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px;
+  font-size: 13px; font-family: inherit; color: var(--dark); width: 100%;
+  background: #fafafa; outline: none; margin-top: 4px;
+}
+.auth-screen input { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15); color: white; }
+.auth-screen input::placeholder { color: #7aaa99; }
+input:focus, textarea:focus, select:focus { border-color: var(--teal); }
+textarea { resize: none; height: 70px; }
+.save-btn { background: var(--teal); color: white; border: none; border-radius: 10px; padding: 11px; width: 100%; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 10px; }
+.save-btn:active { opacity: 0.85; }
+.save-btn.secondary { background: var(--dark); }
+.save-btn.ghost { background: transparent; color: var(--red); border: 1.5px solid var(--red-lt); }
+
+/* WEIGHT LOG */
+.wt-entry { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid #f5f5f5; font-size: 13px; }
+.wt-entry:last-child { border-bottom: none; }
+.wt-date { color: var(--gray); }
+.wt-val { font-weight: 700; color: var(--teal); }
+.wt-diff { font-size: 11px; }
+
+/* HISTORY */
+.hist-day { background: white; border-radius: 12px; border: 0.5px solid var(--border); padding: 14px 16px; margin-bottom: 10px; }
+.hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.hist-date { font-size: 13px; font-weight: 700; color: var(--dark); }
+.hist-score { font-size: 13px; font-weight: 700; }
+.hist-pills { display: flex; gap: 5px; flex-wrap: wrap; }
+.hist-pill { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600; }
+.pill-done { background: var(--teal-lt); color: var(--teal); }
+.pill-miss { background: var(--red-lt); color: var(--red); }
+
+/* GOAL CARD */
+.goal-card { background: var(--dark); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+.goal-card h2 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+.goal-card p { font-size: 11px; color: #7aaa99; margin-bottom: 12px; }
+.goal-progress { background: rgba(255,255,255,0.1); border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 6px; }
+.goal-fill { height: 100%; background: var(--teal-mid); border-radius: 8px; transition: width 0.5s; }
+.goal-stats { display: flex; justify-content: space-between; font-size: 11px; color: #aaccbb; }
+
+/* BOTTOM NAV */
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: white; border-top: 0.5px solid var(--border); display: flex; padding: 8px 0 16px; z-index: 100; }
+.bn-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; border: none; background: transparent; cursor: pointer; padding: 6px 0; font-family: inherit; color: var(--gray); }
+.bn-btn.active { color: var(--teal); }
+.bn-icon { font-size: 20px; }
+.bn-label { font-size: 9px; font-weight: 600; }
+
+/* UTILS */
+.tag-green { color: var(--teal); }
+.tag-red { color: var(--red); }
+.tag-amber { color: var(--amber); }
+.mt8 { margin-top: 8px; }
+.empty { text-align: center; padding: 30px 20px; color: var(--gray); font-size: 13px; line-height: 1.6; }
+.sync-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--teal-mid); margin-right:5px; vertical-align:middle; }
+.sync-dot.off { background: var(--red); }
+.link-btn { background:none;border:none;color:var(--gray);font-size:11px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:6px 0; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 20px 20px 0 0; padding: 20px 20px 36px; width: 100%; max-width: 430px; }
+.modal h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+.modal-close { float: right; background: #f0f0f0; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-logo">💪</div>
+  <div class="auth-title" id="authTitle">Coach — Angela</div>
+  <div class="auth-sub">This app is just for you. Create your account once, then sign in with the same email on any device to keep everything in sync.</div>
+  <input type="email" id="auth-email" placeholder="Email" autocomplete="username">
+  <input type="password" id="auth-password" placeholder="Password (6+ characters)" autocomplete="current-password">
+  <div class="auth-error" id="authError"></div>
+  <div class="auth-btn-row">
+    <button class="auth-btn secondary" onclick="handleSignUp()">Create Account</button>
+    <button class="auth-btn primary" onclick="handleSignIn()">Sign In</button>
+  </div>
+  <div class="auth-note">First time here? Tap "Create Account".<br>Already set up? Tap "Sign In".</div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
+<div class="nav">
+  <div class="nav-top">
+    <div>
+      <div class="nav-title">Coach Angela 💪</div>
+      <div class="nav-date" id="navDate"></div>
+    </div>
+    <div style="text-align:right;">
+      <div class="nav-day" id="navDay"></div>
+      <div class="nav-date" id="navCountdown"></div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('today',this)">Today</button>
+    <button class="nav-tab" onclick="showPage('checkin',this)">Check-In</button>
+    <button class="nav-tab" onclick="showPage('weight',this)">Weight</button>
+    <button class="nav-tab" onclick="showPage('history',this)">History</button>
+    <button class="nav-tab" onclick="showPage('goals',this)">Goals</button>
+  </div>
+</div>
+
+<!-- TODAY PAGE -->
+<div class="page active" id="page-today">
+
+  <div class="notif-banner hidden" id="notifBanner">
+    <span id="notifBannerText">Turn on push notifications so I can reach you at 6am, 9am, 12:30, 3, 5, 8 &amp; 9:30.</span>
+    <button onclick="enableNotifications()">Enable</button>
+  </div>
+
+  <div class="coach-banner" id="coachBanner">
+    <div class="coach-emoji" id="coachEmoji">💪</div>
+    <div class="coach-label">Your Coach <span class="sync-dot" id="syncDot" title="Synced"></span></div>
+    <div class="coach-msg" id="coachMsg">Loading your daily message...</div>
+    <div class="coach-sub" id="coachSub"></div>
+  </div>
+
+  <div class="streak-row">
+    <div class="streak-card">
+      <div class="streak-icon">🚫🍷</div>
+      <div class="streak-num" id="streakAlcohol" style="color:var(--teal)">0</div>
+      <div class="streak-label">Alcohol<br>Free Days</div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-icon">🚫🍬</div>
+      <div class="streak-num" id="streakSugar" style="color:var(--teal)">0</div>
+      <div class="streak-label">Sugar<br>Free Days</div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-icon">💪</div>
+      <div class="streak-num" id="streakWorkout" style="color:var(--purple)">0</div>
+      <div class="streak-label">Workouts<br>This Week</div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-icon">🌅</div>
+      <div class="streak-num" id="streakMobility" style="color:var(--amber)">0</div>
+      <div class="streak-label">Mobility<br>Streak</div>
+    </div>
+  </div>
+
+  <div class="score-card" id="scoreCard">
+    <div class="score-circle" id="scoreCircle">
+      <div class="score-num" id="scoreNum">—</div>
+      <div class="score-denom">/10</div>
+    </div>
+    <div class="score-body">
+      <div class="score-title" id="scoreTitle">Today's Score</div>
+      <div class="score-detail" id="scoreDetail">Complete your check-in to get your score</div>
+    </div>
+  </div>
+
+  <div class="section-label">Today's Habits</div>
+  <div class="check-card" id="todayChecklist"></div>
+
+  <button class="craving-btn" onclick="toggleCraving()">
+    🆘 I'm having a craving — help me
+  </button>
+
+  <div class="craving-panel" id="cravingPanel">
+    <h3>You've got this. Here's what to do right now.</h3>
+    <p id="cravingMotivation"></p>
+    <div class="drink-item"><div class="drink-emoji">🫧</div><div class="drink-body"><div class="drink-name">Sparkling water + fresh lime</div><div class="drink-detail">Squeeze half a lime over ice with sparkling water. Feels like a drink, zero consequences.</div></div></div>
+    <div class="drink-item"><div class="drink-emoji">🍹</div><div class="drink-body"><div class="drink-name">Virgin Paloma</div><div class="drink-detail">Grapefruit juice + sparkling water + lime + salt rim. Feels like a real cocktail.</div></div></div>
+    <div class="drink-item"><div class="drink-emoji">🌿</div><div class="drink-body"><div class="drink-name">Sparkling water + muddled mint + lime</div><div class="drink-detail">Muddle a few mint leaves, add ice, sparkling water, squeeze of lime. Virgin mojito essentially.</div></div></div>
+    <div class="drink-item"><div class="drink-emoji">🫖</div><div class="drink-body"><div class="drink-name">Hot tea with zero sugar syrup</div><div class="drink-detail">Your afternoon tea habit — this is already part of your routine. Make it now.</div></div></div>
+    <div class="drink-item"><div class="drink-emoji">🍋</div><div class="drink-body"><div class="drink-name">Sparkling water + cucumber + lemon</div><div class="drink-detail">Slice cucumber and lemon into a glass of sparkling water. Spa water — refreshing and sophisticated.</div></div></div>
+    <div class="drink-item"><div class="drink-emoji">🥤</div><div class="drink-body"><div class="drink-name">Kombucha</div><div class="drink-detail">GT's Original or Ginger Lemon — slightly fizzy, complex flavor, feels like a treat.</div></div></div>
+    <div class="craving-msg" id="cravingMsg"></div>
+    <div class="craving-count" id="cravingCount"></div>
+  </div>
+
+</div>
+
+<!-- CHECK-IN PAGE -->
+<div class="page" id="page-checkin">
+  <div class="input-card">
+    <h3>🌅 Morning</h3>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Did you do morning mobility? (20 min)</div>
+      <select id="ci-mobility">
+        <option value="">— select —</option>
+        <option value="yes">✅ Yes — done</option>
+        <option value="partial">⚡ Partial — did some</option>
+        <option value="no">❌ Not yet</option>
+      </select>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Did you drink 16 oz water first thing?</div>
+      <select id="ci-water">
+        <option value="">— select —</option>
+        <option value="yes">✅ Yes</option>
+        <option value="no">❌ No</option>
+      </select>
+    </div>
+    <div>
+      <div class="input-label">Breakfast logged in MFP?</div>
+      <select id="ci-breakfast">
+        <option value="">— select —</option>
+        <option value="yes">✅ Logged</option>
+        <option value="ate-nolog">🍳 Ate but didn't log</option>
+        <option value="skipped">⏭ Skipped breakfast</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <h3>☀️ Midday</h3>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Lunch logged in MFP?</div>
+      <select id="ci-lunch">
+        <option value="">— select —</option>
+        <option value="yes">✅ Logged</option>
+        <option value="ate-nolog">🍽 Ate but didn't log</option>
+        <option value="skipped">⏭ Skipped</option>
+      </select>
+    </div>
+    <div>
+      <div class="input-label">Current step count</div>
+      <input type="number" id="ci-steps" placeholder="e.g. 6500" />
+    </div>
+  </div>
+
+  <div class="input-card">
+    <h3>💪 Workout</h3>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Did you work out today?</div>
+      <select id="ci-workout">
+        <option value="">— select —</option>
+        <option value="full">✅ Full session completed</option>
+        <option value="partial">⚡ Partial — got something in</option>
+        <option value="rest">😴 Rest day (planned)</option>
+        <option value="no">❌ Skipped</option>
+      </select>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">What did you do? (optional)</div>
+      <input type="text" id="ci-workout-detail" placeholder="e.g. Push day, 30 min walking" />
+    </div>
+    <div>
+      <div class="input-label">Did you log it in Caliber?</div>
+      <select id="ci-caliber">
+        <option value="">— select —</option>
+        <option value="yes">✅ Yes</option>
+        <option value="no">❌ No</option>
+        <option value="na">— Rest day</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <h3>🚫 Commitments</h3>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Alcohol today?</div>
+      <select id="ci-alcohol">
+        <option value="">— select —</option>
+        <option value="no">✅ Zero — stayed clean</option>
+        <option value="yes">❌ Had a drink</option>
+      </select>
+    </div>
+    <div>
+      <div class="input-label">Added sugar / desserts / candy?</div>
+      <select id="ci-sugar">
+        <option value="">— select —</option>
+        <option value="no">✅ No — stayed clean</option>
+        <option value="yes">❌ Had some</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <h3>🌙 Evening Close</h3>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Dinner logged in MFP?</div>
+      <select id="ci-dinner">
+        <option value="">— select —</option>
+        <option value="yes">✅ Logged</option>
+        <option value="ate-nolog">🍽 Ate but didn't log</option>
+        <option value="skipped">⏭ Skipped dinner</option>
+      </select>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Final step count</div>
+      <input type="number" id="ci-steps-final" placeholder="e.g. 10200" />
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Total water today (oz)</div>
+      <input type="number" id="ci-water-oz" placeholder="e.g. 90" />
+    </div>
+    <div>
+      <div class="input-label">How do you feel? (optional)</div>
+      <textarea id="ci-notes" placeholder="Energy, mood, wins, struggles..."></textarea>
+    </div>
+  </div>
+
+  <button class="save-btn" onclick="saveCheckin()">💾 Save Today's Check-In</button>
+
+</div>
+
+<!-- WEIGHT PAGE -->
+<div class="page" id="page-weight">
+  <div class="goal-card">
+    <h2>Goal Weight: <span id="goalWeightLabel">110</span> lbs</h2>
+    <p>Starting: <span id="wtStart">—</span> lbs · Current: <span id="wtCurrent">—</span> lbs · To go: <span id="wtToGo">—</span> lbs</p>
+    <div class="goal-progress"><div class="goal-fill" id="wtProgress" style="width:0%"></div></div>
+    <div class="goal-stats"><span>Start</span><span id="wtPct">0% there</span><span id="goalWeightLabel2">110 lbs</span></div>
+  </div>
+
+  <div class="input-card">
+    <h3>Log Today's Weight</h3>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Weight (lbs)</div>
+      <input type="number" id="wt-input" placeholder="e.g. 122.5" step="0.1" />
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Time of day</div>
+      <select id="wt-time">
+        <option value="morning">Morning (most accurate)</option>
+        <option value="midday">Midday</option>
+        <option value="evening">Evening</option>
+      </select>
+    </div>
+    <button class="save-btn" onclick="saveWeight()">Save Weight</button>
+  </div>
+
+  <div class="section-label">Weight History</div>
+  <div class="check-card" id="weightHistory"></div>
+</div>
+
+<!-- HISTORY PAGE -->
+<div class="page" id="page-history">
+  <div class="section-label">Past Check-Ins</div>
+  <div id="historyList"></div>
+</div>
+
+<!-- GOALS PAGE -->
+<div class="page" id="page-goals">
+  <div class="goal-card">
+    <h2 id="sprintName">Sprint 🎯</h2>
+    <p id="sprintDates">— to —</p>
+    <div class="goal-progress"><div class="goal-fill" id="sprintProgress" style="width:0%"></div></div>
+    <div class="goal-stats"><span id="sprintStartLabel">Start</span><span id="sprintPct">Day 1</span><span id="sprintEndLabel">End</span></div>
+  </div>
+
+  <div class="check-card">
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">🚫</div>
+      <div class="check-body"><div class="check-title">Zero alcohol — dry till goal weight</div><div class="check-sub">No exceptions. Not even one.</div></div>
+    </div>
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">🍬</div>
+      <div class="check-body"><div class="check-title">No desserts or candy</div><div class="check-sub">Fruit is fine. Natural sugars ok.</div></div>
+    </div>
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">🌅</div>
+      <div class="check-body"><div class="check-title">Morning mobility every single day</div><div class="check-sub">20 min. No exceptions.</div></div>
+    </div>
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">🚶</div>
+      <div class="check-body"><div class="check-title">10,000 steps every day</div><div class="check-sub">Walking pad + gym + daily movement.</div></div>
+    </div>
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">💪</div>
+      <div class="check-body"><div class="check-title">3–4 weight sessions per week</div><div class="check-sub">Push · Pull · Legs · Saturday full body</div></div>
+    </div>
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">📱</div>
+      <div class="check-body"><div class="check-title">Log every meal in MFP</div><div class="check-sub">Every meal. No skipping.</div></div>
+    </div>
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">💧</div>
+      <div class="check-body"><div class="check-title">90 oz water minimum daily</div><div class="check-sub">Start with 16 oz before anything else.</div></div>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <h3>📋 Push Notification Schedule</h3>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.6;">These fire automatically from the server — no alarms needed. Make sure notifications are enabled above on Today.</p>
+    <div class="input-row"><div class="input-label">6:00 AM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Mobility · Water</div></div>
+    <div class="input-row"><div class="input-label">9:00 AM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Log breakfast</div></div>
+    <div class="input-row"><div class="input-label">12:30 PM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Log lunch · steps</div></div>
+    <div class="input-row"><div class="input-label">3:00 PM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Danger zone check-in</div></div>
+    <div class="input-row"><div class="input-label">5:00 PM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Workout time</div></div>
+    <div class="input-row"><div class="input-label">8:00 PM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Log dinner · close day</div></div>
+    <div class="input-row" style="border:none;"><div class="input-label">9:30 PM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Screens off · sleep</div></div>
+  </div>
+
+  <div class="input-card">
+    <h3>🔄 Start a New Sprint</h3>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Coming back from the cruise (or any break)? Reset the clock and start a fresh sprint today. Your check-in history and streaks calculation stay intact — only the sprint dates reset.</p>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Goal weight (lbs)</div>
+      <input type="number" id="goal-weight-input" step="0.1" />
+    </div>
+    <button class="save-btn" onclick="startNewSprint(14)">Start New 14-Day Sprint</button>
+    <button class="save-btn secondary" onclick="startNewSprint(30)">Start New 30-Day Sprint</button>
+  </div>
+
+  <button class="link-btn" onclick="handleSignOut()">Sign out</button>
+</div>
+
+</div><!-- /#app -->
+
+<!-- SDKs: Firebase compat build (no bundler needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
+<script src="./firebase-config.js"></script>
+<script>
+// ── FIREBASE INIT ───────────────────────────────────────────────────────────
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let messaging = null;
+try { messaging = firebase.messaging.isSupported() ? firebase.messaging() : null; } catch (e) { messaging = null; }
+
+db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+
+let swRegistration = null;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then((reg) => { swRegistration = reg; }).catch(() => {});
+}
+
+// ── STATE ────────────────────────────────────────────────────────────────
+let uid = null;
+let checkins = {};
+let weights = [];
+let settings = defaultSettings();
+let unsubCheckins = null, unsubWeights = null, unsubSettings = null;
+
+function defaultSettings(){
+  return {
+    sprintStart: todayStr(),
+    sprintLength: 14,
+    goalWeight: 110,
+    sprintHistory: [],
+    cravingCount: 0
+  };
+}
+
+function todayStr(d){
+  d = d || new Date();
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function parseDateStr(s){ const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+
+// ── AUTH ─────────────────────────────────────────────────────────────────
+function authErr(msg){ document.getElementById('authError').textContent = msg || ''; }
+
+function handleSignUp(){
+  const email = document.getElementById('auth-email').value.trim();
+  const pw = document.getElementById('auth-password').value;
+  if(!email || pw.length < 6){ authErr('Enter an email and a password of at least 6 characters.'); return; }
+  authErr('Creating your account...');
+  auth.createUserWithEmailAndPassword(email, pw)
+    .catch((e) => authErr(e.message));
+}
+
+function handleSignIn(){
+  const email = document.getElementById('auth-email').value.trim();
+  const pw = document.getElementById('auth-password').value;
+  if(!email || !pw){ authErr('Enter your email and password.'); return; }
+  authErr('Signing in...');
+  auth.signInWithEmailAndPassword(email, pw)
+    .catch((e) => authErr(e.message));
+}
+
+function handleSignOut(){
+  if(!confirm('Sign out of Coach Angela on this device?')) return;
+  cleanupSubscriptions();
+  auth.signOut();
+}
+
+function cleanupSubscriptions(){
+  if(unsubCheckins) unsubCheckins();
+  if(unsubWeights) unsubWeights();
+  if(unsubSettings) unsubSettings();
+  unsubCheckins = unsubWeights = unsubSettings = null;
+  checkins = {}; weights = []; settings = defaultSettings();
+}
+
+auth.onAuthStateChanged((user) => {
+  if(user){
+    uid = user.uid;
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    authErr('');
+    subscribeData();
+    initNotifications();
+  } else {
+    uid = null;
+    cleanupSubscriptions();
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('authScreen').classList.remove('hidden');
+  }
+});
+
+// ── FIRESTORE SYNC ───────────────────────────────────────────────────────
+function subscribeData(){
+  const userRef = db.collection('users').doc(uid);
+
+  unsubSettings = userRef.collection('meta').doc('settings').onSnapshot((doc) => {
+    if(doc.exists){
+      settings = Object.assign(defaultSettings(), doc.data());
+    } else {
+      userRef.collection('meta').doc('settings').set(defaultSettings());
+    }
+    renderAll();
+  }, (err) => console.error('settings sync error', err));
+
+  unsubCheckins = userRef.collection('checkins').onSnapshot((snap) => {
+    checkins = {};
+    snap.forEach((d) => { checkins[d.id] = d.data(); });
+    renderAll();
+  }, (err) => console.error('checkins sync error', err));
+
+  unsubWeights = userRef.collection('weights').orderBy('date', 'desc').onSnapshot((snap) => {
+    weights = [];
+    snap.forEach((d) => weights.push(Object.assign({ id: d.id }, d.data())));
+    renderAll();
+  }, (err) => console.error('weights sync error', err));
+}
+
+function markSynced(ok){
+  const dot = document.getElementById('syncDot');
+  if(dot) dot.classList.toggle('off', !ok);
+}
+
+// ── NOTIFICATIONS ────────────────────────────────────────────────────────
+function isStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function isIOS(){
+  return /iP(hone|ad|od)/.test(navigator.userAgent);
+}
+
+async function initNotifications(){
+  const banner = document.getElementById('notifBanner');
+  if(!('Notification' in window) || !messaging){
+    if(isIOS() && !isStandalone()){
+      banner.classList.remove('hidden');
+      document.getElementById('notifBannerText').textContent = 'Add this app to your Home Screen first (Share → Add to Home Screen), then open it from there to enable push notifications.';
+      banner.querySelector('button').style.display = 'none';
+    }
+    return;
+  }
+  if(Notification.permission === 'granted'){
+    banner.classList.add('hidden');
+    registerToken();
+  } else if(Notification.permission === 'denied'){
+    banner.classList.remove('hidden');
+    document.getElementById('notifBannerText').textContent = 'Notifications are blocked. Enable them for this app in your phone Settings to get pushed at 6am, 9am, 12:30, 3, 5, 8 & 9:30.';
+    banner.querySelector('button').style.display = 'none';
+  } else {
+    if(isIOS() && !isStandalone()){
+      document.getElementById('notifBannerText').textContent = 'Add this app to your Home Screen first (Share → Add to Home Screen), then open it from there to enable push notifications.';
+      banner.querySelector('button').style.display = 'none';
+    } else {
+      document.getElementById('notifBannerText').textContent = 'Turn on push notifications so I can reach you at 6am, 9am, 12:30, 3, 5, 8 & 9:30.';
+      banner.querySelector('button').style.display = '';
+    }
+    banner.classList.remove('hidden');
+  }
+}
+
+async function enableNotifications(){
+  try {
+    const perm = await Notification.requestPermission();
+    if(perm !== 'granted'){ initNotifications(); return; }
+    document.getElementById('notifBanner').classList.add('hidden');
+    await registerToken();
+  } catch(e){ console.error(e); }
+}
+
+async function registerToken(){
+  if(!messaging) return;
+  try {
+    const token = await messaging.getToken({
+      vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: swRegistration || undefined
+    });
+    if(token && uid){
+      await db.collection('users').doc(uid).collection('tokens').doc(token).set({
+        createdAt: Date.now(),
+        ua: navigator.userAgent
+      });
+    }
+  } catch(e){ console.error('FCM token error', e); }
+}
+
+if(messaging){
+  messaging.onMessage((payload) => {
+    const n = payload.notification || {};
+    if(n.title) alert(`${n.title}\n\n${n.body || ''}`);
+  });
+}
+
+// ── COACH MESSAGES ───────────────────────────────────────────────────────
+function getCoachMessage(){
+  const h = new Date().getHours();
+  const td = checkins[todayStr()] || {};
+  const streak = getStreaks();
+
+  if(td.alcohol === 'yes') return {
+    emoji:'😤', msg:'You had a drink. That\'s done — it doesn\'t define today or tomorrow. Reset right now. The streak restarts tomorrow and you know exactly how good you feel when you\'re clean.',
+    sub:'One slip doesn\'t erase your progress. Get back on track immediately.'
+  };
+  if(h < 7 && !td.mobility) return {
+    emoji:'🌅', msg:'Good morning. Before you do anything else — get on that mat. 20 minutes of mobility. Your body needs it, your back needs it, and it sets the tone for every decision you make today.',
+    sub:'Water first, then mat. Go.'
+  };
+  if(h >= 7 && h < 9 && !td.breakfast) return {
+    emoji:'🍳', msg:'Breakfast is non-negotiable. Skipping it spikes cortisol, crashes your blood sugar by 10 AM, and makes the afternoon cravings 10x harder to resist. Eat protein NOW.',
+    sub:'Eggs, Greek yogurt, protein shake — anything. Log it in MFP.'
+  };
+  if(h >= 12 && h < 14 && !td.lunch) return {
+    emoji:'🥗', msg:'It\'s lunch time. Don\'t skip it — an empty gut in the afternoon is your biggest enemy. Protein first. Log it in MFP before you eat.',
+    sub:'Prepped chicken bowl · tuna sandwich · whatever you have. Eat it.'
+  };
+  if(h >= 15 && h < 17 && td.alcohol === undefined) return {
+    emoji:'⚠️', msg:'3 PM is the danger zone. This is when cravings hit hardest and willpower is lowest. Have your hot tea RIGHT NOW. If you feel tempted — hit the craving button below.',
+    sub:'You committed to this goal. Honor it.'
+  };
+  if(h >= 17 && h < 19 && !td.workout) return {
+    emoji:'💪', msg:'It\'s workout time and there\'s no excuse not to go. You don\'t have to feel like it. You just have to start. The hardest part is putting your shoes on — after that your body takes over.',
+    sub:'30 minutes is all you need. Push. Pull. Legs. Whatever — just move.'
+  };
+  if(h >= 20 && !td.dinner) return {
+    emoji:'🍽️', msg:'Log your dinner in MFP before you close the day. No skipping — incomplete logging is incomplete accountability.',
+    sub:'Then check your steps. Did you hit 10k?'
+  };
+
+  if(streak.alcohol >= 7) return {
+    emoji:'🔥', msg:`${streak.alcohol} days alcohol free. That is serious commitment. Your gut is healing, your sleep is deeper, your fat loss is accelerating. This is what it looks like when you mean it.`,
+    sub:'Keep the streak alive. Every day adds to something real.'
+  };
+  if(streak.alcohol >= 3) return {
+    emoji:'⚡', msg:`${streak.alcohol} days clean. You're building momentum. This is the window where habits form — don't break it now. The first two weeks are the hardest and you're in them.`,
+    sub:'Stay the course.'
+  };
+
+  if(h < 12) return { emoji:'💪', msg:'Today is another chance to prove to yourself that you\'re serious about this. Every clean day is a vote for the person you\'re becoming.', sub:'Check off your morning habits.' };
+  if(h < 17) return { emoji:'🎯', msg:'Midday check — are you on track? Steps, water, meals logged? Small consistent actions every single day beat perfect days followed by nothing.', sub:'Stay focused. You\'ve got this.' };
+  return { emoji:'🌙', msg:'Close the day strong. Log dinner, check your steps, drink your water. How you finish today is how you start tomorrow.', sub:'Screens off by 9:30. Sleep is when you actually change.' };
+}
+
+function getCravingMessages(){
+  const msgs = [
+    'You set a goal and you are not there yet. A drink right now is a vote against the person you\'re becoming. The craving passes in 15 minutes. This moment does not.',
+    'Every single day you stay clean, your gut heals a little more, your sleep improves, your fat burns faster. One drink sets all of that back 24 hours. Is that drink worth one day of progress? It never is.',
+    'You know how you feel the morning after a drink — bloated, backed up, low energy, guilt. You know how you feel after a clean night — clearer, lighter, proud. Choose the feeling you want tomorrow morning.',
+    'The streak is real. The progress is real. The discomfort of this craving is temporary. The results of your commitment are permanent. Pick up that sparkling water and get through the next 20 minutes.',
+    'Angela — you set a goal. You\'re not there yet. Every clean day is one day closer. Don\'t let a temporary craving steal a permanent result from you.',
+    'This craving is loud right now, but it is not in charge. You are. Get up, make the mocktail, and prove to yourself — again — that you don\'t need it.',
+    'Nobody regrets the drink they didn\'t have. Everybody regrets the one that reset their streak. Make the choice future-you will thank you for.',
+  ];
+  return msgs[Math.floor(Math.random() * msgs.length)];
+}
+
+// ── STREAKS ──────────────────────────────────────────────────────────────
+function getStreaks(){
+  const dates = Object.keys(checkins).sort().reverse();
+  let alcohol = 0, sugar = 0, mobility = 0;
+  for(let d of dates){ if(checkins[d].alcohol === 'no') alcohol++; else break; }
+  for(let d of dates){ if(checkins[d].sugar === 'no') sugar++; else break; }
+  for(let d of dates){ if(checkins[d].mobility === 'yes' || checkins[d].mobility === 'partial') mobility++; else break; }
+  const now = new Date();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+  weekStart.setHours(0,0,0,0);
+  let workouts = 0;
+  dates.forEach((d) => {
+    const dd = parseDateStr(d);
+    if(dd >= weekStart && checkins[d].workout === 'full') workouts++;
+  });
+  return { alcohol, sugar, mobility, workouts };
+}
+
+// ── SCORE ────────────────────────────────────────────────────────────────
+function calcScore(data){
+  if(!data) return { score:0, details:[] };
+  let pts = 0;
+  const details = [];
+  if(data.mobility === 'yes'){ pts+=1.5; details.push('Mobility ✅'); }
+  else if(data.mobility === 'partial'){ pts+=0.75; details.push('Mobility partial'); }
+  if(data.alcohol === 'no'){ pts+=2; details.push('No alcohol ✅'); }
+  else if(data.alcohol === 'yes'){ details.push('Had alcohol ❌'); }
+  if(data.sugar === 'no'){ pts+=1; details.push('No sugar ✅'); }
+  if(data.workout === 'full'){ pts+=2; details.push('Full workout ✅'); }
+  else if(data.workout === 'partial'){ pts+=1; details.push('Partial workout'); }
+  else if(data.workout === 'rest'){ pts+=0.5; details.push('Rest day'); }
+  const steps = parseInt(data.stepsFinal) || 0;
+  if(steps >= 10000){ pts+=1.5; details.push('10k steps ✅'); }
+  else if(steps >= 7500){ pts+=0.75; details.push('7.5k steps'); }
+  if(data.breakfast === 'yes') pts+=0.5;
+  if(data.lunch === 'yes') pts+=0.5;
+  if(data.dinner === 'yes') pts+=0.5;
+  if(data.breakfast === 'yes' && data.lunch === 'yes' && data.dinner === 'yes'){ details.push('All meals logged ✅'); }
+  const water = parseInt(data.waterOz) || 0;
+  if(water >= 90){ pts+=0.5; details.push('Water goal ✅'); }
+  return { score: Math.min(10, Math.round(pts*10)/10), details };
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────
+function renderAll(){
+  markSynced(true);
+  renderToday();
+  const weightPage = document.getElementById('page-weight');
+  if(weightPage && weightPage.classList.contains('active')) renderWeight();
+  const histPage = document.getElementById('page-history');
+  if(histPage && histPage.classList.contains('active')) renderHistory();
+  renderGoals();
+  const gwInput = document.getElementById('goal-weight-input');
+  if(gwInput && document.activeElement !== gwInput) gwInput.value = settings.goalWeight;
+}
+
+function renderToday(){
+  const cm = getCoachMessage();
+  document.getElementById('coachEmoji').textContent = cm.emoji;
+  document.getElementById('coachMsg').textContent = cm.msg;
+  document.getElementById('coachSub').textContent = cm.sub;
+
+  const s = getStreaks();
+  document.getElementById('streakAlcohol').textContent = s.alcohol;
+  document.getElementById('streakSugar').textContent = s.sugar;
+  document.getElementById('streakWorkout').textContent = s.workouts;
+  document.getElementById('streakMobility').textContent = s.mobility;
+
+  const td = checkins[todayStr()];
+  const sc = calcScore(td);
+  const scoreEl = document.getElementById('scoreNum');
+  const circleEl = document.getElementById('scoreCircle');
+  if(td && Object.keys(td).length > 2){
+    scoreEl.textContent = sc.score;
+    const color = sc.score >= 8 ? '#0F6E56' : sc.score >= 5 ? '#B07D2A' : '#C0392B';
+    circleEl.style.borderColor = color;
+    scoreEl.style.color = color;
+    document.getElementById('scoreTitle').textContent = sc.score >= 8 ? 'Crushing it! 🔥' : sc.score >= 5 ? 'Good day 👍' : 'Room to grow 💪';
+    document.getElementById('scoreDetail').textContent = sc.details.join(' · ') || 'Keep going';
+  } else {
+    scoreEl.textContent = '—';
+    circleEl.style.borderColor = '#e0e0e0';
+    document.getElementById('scoreDetail').textContent = 'Complete your check-in to get your daily score';
+  }
+
+  const checks = [
+    { label:'Morning Mobility', sub:'20 min on the mat', icon:'🌅', done: td?.mobility === 'yes', partial: td?.mobility === 'partial' },
+    { label:'Alcohol Free', sub:'No exceptions', icon:'🚫', done: td?.alcohol === 'no', failed: td?.alcohol === 'yes' },
+    { label:'No Desserts / Candy', sub:'Natural sugar from fruit is fine', icon:'🍬', done: td?.sugar === 'no', failed: td?.sugar === 'yes' },
+    { label:'Workout', sub: td?.workoutDetail || 'Push · Pull · Legs · Active · Saturday', icon:'💪', done: td?.workout === 'full', partial: td?.workout === 'partial' },
+    { label:'10,000 Steps', sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon:'🚶', done: (parseInt(td?.stepsFinal)||0) >= 10000, partial: (parseInt(td?.stepsFinal)||0) >= 7500 },
+    { label:'All Meals Logged in MFP', sub:'Breakfast + lunch + dinner', icon:'📱', done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' },
+    { label:'90 oz Water', sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon:'💧', done: (parseInt(td?.waterOz)||0) >= 90, partial: (parseInt(td?.waterOz)||0) >= 60 },
+  ];
+
+  const cl = document.getElementById('todayChecklist');
+  cl.innerHTML = checks.map(c => `
+    <div class="check-item" onclick="showPage('checkin', document.querySelectorAll('.nav-tab')[1])">
+      <div class="check-box ${c.failed ? 'failed' : c.done ? 'done' : c.partial ? 'done' : ''}">${c.failed ? '✗' : c.done || c.partial ? '✓' : ''}</div>
+      <div class="check-body">
+        <div class="check-title" style="color:${c.failed ? 'var(--red)' : c.done ? 'var(--teal)' : 'var(--dark)'}">${c.label}</div>
+        <div class="check-sub">${c.sub}</div>
+      </div>
+      <div class="check-icon">${c.icon}</div>
+    </div>`).join('');
+
+  const cc = document.getElementById('cravingCount');
+  if(cc) cc.textContent = settings.cravingCount ? `You've talked yourself out of ${settings.cravingCount} craving${settings.cravingCount===1?'':'s'} so far. Keep going.` : '';
+}
+
+// ── SAVE CHECK-IN ────────────────────────────────────────────────────────
+function saveCheckin(){
+  const data = {
+    saved: Date.now(),
+    mobility: document.getElementById('ci-mobility').value,
+    water: document.getElementById('ci-water').value,
+    breakfast: document.getElementById('ci-breakfast').value,
+    lunch: document.getElementById('ci-lunch').value,
+    steps: document.getElementById('ci-steps').value,
+    workout: document.getElementById('ci-workout').value,
+    workoutDetail: document.getElementById('ci-workout-detail').value,
+    caliber: document.getElementById('ci-caliber').value,
+    alcohol: document.getElementById('ci-alcohol').value,
+    sugar: document.getElementById('ci-sugar').value,
+    dinner: document.getElementById('ci-dinner').value,
+    stepsFinal: document.getElementById('ci-steps-final').value,
+    waterOz: document.getElementById('ci-water-oz').value,
+    notes: document.getElementById('ci-notes').value,
+  };
+
+  db.collection('users').doc(uid).collection('checkins').doc(todayStr()).set(data)
+    .then(() => {
+      const sc = calcScore(data);
+      let feedbackMsg = '';
+      if(sc.score >= 8) feedbackMsg = `Score: ${sc.score}/10 — Outstanding day Angela! 🔥`;
+      else if(sc.score >= 5) feedbackMsg = `Score: ${sc.score}/10 — Solid day. Keep building. 💪`;
+      else feedbackMsg = `Score: ${sc.score}/10 — Tomorrow you go harder. No excuses.`;
+      if(data.alcohol === 'yes') feedbackMsg += '\n\nThe alcohol breaks your streak. It\'s done — reset tomorrow and don\'t let it happen again.';
+      alert(feedbackMsg);
+      showPage('today', document.querySelectorAll('.nav-tab')[0]);
+    })
+    .catch((e) => { markSynced(false); alert('Could not save — check your connection. It will retry automatically.\n' + e.message); });
+}
+
+// ── WEIGHT ───────────────────────────────────────────────────────────────
+function saveWeight(){
+  const val = parseFloat(document.getElementById('wt-input').value);
+  if(!val){ alert('Enter a weight'); return; }
+  const entry = { date: todayStr(), weight: val, time: document.getElementById('wt-time').value, createdAt: Date.now() };
+  db.collection('users').doc(uid).collection('weights').add(entry)
+    .then(() => {
+      document.getElementById('wt-input').value = '';
+      alert(`${val} lbs logged. ${val > settings.goalWeight ? `${(val-settings.goalWeight).toFixed(1)} lbs to goal.` : '🎯 GOAL REACHED!'}`);
+    })
+    .catch((e) => { markSynced(false); alert('Could not save — check your connection.\n' + e.message); });
+}
+
+function renderWeight(){
+  document.getElementById('goalWeightLabel').textContent = settings.goalWeight;
+  document.getElementById('goalWeightLabel2').textContent = settings.goalWeight + ' lbs';
+  const startWt = weights.length > 0 ? weights[weights.length-1].weight : null;
+  const currWt = weights.length > 0 ? weights[0].weight : null;
+  document.getElementById('wtStart').textContent = startWt || '—';
+  document.getElementById('wtCurrent').textContent = currWt || '—';
+  document.getElementById('wtToGo').textContent = currWt ? Math.max(0,(currWt-settings.goalWeight).toFixed(1)) : '—';
+  if(startWt && currWt){
+    const totalToLose = startWt - settings.goalWeight;
+    const lost = startWt - currWt;
+    const pct = totalToLose > 0 ? Math.max(0, Math.min(100, Math.round(lost/totalToLose*100))) : 100;
+    document.getElementById('wtProgress').style.width = pct+'%';
+    document.getElementById('wtPct').textContent = pct+'% there';
+  }
+  const hist = document.getElementById('weightHistory');
+  if(weights.length === 0){ hist.innerHTML = '<div class="empty">No weight logged yet.<br>Log your first weight above.</div>'; return; }
+  hist.innerHTML = weights.slice(0,14).map((w,i) => {
+    const prev = weights[i+1];
+    const diff = prev ? (w.weight - prev.weight) : 0;
+    const diffStr = diff === 0 ? '' : diff < 0 ? `<span style="color:var(--teal)">▼ ${Math.abs(diff).toFixed(1)}</span>` : `<span style="color:var(--red)">▲ ${diff.toFixed(1)}</span>`;
+    return `<div class="wt-entry"><span class="wt-date">${w.date} · ${w.time}</span><span class="wt-val">${w.weight} lbs ${diffStr}</span></div>`;
+  }).join('');
+}
+
+// ── HISTORY ──────────────────────────────────────────────────────────────
+function renderHistory(){
+  const list = document.getElementById('historyList');
+  const dates = Object.keys(checkins).sort().reverse();
+  if(dates.length === 0){ list.innerHTML = '<div class="empty">No check-ins yet.<br>Complete your first check-in today.</div>'; return; }
+  list.innerHTML = dates.map(d => {
+    const c = checkins[d];
+    const sc = calcScore(c);
+    const color = sc.score >= 8 ? 'var(--teal)' : sc.score >= 5 ? 'var(--amber)' : 'var(--red)';
+    const pills = [
+      c.alcohol === 'no' ? {l:'No alcohol',done:true} : c.alcohol === 'yes' ? {l:'Drank',done:false} : null,
+      c.mobility === 'yes' ? {l:'Mobility',done:true} : c.mobility === 'no' ? {l:'No mobility',done:false} : null,
+      c.workout === 'full' ? {l:'Workout',done:true} : c.workout === 'no' ? {l:'No workout',done:false} : null,
+      (parseInt(c.stepsFinal)||0) >= 10000 ? {l:'10k steps',done:true} : null,
+      c.sugar === 'no' ? {l:'No sugar',done:true} : c.sugar === 'yes' ? {l:'Had sugar',done:false} : null,
+    ].filter(Boolean);
+    return `<div class="hist-day">
+      <div class="hist-header">
+        <div class="hist-date">${d}</div>
+        <div class="hist-score" style="color:${color}">${sc.score}/10</div>
+      </div>
+      <div class="hist-pills">${pills.map(p=>`<span class="hist-pill ${p.done?'pill-done':'pill-miss'}">${p.l}</span>`).join('')}</div>
+      ${c.notes ? `<div style="font-size:11px;color:var(--gray);margin-top:6px;font-style:italic;">"${c.notes}"</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── GOALS / SPRINT ───────────────────────────────────────────────────────
+function renderGoals(){
+  const startEl = document.getElementById('sprintName');
+  if(!startEl) return;
+  const start = parseDateStr(settings.sprintStart);
+  const end = new Date(start); end.setDate(end.getDate() + settings.sprintLength);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmt = (dt) => `${months[dt.getMonth()]} ${dt.getDate()}`;
+  document.getElementById('sprintDates').textContent = `${fmt(start)} – ${fmt(end)}, ${end.getFullYear()} · ${settings.sprintLength} days`;
+  document.getElementById('sprintStartLabel').textContent = fmt(start);
+  document.getElementById('sprintEndLabel').textContent = fmt(end);
+
+  const now = new Date();
+  const dayNum = Math.floor((now - start) / 86400000) + 1;
+  const pct = Math.min(100, Math.max(0, Math.round(((now - start) / (end - start)) * 100)));
+  document.getElementById('sprintProgress').style.width = pct + '%';
+  document.getElementById('sprintPct').textContent = dayNum > 0 ? `Day ${Math.min(dayNum, settings.sprintLength)} of ${settings.sprintLength}` : 'Not started';
+}
+
+function startNewSprint(days){
+  const goalWeight = parseFloat(document.getElementById('goal-weight-input').value) || settings.goalWeight;
+  if(!confirm(`Start a fresh ${days}-day sprint starting today? Your history stays saved.`)) return;
+  const prevSprint = { start: settings.sprintStart, length: settings.sprintLength, endedAt: Date.now() };
+  const newSettings = {
+    sprintStart: todayStr(),
+    sprintLength: days,
+    goalWeight: goalWeight,
+    sprintHistory: (settings.sprintHistory || []).concat([prevSprint]),
+    cravingCount: settings.cravingCount || 0
+  };
+  db.collection('users').doc(uid).collection('meta').doc('settings').set(newSettings)
+    .then(() => alert(`New ${days}-day sprint started. Let's go. 💪`))
+    .catch((e) => alert('Could not save: ' + e.message));
+}
+
+// ── CRAVING ──────────────────────────────────────────────────────────────
+function toggleCraving(){
+  const panel = document.getElementById('cravingPanel');
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open')){
+    document.getElementById('cravingMsg').textContent = getCravingMessages();
+    document.getElementById('cravingMotivation').textContent = 'The craving will pass in 15 minutes. Here\'s what to drink right now instead:';
+    panel.scrollIntoView({ behavior:'smooth', block:'start' });
+    if(uid){
+      db.collection('users').doc(uid).collection('meta').doc('settings').set(
+        { cravingCount: firebase.firestore.FieldValue.increment(1) }, { merge: true }
+      ).catch(() => {});
+    }
+  }
+}
+
+// ── HEADER ───────────────────────────────────────────────────────────────
+function updateHeader(){
+  const now = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('navDate').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+  const start = parseDateStr(settings.sprintStart);
+  const end = new Date(start); end.setDate(end.getDate() + settings.sprintLength);
+  const dayNum = Math.floor((now - start) / 86400000) + 1;
+  const daysLeft = Math.ceil((end - now) / 86400000);
+  document.getElementById('navDay').textContent = dayNum > 0 ? `Day ${Math.min(dayNum, settings.sprintLength)} of ${settings.sprintLength}` : 'Sprint starts today!';
+  document.getElementById('navCountdown').textContent = daysLeft > 0 ? `${daysLeft} days left` : 'Sprint complete!';
+}
+
+// ── NAV ──────────────────────────────────────────────────────────────────
+function showPage(id, tabEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(tabEl) tabEl.classList.add('active');
+  if(id==='today') renderToday();
+  if(id==='weight') renderWeight();
+  if(id==='history') renderHistory();
+  if(id==='goals') renderGoals();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+updateHeader();
+setInterval(() => { updateHeader(); renderToday(); }, 60000);
+</script>
+</body>
+</html>
