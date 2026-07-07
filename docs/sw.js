@@ -3,7 +3,7 @@
    and (2) Firebase Cloud Messaging background push notifications.
    Keeping both in ONE file avoids the two-service-workers-fighting-over-one-scope problem. */
 
-const CACHE_NAME = 'coach-angela-v1';
+const CACHE_NAME = 'coach-angela-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -30,9 +30,28 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  // Network-first for Firestore/Firebase API calls, cache-first for the app shell.
   const url = event.request.url;
   if (url.includes('firestore.googleapis.com') || url.includes('googleapis.com')) return;
+
+  // firebase-config.js can change (new keys, VAPID rotation) without the service
+  // worker file itself changing, so it must never be served stale from cache —
+  // always try the network first, and only fall back to cache if offline.
+  if (url.includes('firebase-config.js')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return res;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Cache-first (with background refresh) for the rest of the app shell.
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)
