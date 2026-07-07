@@ -1,12 +1,13 @@
-# Coach — Angela: setup guide
+# Coach: setup guide
 
 ## What this is
 
-An installable app (PWA) with:
+An installable app (PWA) built so anyone can use it — not tied to one person's stats. Includes:
 - **Firebase Auth** (email/password) so your data is tied to your account, not your device.
-- **Firestore** for check-ins, weights, streaks, and settings — synced live, works offline, catches up when back online.
-- **Cloud Functions + Cloud Scheduler** sending real push notifications at 6:00, 9:00, 12:30, 3:00, 5:00, 8:00, and 9:30 daily, personalized against your actual check-in state.
+- **Firestore** for check-ins, weights, measurements, streaks, and settings — synced live, works offline, catches up when back online.
+- **Cloud Functions + Cloud Scheduler** sending real push notifications at 6:00, 9:00, 12:30, 3:00, 5:00, 8:00, and 9:30 daily, personalized with your first name, your check-in state, and your chosen food/workout apps.
 - **GitHub Pages** hosting the static frontend.
+- A built-in **nutrition/macro calculator**, a **flexible-length sprint goal setter** with backdating, a **body measurements tracker**, and a **craving button** split between alcohol and sweet-tooth cravings.
 
 One-time setup below. After that, it just runs.
 
@@ -68,7 +69,18 @@ Requires iOS 16.4 or later. If you ever use a second device (iPad, laptop), just
 
 ## Starting a new sprint
 
-After your cruise (or anytime), open **Goals → Start a New Sprint**, set your goal weight, and tap 14-day or 30-day. Your check-in history and streak math stay intact — only the sprint start/end dates reset.
+After your cruise (or anytime), open **Goals → Start a New Sprint**, enter any sprint length in days (7, 14, 30, 45 — whatever you want), a start date (including a past date if you technically started before you set this up), and your goal weight. Your check-in history and streak math stay intact — only the sprint start/end dates reset.
+
+## First-time setup inside the app
+
+1. **Create Account** with your first name, email, and password — the app uses your first name throughout (nav, coach messages, push notifications).
+2. On the **Profile** tab, fill in your Nutrition Profile (sex, age, height, activity, goal) to get calorie/macro targets, and your Preferences (daily step goal, workout days per week, which food-logging app and workout-logging app you use — MyFitnessPal/Caliber are just defaults, not requirements).
+3. On the **Weight** tab you can also log body measurements (waist, chest, thigh/calf/bicep — left and right separately) in inches or centimeters.
+4. On **Check-In**, use the date picker at the top to log or edit any past day — handy for backdating or fixing a day you forgot.
+
+## Alcohol accountability
+
+A logged drink does three things automatically: it doesn't silently reset your streak counter without consequence — it extends your current sprint by one day, adds to a lifetime slip counter shown next to your best-ever streak on Today, and resets the current streak. The sprint clock never gets shorter because of a slip, only longer.
 
 ## Notes on reliability
 

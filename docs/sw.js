@@ -1,9 +1,9 @@
-/* Coach — Angela: single service worker.
+/* Coach — single service worker.
    Handles (1) offline app-shell caching so the PWA installs/opens instantly,
    and (2) Firebase Cloud Messaging background push notifications.
    Keeping both in ONE file avoids the two-service-workers-fighting-over-one-scope problem. */
 
-const CACHE_NAME = 'coach-angela-v2';
+const CACHE_NAME = 'coach-angela-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -51,6 +51,23 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // For index.html, also prefer network-first so redesigns show up immediately
+  // instead of waiting for a background refresh cycle.
+  if (url.includes('index.html') || url.endsWith('/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return res;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
   // Cache-first (with background refresh) for the rest of the app shell.
   event.respondWith(
     caches.match(event.request).then((cached) => {
@@ -79,13 +96,13 @@ try {
 
   messaging.onBackgroundMessage((payload) => {
     const data = payload.notification || payload.data || {};
-    const title = data.title || 'Coach Angela';
+    const title = data.title || 'Coach';
     const body = data.body || 'Check in now.';
     self.registration.showNotification(title, {
       body: body,
       icon: './icons/icon-192.png',
       badge: './icons/icon-192.png',
-      tag: 'coach-angela-reminder',
+      tag: 'coach-reminder',
       renotify: true,
       data: { url: './index.html' }
     });

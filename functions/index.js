@@ -1,14 +1,15 @@
 /**
- * Coach — Angela: scheduled push notifications.
+ * Coach — scheduled push notifications.
  *
  * 7 Cloud Scheduler-backed functions fire at fixed local times every day and
  * send a personalized, tough-love push notification via FCM based on that
- * day's Firestore check-in state (so she's not nagged about things she's
- * already done).
+ * day's Firestore check-in state (so nobody's nagged about things they've
+ * already done). Messages are personalized per-user with their first name
+ * and their chosen food/workout logging apps.
  *
  * Requires the Blaze (pay-as-you-go) plan — Cloud Scheduler + the always-on
  * scheduler infra isn't available on the free Spark plan. At this volume
- * (7 sends/day for one user) the actual cost is effectively $0/month.
+ * (7 sends/day, small number of users) the actual cost is effectively $0/month.
  */
 
 const { onSchedule } = require('firebase-functions/v2/scheduler');
@@ -19,7 +20,7 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 const db = admin.firestore();
 
-// ⚠️ Set this to Angela's local IANA timezone. Defaults to US Eastern.
+// ⚠️ Set this to your local IANA timezone. Defaults to US Eastern.
 // Full list: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 const TIMEZONE = 'America/New_York';
 
@@ -52,7 +53,7 @@ function streakFromMap(map, matchFn) {
   return streak;
 }
 
-function calcScore(data) {
+function calcScore(data, stepGoal) {
   if (!data) return 0;
   let pts = 0;
   if (data.mobility === 'yes') pts += 1.5; else if (data.mobility === 'partial') pts += 0.75;
@@ -60,13 +61,29 @@ function calcScore(data) {
   if (data.sugar === 'no') pts += 1;
   if (data.workout === 'full') pts += 2; else if (data.workout === 'partial') pts += 1; else if (data.workout === 'rest') pts += 0.5;
   const steps = parseInt(data.stepsFinal) || 0;
-  if (steps >= 10000) pts += 1.5; else if (steps >= 7500) pts += 0.75;
+  const goal = stepGoal || 10000;
+  if (steps >= goal) pts += 1.5; else if (steps >= goal * 0.75) pts += 0.75;
   if (data.breakfast === 'yes') pts += 0.5;
   if (data.lunch === 'yes') pts += 0.5;
   if (data.dinner === 'yes') pts += 0.5;
   const water = parseInt(data.waterOz) || 0;
   if (water >= 90) pts += 0.5;
   return Math.min(10, Math.round(pts * 10) / 10);
+}
+
+function firstNameOf(settings) {
+  return (settings && settings.firstName) || 'there';
+}
+function foodAppOf(settings) {
+  if (!settings) return 'MyFitnessPal';
+  return (settings.foodApp === 'other' ? settings.foodAppOther : settings.foodApp) || 'MyFitnessPal';
+}
+function workoutAppOf(settings) {
+  if (!settings) return 'Caliber';
+  return (settings.workoutApp === 'other' ? settings.workoutAppOther : settings.workoutApp) || 'Caliber';
+}
+function stepGoalOf(settings) {
+  return (settings && parseInt(settings.stepGoal)) || 10000;
 }
 
 async function sendToAllUsers(label, buildMessage) {
@@ -81,9 +98,10 @@ async function sendToAllUsers(label, buildMessage) {
   for (const userDoc of usersSnap.docs) {
     const uid = userDoc.id;
     try {
-      const [recentMap, tokensSnap] = await Promise.all([
+      const [recentMap, tokensSnap, settingsDoc] = await Promise.all([
         getRecentCheckins(uid),
         db.collection('users').doc(uid).collection('tokens').get(),
+        db.collection('users').doc(uid).collection('meta').doc('settings').get(),
       ]);
       const tokens = tokensSnap.docs.map((d) => d.id);
       if (tokens.length === 0) {
@@ -91,11 +109,16 @@ async function sendToAllUsers(label, buildMessage) {
         continue;
       }
 
+      const settings = settingsDoc.exists ? settingsDoc.data() : {};
       const checkin = recentMap[today] || {};
       const alcoholStreak = streakFromMap(recentMap, (c) => c.alcohol === 'no');
       const sugarStreak = streakFromMap(recentMap, (c) => c.sugar === 'no');
+      const name = firstNameOf(settings);
+      const foodApp = foodAppOf(settings);
+      const workoutApp = workoutAppOf(settings);
+      const stepGoal = stepGoalOf(settings);
 
-      const built = buildMessage({ checkin, alcoholStreak, sugarStreak, today });
+      const built = buildMessage({ checkin, alcoholStreak, sugarStreak, today, name, foodApp, workoutApp, stepGoal, settings });
       if (!built || built.skip) {
         logger.info(`[${label}] ${uid}: skipped (${built && built.reason})`);
         continue;
@@ -128,93 +151,93 @@ async function sendToAllUsers(label, buildMessage) {
 
 // ── 6:00 AM — MOBILITY + WATER ──────────────────────────────────────────────
 exports.push0600 = onSchedule({ schedule: '0 6 * * *', timeZone: TIMEZONE }, async () => {
-  await sendToAllUsers('06:00', ({ alcoholStreak }) => {
+  await sendToAllUsers('06:00', ({ alcoholStreak, name }) => {
     const streakLine = alcoholStreak > 0 ? ` Day ${alcoholStreak + 1} clean starts right now.` : '';
     return {
-      title: '🌅 Coach Angela — 6:00 AM',
-      body: `Before your feet hit the kitchen floor: 20 minutes of mobility, then 16 oz of water. No snooze, no excuses.${streakLine}`,
+      title: `🌅 Coach — 6:00 AM`,
+      body: `${name}, before your feet hit the kitchen floor: 20 minutes of mobility, then 16 oz of water. No snooze, no excuses.${streakLine}`,
     };
   });
 });
 
 // ── 9:00 AM — BREAKFAST ─────────────────────────────────────────────────────
 exports.push0900 = onSchedule({ schedule: '0 9 * * *', timeZone: TIMEZONE }, async () => {
-  await sendToAllUsers('09:00', ({ checkin }) => {
+  await sendToAllUsers('09:00', ({ checkin, name, foodApp }) => {
     if (checkin.breakfast === 'yes') {
-      return { title: '✅ Coach Angela', body: 'Breakfast logged already — that\'s exactly how you stay ahead today. Keep it up.' };
+      return { title: '✅ Coach', body: `Breakfast logged already, ${name} — that's exactly how you stay ahead today. Keep it up.` };
     }
     return {
-      title: '🍳 Coach Angela — 9:00 AM',
-      body: 'Breakfast is non-negotiable. Skipping it spikes cortisol and makes 3pm cravings 10x harder. Eat protein and log it in MFP — now.',
+      title: '🍳 Coach — 9:00 AM',
+      body: `Breakfast is non-negotiable, ${name}. Skipping it spikes cortisol and makes 3pm cravings 10x harder. Eat protein and log it in ${foodApp} — now.`,
     };
   });
 });
 
 // ── 12:30 PM — LUNCH + STEPS ─────────────────────────────────────────────────
 exports.push1230 = onSchedule({ schedule: '30 12 * * *', timeZone: TIMEZONE }, async () => {
-  await sendToAllUsers('12:30', ({ checkin }) => {
+  await sendToAllUsers('12:30', ({ checkin, name, foodApp }) => {
     if (checkin.lunch === 'yes') {
-      return { title: '✅ Coach Angela', body: 'Lunch logged. Now check your steps — where are you at? Keep moving through the afternoon.' };
+      return { title: '✅ Coach', body: `Lunch logged, ${name}. Now check your steps — where are you at? Keep moving through the afternoon.` };
     }
     return {
-      title: '🥗 Coach Angela — 12:30 PM',
-      body: 'Lunch time. Don\'t skip it — an empty gut this afternoon is your biggest enemy. Protein first, log it in MFP, then check your step count.',
+      title: '🥗 Coach — 12:30 PM',
+      body: `Lunch time, ${name}. Don't skip it — an empty gut this afternoon is your biggest enemy. Protein first, log it in ${foodApp}, then check your step count.`,
     };
   });
 });
 
 // ── 3:00 PM — DANGER ZONE ────────────────────────────────────────────────────
 exports.push1500 = onSchedule({ schedule: '0 15 * * *', timeZone: TIMEZONE }, async () => {
-  await sendToAllUsers('15:00', ({ checkin, alcoholStreak }) => {
+  await sendToAllUsers('15:00', ({ checkin, alcoholStreak, name }) => {
     if (checkin.alcohol === 'yes') {
-      return { title: '😤 Coach Angela', body: 'Today already had a slip — that\'s done. Don\'t let it turn into two. Reset right now: hot tea, no exceptions.' };
+      return { title: '😤 Coach', body: `${name}, today already had a slip — that's done. Don't let it turn into two. Reset right now: hot tea, no exceptions.` };
     }
     const streakLine = alcoholStreak >= 3 ? ` You're ${alcoholStreak} days clean — don't hand it away now.` : '';
     return {
-      title: '⚠️ Coach Angela — 3:00 PM',
-      body: `Danger zone. This is when cravings hit hardest and willpower is lowest. Hot tea, right now. Feeling tempted? Open the app and hit the craving button.${streakLine}`,
+      title: '⚠️ Coach — 3:00 PM',
+      body: `Danger zone, ${name}. This is when cravings hit hardest and willpower is lowest. Hot tea, right now. Feeling tempted? Open the app and hit the craving button.${streakLine}`,
     };
   });
 });
 
 // ── 5:00 PM — WORKOUT ────────────────────────────────────────────────────────
 exports.push1700 = onSchedule({ schedule: '0 17 * * *', timeZone: TIMEZONE }, async () => {
-  await sendToAllUsers('17:00', ({ checkin }) => {
+  await sendToAllUsers('17:00', ({ checkin, name }) => {
     if (checkin.workout === 'full' || checkin.workout === 'partial') {
-      return { title: '💪 Coach Angela', body: 'Workout\'s in the books. Proud of you — now finish the day just as strong.' };
+      return { title: '💪 Coach', body: `Workout's in the books, ${name}. Proud of you — now finish the day just as strong.` };
     }
     if (checkin.workout === 'rest') {
-      return { title: '😴 Coach Angela', body: 'Planned rest day — good. Recovery is part of the plan, not an excuse. Still hit your steps and water.' };
+      return { title: '😴 Coach', body: `Planned rest day, ${name} — good. Recovery is part of the plan, not an excuse. Still hit your steps and water.` };
     }
     return {
-      title: '💪 Coach Angela — 5:00 PM',
-      body: 'Workout time. No excuse not to go. You don\'t have to feel like it — you just have to start. Shoes on, everything else follows.',
+      title: '💪 Coach — 5:00 PM',
+      body: `Workout time, ${name}. No excuse not to go. You don't have to feel like it — you just have to start. Shoes on, everything else follows.`,
     };
   });
 });
 
 // ── 8:00 PM — DINNER + CLOSE DAY ─────────────────────────────────────────────
 exports.push2000 = onSchedule({ schedule: '0 20 * * *', timeZone: TIMEZONE }, async () => {
-  await sendToAllUsers('20:00', ({ checkin }) => {
+  await sendToAllUsers('20:00', ({ checkin, name, foodApp }) => {
     if (checkin.dinner === 'yes') {
-      return { title: '✅ Coach Angela', body: 'Dinner logged. Check your final step count and water total, then start winding down.' };
+      return { title: '✅ Coach', body: `Dinner logged, ${name}. Check your final step count and water total, then start winding down.` };
     }
     return {
-      title: '🍽️ Coach Angela — 8:00 PM',
-      body: 'Log dinner in MFP before you close the day. No skipping — incomplete logging is incomplete accountability. Then check your steps.',
+      title: '🍽️ Coach — 8:00 PM',
+      body: `Log dinner in ${foodApp} before you close the day, ${name}. No skipping — incomplete logging is incomplete accountability. Then check your steps.`,
     };
   });
 });
 
 // ── 9:30 PM — SCREENS OFF / DAILY RECAP ──────────────────────────────────────
 exports.push2130 = onSchedule({ schedule: '30 21 * * *', timeZone: TIMEZONE }, async () => {
-  await sendToAllUsers('21:30', ({ checkin }) => {
+  await sendToAllUsers('21:30', ({ checkin, name, stepGoal }) => {
     const hasData = checkin && Object.keys(checkin).length > 2;
-    const score = hasData ? calcScore(checkin) : null;
+    const score = hasData ? calcScore(checkin, stepGoal) : null;
     const scoreLine = score !== null ? ` Today's score: ${score}/10.` : '';
     return {
-      title: '🌙 Coach Angela — 9:30 PM',
-      body: `Screens off. Sleep by 10 — that's when you actually change.${scoreLine} Tomorrow, go again.`,
+      title: '🌙 Coach — 9:30 PM',
+      body: `Screens off, ${name}. Sleep by 10 — that's when you actually change.${scoreLine} Tomorrow, go again.`,
     };
   });
 });

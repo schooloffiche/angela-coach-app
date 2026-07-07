@@ -8,7 +8,10 @@
 <meta name="theme-color" content="#1A2E2B">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
-<title>Coach — Angela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<title>Coach</title>
 <style>
 :root {
   --teal: #0F6E56;
@@ -22,10 +25,18 @@
   --purple: #3C3489;
   --purple-lt: #EEEDFE;
   --white: #ffffff;
-  --off: #f7f7f5;
-  --border: #e8e8e8;
-  --gray: #888;
-  --dark-gray: #444;
+  --cream: #FBF6EE;
+  --off: #FBF6EE;
+  --border: #EDE0CC;
+  --border-soft: #F1E7D4;
+  --gray: #93887a;
+  --dark-gray: #4a423c;
+  --coral-lt: #FAECE7;
+  --coral-mid: #F0997B;
+  --coral: #D85A30;
+  --coral-dark: #993C1D;
+  --coral-darkest: #712B13;
+  --font-voice: 'Lora', Georgia, serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: -apple-system, Arial, sans-serif; background: var(--off); color: var(--dark-gray); min-height: 100vh; max-width: 430px; margin: 0 auto; }
@@ -35,14 +46,14 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .auth-screen.hidden { display: none; }
 .auth-logo { font-size: 34px; margin-bottom: 6px; }
 .auth-title { font-size: 22px; font-weight: 700; color: white; margin-bottom: 4px; }
-.auth-sub { font-size: 13px; color: #7aaa99; margin-bottom: 26px; line-height: 1.5; }
+.auth-sub { font-size: 13px; color: #e3b8a3; margin-bottom: 26px; line-height: 1.5; }
 .auth-screen input { margin-bottom: 12px; }
 .auth-error { color: #ff9d8f; font-size: 12px; margin-bottom: 10px; min-height: 16px; }
 .auth-btn-row { display: flex; gap: 10px; margin-top: 4px; }
 .auth-btn { flex: 1; border: none; border-radius: 10px; padding: 13px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
-.auth-btn.primary { background: var(--teal-mid); color: white; }
+.auth-btn.primary { background: var(--coral); color: white; }
 .auth-btn.secondary { background: rgba(255,255,255,0.08); color: white; }
-.auth-note { font-size: 11px; color: #557; color: #6b8f81; margin-top: 18px; text-align: center; line-height: 1.5; }
+.auth-note { font-size: 11px; color: #b89a86; margin-top: 18px; text-align: center; line-height: 1.5; }
 
 #app.hidden { display: none; }
 
@@ -50,23 +61,23 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .nav { background: var(--dark); color: white; padding: 16px 20px 0; position: sticky; top: 0; z-index: 100; }
 .nav-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .nav-title { font-size: 18px; font-weight: 700; }
-.nav-date { font-size: 11px; color: #7aaa99; }
+.nav-date { font-size: 11px; color: #d9a98f; }
 .nav-day { font-size: 12px; color: #ffd080; font-weight: 600; }
-.nav-tabs { display: flex; gap: 2px; }
-.nav-tab { flex: 1; padding: 8px 4px; font-size: 10px; font-weight: 700; text-align: center; color: #7aaa99; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; }
-.nav-tab.active { color: var(--teal-mid); border-bottom-color: var(--teal-mid); }
+.nav-tabs { display: flex; gap: 2px; overflow-x: auto; }
+.nav-tab { flex: 1; padding: 8px 4px; font-size: 10px; font-weight: 700; text-align: center; color: #c99b85; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; }
+.nav-tab.active { color: var(--coral-mid); border-bottom-color: var(--coral-mid); }
 
 /* PAGES */
 .page { display: none; padding: 16px 14px 80px; }
 .page.active { display: block; }
 
 /* COACH BANNER */
-.coach-banner { background: var(--dark); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
-.coach-banner::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: rgba(29,158,117,0.15); border-radius: 50%; }
-.coach-emoji { font-size: 28px; margin-bottom: 6px; }
-.coach-label { font-size: 10px; font-weight: 700; color: var(--teal-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-.coach-msg { font-size: 14px; color: white; line-height: 1.6; font-weight: 500; }
-.coach-sub { font-size: 11px; color: #7aaa99; margin-top: 6px; }
+.coach-banner { background: var(--white); border: 0.5px solid var(--border); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.coach-banner::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: var(--coral-lt); border-radius: 50%; }
+.coach-emoji { font-size: 28px; margin-bottom: 6px; position: relative; }
+.coach-label { font-size: 10px; font-weight: 700; color: var(--coral-dark); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; position: relative; }
+.coach-msg { font-size: 14.5px; color: var(--coral-darkest); line-height: 1.65; font-weight: 500; font-family: var(--font-voice); font-style: italic; position: relative; }
+.coach-sub { font-size: 11px; color: var(--gray); margin-top: 6px; position: relative; }
 
 /* NOTIFICATION BANNER */
 .notif-banner { background: var(--amber-lt); border: 0.5px solid #f0dfb8; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 12px; color: var(--dark-gray); display: flex; align-items: center; gap: 10px; }
@@ -75,14 +86,15 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .notif-ok { background: var(--teal-lt); border-color: #bfe6d8; color: var(--teal); }
 
 /* STREAK ROW */
-.streak-row { display: flex; gap: 8px; margin-bottom: 14px; }
-.streak-card { flex: 1; background: white; border-radius: 12px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; }
-.streak-num { font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 3px; }
+.streak-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.streak-card { flex: 1; background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; }
+.streak-num { font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 3px; color: var(--coral-dark); }
 .streak-label { font-size: 9px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
 .streak-icon { font-size: 14px; margin-bottom: 4px; }
+.streak-sub-line { font-size: 11px; color: var(--gray); text-align: center; margin-bottom: 14px; }
 
 /* SCORE */
-.score-card { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+.score-card { background: white; border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
 .score-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 0; border: 3px solid var(--border); }
 .score-num { font-size: 22px; font-weight: 700; line-height: 1; }
 .score-denom { font-size: 10px; color: var(--gray); }
@@ -92,10 +104,10 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 
 /* CHECKLIST */
 .section-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; margin-top: 4px; }
-.check-card { background: white; border-radius: 14px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
-.check-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid #f5f5f5; cursor: pointer; transition: background 0.1s; }
+.check-card { background: white; border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+.check-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid var(--border-soft); cursor: pointer; transition: background 0.1s; }
 .check-item:last-child { border-bottom: none; }
-.check-item:active { background: #f8f8f8; }
+.check-item:active { background: var(--cream); }
 .check-box { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 13px; }
 .check-box.done { background: var(--teal); border-color: var(--teal); color: white; }
 .check-box.failed { background: var(--red); border-color: var(--red); color: white; }
@@ -105,53 +117,71 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .check-icon { font-size: 18px; flex-shrink: 0; }
 
 /* CRAVING BUTTON */
-.craving-btn { background: var(--red); color: white; border: none; border-radius: 14px; padding: 16px; width: 100%; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.craving-btn { background: var(--coral); color: white; border: none; border-radius: 16px; padding: 16px; width: 100%; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .craving-btn:active { opacity: 0.85; }
 
 /* CRAVING PANEL */
-.craving-panel { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: none; }
+.craving-choice { display: flex; gap: 8px; margin-bottom: 14px; }
+.craving-choice.hidden { display: none; }
+.craving-choice-btn { flex: 1; background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 8px; text-align: center; cursor: pointer; font-family: inherit; }
+.craving-choice-btn .cc-emoji { font-size: 24px; display: block; margin-bottom: 6px; }
+.craving-choice-btn .cc-label { font-size: 12px; font-weight: 700; color: var(--dark); }
+.craving-panel { background: white; border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: none; }
 .craving-panel.open { display: block; }
 .craving-panel h3 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
 .craving-panel p { font-size: 12px; color: var(--gray); margin-bottom: 12px; line-height: 1.5; }
-.drink-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid #f5f5f5; font-size: 12px; }
+.drink-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); font-size: 12px; }
 .drink-item:last-child { border-bottom: none; }
 .drink-emoji { font-size: 18px; flex-shrink: 0; width: 24px; }
 .drink-body { flex: 1; }
 .drink-name { font-weight: 600; color: var(--dark); margin-bottom: 1px; font-size: 13px; }
 .drink-detail { color: var(--gray); }
-.craving-msg { background: var(--teal-lt); border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--teal); line-height: 1.6; font-weight: 600; }
+.craving-msg { background: var(--coral-lt); border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--coral-darkest); line-height: 1.6; font-weight: 600; font-family: var(--font-voice); font-style: italic; }
 .craving-count { font-size: 11px; color: var(--gray); margin-top: 8px; text-align: center; }
+.craving-back { background: none; border: none; color: var(--gray); font-size: 11px; text-decoration: underline; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 
 /* INPUT */
-.input-card { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
+.input-card { background: white; border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
 .input-card h3 { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
-.input-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 0.5px solid #f5f5f5; }
+.input-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); }
 .input-row:last-child { border-bottom: none; }
 .input-label { font-size: 12px; color: var(--dark-gray); flex: 1; font-weight: 500; }
-.input-val { font-size: 13px; font-weight: 700; color: var(--teal); min-width: 50px; text-align: right; }
-input[type=number], input[type=text], input[type=email], input[type=password], textarea, select {
+.input-val { font-size: 13px; font-weight: 700; color: var(--coral-dark); min-width: 50px; text-align: right; }
+input[type=number], input[type=text], input[type=email], input[type=password], input[type=date], textarea, select {
   border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px;
   font-size: 13px; font-family: inherit; color: var(--dark); width: 100%;
-  background: #fafafa; outline: none; margin-top: 4px;
+  background: #fffdf9; outline: none; margin-top: 4px;
 }
 .auth-screen input { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15); color: white; }
-.auth-screen input::placeholder { color: #7aaa99; }
-input:focus, textarea:focus, select:focus { border-color: var(--teal); }
+.auth-screen input::placeholder { color: #cf9c88; }
+input:focus, textarea:focus, select:focus { border-color: var(--coral); }
 textarea { resize: none; height: 70px; }
 .save-btn { background: var(--teal); color: white; border: none; border-radius: 10px; padding: 11px; width: 100%; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 10px; }
 .save-btn:active { opacity: 0.85; }
 .save-btn.secondary { background: var(--dark); }
+.save-btn.coral { background: var(--coral); }
 .save-btn.ghost { background: transparent; color: var(--red); border: 1.5px solid var(--red-lt); }
+.half-row { display: flex; gap: 8px; }
+.half-row > div { flex: 1; }
+
+/* MEASUREMENTS */
+.measure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+.measure-field label { font-size: 11px; color: var(--gray); font-weight: 600; display: block; margin-bottom: 2px; }
 
 /* WEIGHT LOG */
-.wt-entry { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid #f5f5f5; font-size: 13px; }
+.wt-entry { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); font-size: 13px; }
 .wt-entry:last-child { border-bottom: none; }
 .wt-date { color: var(--gray); }
-.wt-val { font-weight: 700; color: var(--teal); }
+.wt-val { font-weight: 700; color: var(--coral-dark); }
 .wt-diff { font-size: 11px; }
+.ms-entry { padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); font-size: 12px; }
+.ms-entry:last-child { border-bottom: none; }
+.ms-entry-date { color: var(--gray); font-weight: 600; margin-bottom: 3px; }
+.ms-entry-vals { color: var(--dark-gray); line-height: 1.6; }
 
 /* HISTORY */
-.hist-day { background: white; border-radius: 12px; border: 0.5px solid var(--border); padding: 14px 16px; margin-bottom: 10px; }
+.hist-day { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
+.hist-day:active { background: var(--cream); }
 .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .hist-date { font-size: 13px; font-weight: 700; color: var(--dark); }
 .hist-score { font-size: 13px; font-weight: 700; }
@@ -159,19 +189,26 @@ textarea { resize: none; height: 70px; }
 .hist-pill { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600; }
 .pill-done { background: var(--teal-lt); color: var(--teal); }
 .pill-miss { background: var(--red-lt); color: var(--red); }
+.hist-edit-hint { font-size: 10px; color: var(--gray); margin-top: 6px; }
 
 /* GOAL CARD */
-.goal-card { background: var(--dark); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+.goal-card { background: var(--dark); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
 .goal-card h2 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
-.goal-card p { font-size: 11px; color: #7aaa99; margin-bottom: 12px; }
+.goal-card p { font-size: 11px; color: #d9a98f; margin-bottom: 12px; }
 .goal-progress { background: rgba(255,255,255,0.1); border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 6px; }
-.goal-fill { height: 100%; background: var(--teal-mid); border-radius: 8px; transition: width 0.5s; }
-.goal-stats { display: flex; justify-content: space-between; font-size: 11px; color: #aaccbb; }
+.goal-fill { height: 100%; background: var(--coral-mid); border-radius: 8px; transition: width 0.5s; }
+.goal-stats { display: flex; justify-content: space-between; font-size: 11px; color: #f0c9b8; }
+
+/* MACROS */
+.macro-grid { display: flex; gap: 8px; margin-top: 4px; }
+.macro-item { flex: 1; text-align: center; background: rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 6px; }
+.macro-num { font-size: 18px; font-weight: 700; color: white; }
+.macro-label { font-size: 10px; color: #f0c9b8; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 2px; }
 
 /* BOTTOM NAV */
 .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: white; border-top: 0.5px solid var(--border); display: flex; padding: 8px 0 16px; z-index: 100; }
 .bn-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; border: none; background: transparent; cursor: pointer; padding: 6px 0; font-family: inherit; color: var(--gray); }
-.bn-btn.active { color: var(--teal); }
+.bn-btn.active { color: var(--coral); }
 .bn-icon { font-size: 20px; }
 .bn-label { font-size: 9px; font-weight: 600; }
 
@@ -184,12 +221,6 @@ textarea { resize: none; height: 70px; }
 .sync-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--teal-mid); margin-right:5px; vertical-align:middle; }
 .sync-dot.off { background: var(--red); }
 .link-btn { background:none;border:none;color:var(--gray);font-size:11px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:6px 0; }
-
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
-.modal-overlay.open { display: flex; }
-.modal { background: white; border-radius: 20px 20px 0 0; padding: 20px 20px 36px; width: 100%; max-width: 430px; }
-.modal h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
-.modal-close { float: right; background: #f0f0f0; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
@@ -197,8 +228,9 @@ textarea { resize: none; height: 70px; }
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-logo">💪</div>
-  <div class="auth-title" id="authTitle">Coach — Angela</div>
+  <div class="auth-title" id="authTitle">Coach</div>
   <div class="auth-sub">This app is just for you. Create your account once, then sign in with the same email on any device to keep everything in sync.</div>
+  <input type="text" id="auth-firstname" placeholder="First name" autocomplete="given-name">
   <input type="email" id="auth-email" placeholder="Email" autocomplete="username">
   <input type="password" id="auth-password" placeholder="Password (6+ characters)" autocomplete="current-password">
   <div class="auth-error" id="authError"></div>
@@ -206,7 +238,7 @@ textarea { resize: none; height: 70px; }
     <button class="auth-btn secondary" onclick="handleSignUp()">Create Account</button>
     <button class="auth-btn primary" onclick="handleSignIn()">Sign In</button>
   </div>
-  <div class="auth-note">First time here? Tap "Create Account".<br>Already set up? Tap "Sign In".</div>
+  <div class="auth-note">First time here? Enter your first name, then tap "Create Account".<br>Already set up? Email + password, then "Sign In".</div>
 </div>
 
 <!-- APP -->
@@ -215,7 +247,7 @@ textarea { resize: none; height: 70px; }
 <div class="nav">
   <div class="nav-top">
     <div>
-      <div class="nav-title">Coach Angela 💪</div>
+      <div class="nav-title" id="navTitle">Coach 💪</div>
       <div class="nav-date" id="navDate"></div>
     </div>
     <div style="text-align:right;">
@@ -227,6 +259,7 @@ textarea { resize: none; height: 70px; }
     <button class="nav-tab active" onclick="showPage('today',this)">Today</button>
     <button class="nav-tab" onclick="showPage('checkin',this)">Check-In</button>
     <button class="nav-tab" onclick="showPage('weight',this)">Weight</button>
+    <button class="nav-tab" onclick="showPage('macros',this)">Profile</button>
     <button class="nav-tab" onclick="showPage('history',this)">History</button>
     <button class="nav-tab" onclick="showPage('goals',this)">Goals</button>
   </div>
@@ -250,25 +283,26 @@ textarea { resize: none; height: 70px; }
   <div class="streak-row">
     <div class="streak-card">
       <div class="streak-icon">🚫🍷</div>
-      <div class="streak-num" id="streakAlcohol" style="color:var(--teal)">0</div>
+      <div class="streak-num" id="streakAlcohol">0</div>
       <div class="streak-label">Alcohol<br>Free Days</div>
     </div>
     <div class="streak-card">
       <div class="streak-icon">🚫🍬</div>
-      <div class="streak-num" id="streakSugar" style="color:var(--teal)">0</div>
+      <div class="streak-num" id="streakSugar">0</div>
       <div class="streak-label">Sugar<br>Free Days</div>
     </div>
     <div class="streak-card">
       <div class="streak-icon">💪</div>
-      <div class="streak-num" id="streakWorkout" style="color:var(--purple)">0</div>
+      <div class="streak-num" id="streakWorkout">0</div>
       <div class="streak-label">Workouts<br>This Week</div>
     </div>
     <div class="streak-card">
       <div class="streak-icon">🌅</div>
-      <div class="streak-num" id="streakMobility" style="color:var(--amber)">0</div>
+      <div class="streak-num" id="streakMobility">0</div>
       <div class="streak-label">Mobility<br>Streak</div>
     </div>
   </div>
+  <div class="streak-sub-line" id="alcoholAccountabilityLine">Best streak: 0 days · 0 slips all-time</div>
 
   <div class="score-card" id="scoreCard">
     <div class="score-circle" id="scoreCircle">
@@ -284,19 +318,26 @@ textarea { resize: none; height: 70px; }
   <div class="section-label">Today's Habits</div>
   <div class="check-card" id="todayChecklist"></div>
 
-  <button class="craving-btn" onclick="toggleCraving()">
+  <button class="craving-btn" onclick="toggleCravingChoice()">
     🆘 I'm having a craving — help me
   </button>
 
+  <div class="craving-choice hidden" id="cravingChoice">
+    <div class="craving-choice-btn" onclick="openCraving('alcohol')">
+      <span class="cc-emoji">🍷</span>
+      <span class="cc-label">Alcohol</span>
+    </div>
+    <div class="craving-choice-btn" onclick="openCraving('sugar')">
+      <span class="cc-emoji">🍬</span>
+      <span class="cc-label">Something sweet</span>
+    </div>
+  </div>
+
   <div class="craving-panel" id="cravingPanel">
-    <h3>You've got this. Here's what to do right now.</h3>
+    <button class="craving-back" onclick="closeCraving()">← back</button>
+    <h3 id="cravingTitle">You've got this. Here's what to do right now.</h3>
     <p id="cravingMotivation"></p>
-    <div class="drink-item"><div class="drink-emoji">🫧</div><div class="drink-body"><div class="drink-name">Sparkling water + fresh lime</div><div class="drink-detail">Squeeze half a lime over ice with sparkling water. Feels like a drink, zero consequences.</div></div></div>
-    <div class="drink-item"><div class="drink-emoji">🍹</div><div class="drink-body"><div class="drink-name">Virgin Paloma</div><div class="drink-detail">Grapefruit juice + sparkling water + lime + salt rim. Feels like a real cocktail.</div></div></div>
-    <div class="drink-item"><div class="drink-emoji">🌿</div><div class="drink-body"><div class="drink-name">Sparkling water + muddled mint + lime</div><div class="drink-detail">Muddle a few mint leaves, add ice, sparkling water, squeeze of lime. Virgin mojito essentially.</div></div></div>
-    <div class="drink-item"><div class="drink-emoji">🫖</div><div class="drink-body"><div class="drink-name">Hot tea with zero sugar syrup</div><div class="drink-detail">Your afternoon tea habit — this is already part of your routine. Make it now.</div></div></div>
-    <div class="drink-item"><div class="drink-emoji">🍋</div><div class="drink-body"><div class="drink-name">Sparkling water + cucumber + lemon</div><div class="drink-detail">Slice cucumber and lemon into a glass of sparkling water. Spa water — refreshing and sophisticated.</div></div></div>
-    <div class="drink-item"><div class="drink-emoji">🥤</div><div class="drink-body"><div class="drink-name">Kombucha</div><div class="drink-detail">GT's Original or Ginger Lemon — slightly fizzy, complex flavor, feels like a treat.</div></div></div>
+    <div id="cravingSuggestions"></div>
     <div class="craving-msg" id="cravingMsg"></div>
     <div class="craving-count" id="cravingCount"></div>
   </div>
@@ -305,6 +346,12 @@ textarea { resize: none; height: 70px; }
 
 <!-- CHECK-IN PAGE -->
 <div class="page" id="page-checkin">
+  <div class="input-card">
+    <h3>📅 Which day is this for?</h3>
+    <input type="date" id="ci-date" onchange="loadCheckinForm(this.value)" />
+    <div style="font-size:11px;color:var(--gray);margin-top:6px;" id="ci-date-hint">Editing today</div>
+  </div>
+
   <div class="input-card">
     <h3>🌅 Morning</h3>
     <div style="margin-bottom:8px;">
@@ -325,7 +372,7 @@ textarea { resize: none; height: 70px; }
       </select>
     </div>
     <div>
-      <div class="input-label">Breakfast logged in MFP?</div>
+      <div class="input-label" id="lbl-breakfast-app">Breakfast logged in MyFitnessPal?</div>
       <select id="ci-breakfast">
         <option value="">— select —</option>
         <option value="yes">✅ Logged</option>
@@ -338,7 +385,7 @@ textarea { resize: none; height: 70px; }
   <div class="input-card">
     <h3>☀️ Midday</h3>
     <div style="margin-bottom:8px;">
-      <div class="input-label">Lunch logged in MFP?</div>
+      <div class="input-label" id="lbl-lunch-app">Lunch logged in MyFitnessPal?</div>
       <select id="ci-lunch">
         <option value="">— select —</option>
         <option value="yes">✅ Logged</option>
@@ -369,7 +416,7 @@ textarea { resize: none; height: 70px; }
       <input type="text" id="ci-workout-detail" placeholder="e.g. Push day, 30 min walking" />
     </div>
     <div>
-      <div class="input-label">Did you log it in Caliber?</div>
+      <div class="input-label" id="lbl-caliber-app">Did you log it in Caliber?</div>
       <select id="ci-caliber">
         <option value="">— select —</option>
         <option value="yes">✅ Yes</option>
@@ -402,7 +449,7 @@ textarea { resize: none; height: 70px; }
   <div class="input-card">
     <h3>🌙 Evening Close</h3>
     <div style="margin-bottom:8px;">
-      <div class="input-label">Dinner logged in MFP?</div>
+      <div class="input-label" id="lbl-dinner-app">Dinner logged in MyFitnessPal?</div>
       <select id="ci-dinner">
         <option value="">— select —</option>
         <option value="yes">✅ Logged</option>
@@ -424,7 +471,7 @@ textarea { resize: none; height: 70px; }
     </div>
   </div>
 
-  <button class="save-btn" onclick="saveCheckin()">💾 Save Today's Check-In</button>
+  <button class="save-btn coral" onclick="saveCheckin()">💾 Save Check-In</button>
 
 </div>
 
@@ -456,11 +503,141 @@ textarea { resize: none; height: 70px; }
 
   <div class="section-label">Weight History</div>
   <div class="check-card" id="weightHistory"></div>
+
+  <div class="input-card mt8">
+    <h3>📏 Body Measurements</h3>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Units</div>
+      <select id="ms-unit">
+        <option value="in">Inches</option>
+        <option value="cm">Centimeters</option>
+      </select>
+    </div>
+    <div class="measure-grid">
+      <div class="measure-field"><label>Waist</label><input type="number" id="ms-waist" step="0.1" /></div>
+      <div class="measure-field"><label>Chest</label><input type="number" id="ms-chest" step="0.1" /></div>
+      <div class="measure-field"><label>Thigh — Left</label><input type="number" id="ms-thigh-l" step="0.1" /></div>
+      <div class="measure-field"><label>Thigh — Right</label><input type="number" id="ms-thigh-r" step="0.1" /></div>
+      <div class="measure-field"><label>Calf — Left</label><input type="number" id="ms-calf-l" step="0.1" /></div>
+      <div class="measure-field"><label>Calf — Right</label><input type="number" id="ms-calf-r" step="0.1" /></div>
+      <div class="measure-field"><label>Bicep — Left</label><input type="number" id="ms-bicep-l" step="0.1" /></div>
+      <div class="measure-field"><label>Bicep — Right</label><input type="number" id="ms-bicep-r" step="0.1" /></div>
+    </div>
+    <button class="save-btn" onclick="saveMeasurements()">Save Measurements</button>
+  </div>
+
+  <div class="section-label">Measurement History</div>
+  <div class="check-card" id="measureHistory"></div>
+</div>
+
+<!-- MACROS / PROFILE PAGE -->
+<div class="page" id="page-macros">
+  <div class="input-card">
+    <h3>👤 Nutrition Profile</h3>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Fill this in once — update it anytime your goal changes. Built to work for anyone using this app, not just one person.</p>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Sex (used in the calorie formula)</div>
+      <select id="mc-sex">
+        <option value="">— select —</option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
+      </select>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Age</div>
+      <input type="number" id="mc-age" placeholder="e.g. 42" />
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Height</div>
+      <div class="half-row">
+        <input type="number" id="mc-height-ft" placeholder="Feet" />
+        <input type="number" id="mc-height-in" placeholder="Inches" />
+      </div>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Activity level (outside of planned workouts)</div>
+      <select id="mc-activity">
+        <option value="sedentary">Sedentary — desk job, little walking</option>
+        <option value="light">Lightly active — some daily walking</option>
+        <option value="moderate">Moderately active — on your feet a lot</option>
+        <option value="active">Very active — physically demanding day</option>
+      </select>
+    </div>
+    <div>
+      <div class="input-label">Goal</div>
+      <select id="mc-goal">
+        <option value="lose-gentle">Lose weight — gentle (~0.5 lb/wk)</option>
+        <option value="lose-moderate">Lose weight — moderate (~1 lb/wk)</option>
+        <option value="lose-faster">Lose weight — faster (~1.5 lb/wk)</option>
+        <option value="maintain">Maintain current weight</option>
+        <option value="gain-lean">Gain weight — lean (~0.25–0.5 lb/wk)</option>
+      </select>
+    </div>
+    <button class="save-btn" onclick="saveProfile()">Save Profile &amp; Calculate</button>
+  </div>
+
+  <div class="goal-card" id="macroResultCard" style="display:none;">
+    <h2>Your Daily Targets</h2>
+    <p>Program these into MyFitnessPal (or your app of choice) under Nutrition Goals → Customized.</p>
+    <div class="macro-grid">
+      <div class="macro-item"><div class="macro-num" id="mcCalories">—</div><div class="macro-label">Calories</div></div>
+      <div class="macro-item"><div class="macro-num" id="mcProtein">—</div><div class="macro-label">Protein</div></div>
+      <div class="macro-item"><div class="macro-num" id="mcCarbs">—</div><div class="macro-label">Carbs</div></div>
+      <div class="macro-item"><div class="macro-num" id="mcFat">—</div><div class="macro-label">Fat</div></div>
+    </div>
+    <div class="goal-stats" id="mcDetail" style="margin-top:10px;">—</div>
+  </div>
+
+  <div class="empty" id="macroEmpty">Fill in your profile above (sex, age, height) to see your calorie and macro targets.</div>
+
+  <div class="input-card">
+    <h3>⚙️ Preferences</h3>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">These personalize your check-in labels, score, and coach messages.</p>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Daily step goal</div>
+      <input type="number" id="pref-step-goal" placeholder="e.g. 10000" />
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Workout days per week (the rest are planned rest days)</div>
+      <input type="number" id="pref-workout-days" placeholder="e.g. 4" min="0" max="7" />
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Food logging app</div>
+      <select id="pref-food-app" onchange="toggleOtherField('pref-food-app','pref-food-app-other')">
+        <option value="MyFitnessPal">MyFitnessPal</option>
+        <option value="Lose It!">Lose It!</option>
+        <option value="Cronometer">Cronometer</option>
+        <option value="Noom">Noom</option>
+        <option value="other">Other</option>
+      </select>
+      <input type="text" id="pref-food-app-other" placeholder="App name" style="margin-top:6px;display:none;" />
+    </div>
+    <div>
+      <div class="input-label">Workout logging app</div>
+      <select id="pref-workout-app" onchange="toggleOtherField('pref-workout-app','pref-workout-app-other')">
+        <option value="Caliber">Caliber</option>
+        <option value="Strong">Strong</option>
+        <option value="Hevy">Hevy</option>
+        <option value="JEFIT">JEFIT</option>
+        <option value="other">Other</option>
+      </select>
+      <input type="text" id="pref-workout-app-other" placeholder="App name" style="margin-top:6px;display:none;" />
+    </div>
+    <button class="save-btn" onclick="savePreferences()">Save Preferences</button>
+  </div>
+
+  <div class="input-card">
+    <h3>ℹ️ How macros are calculated</h3>
+    <p style="font-size:12px;color:var(--gray);line-height:1.6;">
+      Uses the Mifflin-St Jeor formula for BMR × an activity multiplier for TDEE, then applies your goal's calorie adjustment based on your current logged weight. Protein is set to about 1g per lb of current bodyweight, fat to 25% of calories, and carbs fill the rest. This is a solid, widely-used estimate — not personalized medical or dietitian advice. Adjust based on real-world results after 2–3 weeks.
+    </p>
+  </div>
 </div>
 
 <!-- HISTORY PAGE -->
 <div class="page" id="page-history">
   <div class="section-label">Past Check-Ins</div>
+  <p style="font-size:11px;color:var(--gray);margin-bottom:10px;">Tap any day to edit it.</p>
   <div id="historyList"></div>
 </div>
 
@@ -488,15 +665,15 @@ textarea { resize: none; height: 70px; }
     </div>
     <div class="check-item" style="cursor:default;">
       <div class="check-icon">🚶</div>
-      <div class="check-body"><div class="check-title">10,000 steps every day</div><div class="check-sub">Walking pad + gym + daily movement.</div></div>
+      <div class="check-body"><div class="check-title" id="stepGoalTitle">10,000 steps every day</div><div class="check-sub">Walking pad + gym + daily movement.</div></div>
     </div>
     <div class="check-item" style="cursor:default;">
       <div class="check-icon">💪</div>
-      <div class="check-body"><div class="check-title">3–4 weight sessions per week</div><div class="check-sub">Push · Pull · Legs · Saturday full body</div></div>
+      <div class="check-body"><div class="check-title" id="workoutDaysTitle">3–4 weight sessions per week</div><div class="check-sub">Rest days within your plan are full credit.</div></div>
     </div>
     <div class="check-item" style="cursor:default;">
       <div class="check-icon">📱</div>
-      <div class="check-body"><div class="check-title">Log every meal in MFP</div><div class="check-sub">Every meal. No skipping.</div></div>
+      <div class="check-body"><div class="check-title" id="logMealsTitle">Log every meal in MyFitnessPal</div><div class="check-sub">Every meal. No skipping.</div></div>
     </div>
     <div class="check-item" style="cursor:default;">
       <div class="check-icon">💧</div>
@@ -518,13 +695,20 @@ textarea { resize: none; height: 70px; }
 
   <div class="input-card">
     <h3>🔄 Start a New Sprint</h3>
-    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Coming back from the cruise (or any break)? Reset the clock and start a fresh sprint today. Your check-in history and streaks calculation stay intact — only the sprint dates reset.</p>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Coming back from the cruise (or any break)? Set your own sprint length and start date. Your check-in history and streak math stay intact — only the sprint dates reset.</p>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Sprint length (days) — any number</div>
+      <input type="number" id="sprint-length-input" placeholder="e.g. 14" min="1" />
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Start date</div>
+      <input type="date" id="sprint-start-input" />
+    </div>
     <div style="margin-bottom:8px;">
       <div class="input-label">Goal weight (lbs)</div>
       <input type="number" id="goal-weight-input" step="0.1" />
     </div>
-    <button class="save-btn" onclick="startNewSprint(14)">Start New 14-Day Sprint</button>
-    <button class="save-btn secondary" onclick="startNewSprint(30)">Start New 30-Day Sprint</button>
+    <button class="save-btn coral" onclick="startNewSprint()">Start Sprint</button>
   </div>
 
   <button class="link-btn" onclick="handleSignOut()">Sign out</button>
@@ -557,8 +741,11 @@ if ('serviceWorker' in navigator) {
 let uid = null;
 let checkins = {};
 let weights = [];
+let measurements = [];
 let settings = defaultSettings();
-let unsubCheckins = null, unsubWeights = null, unsubSettings = null;
+let unsubCheckins = null, unsubWeights = null, unsubSettings = null, unsubMeasurements = null;
+let currentCheckinDate = todayStr();
+let currentCravingType = 'alcohol';
 
 function defaultSettings(){
   return {
@@ -566,7 +753,15 @@ function defaultSettings(){
     sprintLength: 14,
     goalWeight: 110,
     sprintHistory: [],
-    cravingCount: 0
+    cravingCount: 0,
+    lifetimeAlcoholSlips: 0,
+    sex: '', age: '', heightFt: '', heightIn: '', activityLevel: 'moderate', goalType: 'lose-moderate',
+    firstName: '',
+    stepGoal: 10000,
+    workoutDaysPerWeek: 4,
+    foodApp: 'MyFitnessPal', foodAppOther: '',
+    workoutApp: 'Caliber', workoutAppOther: '',
+    measurementUnit: 'in'
   };
 }
 
@@ -576,16 +771,26 @@ function todayStr(d){
   return `${y}-${m}-${day}`;
 }
 function parseDateStr(s){ const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+function firstName(){ return settings.firstName || 'there'; }
+function foodAppName(){ return (settings.foodApp === 'other' ? settings.foodAppOther : settings.foodApp) || 'MyFitnessPal'; }
+function workoutAppName(){ return (settings.workoutApp === 'other' ? settings.workoutAppOther : settings.workoutApp) || 'Caliber'; }
+function stepGoal(){ return parseInt(settings.stepGoal) || 10000; }
 
 // ── AUTH ─────────────────────────────────────────────────────────────────
 function authErr(msg){ document.getElementById('authError').textContent = msg || ''; }
 
 function handleSignUp(){
+  const fname = document.getElementById('auth-firstname').value.trim();
   const email = document.getElementById('auth-email').value.trim();
   const pw = document.getElementById('auth-password').value;
+  if(!fname){ authErr('Enter your first name.'); return; }
   if(!email || pw.length < 6){ authErr('Enter an email and a password of at least 6 characters.'); return; }
   authErr('Creating your account...');
   auth.createUserWithEmailAndPassword(email, pw)
+    .then((cred) => {
+      return db.collection('users').doc(cred.user.uid).collection('meta').doc('settings')
+        .set(Object.assign(defaultSettings(), { firstName: fname }));
+    })
     .catch((e) => authErr(e.message));
 }
 
@@ -599,7 +804,7 @@ function handleSignIn(){
 }
 
 function handleSignOut(){
-  if(!confirm('Sign out of Coach Angela on this device?')) return;
+  if(!confirm(`Sign out of Coach on this device, ${firstName()}?`)) return;
   cleanupSubscriptions();
   auth.signOut();
 }
@@ -608,8 +813,9 @@ function cleanupSubscriptions(){
   if(unsubCheckins) unsubCheckins();
   if(unsubWeights) unsubWeights();
   if(unsubSettings) unsubSettings();
-  unsubCheckins = unsubWeights = unsubSettings = null;
-  checkins = {}; weights = []; settings = defaultSettings();
+  if(unsubMeasurements) unsubMeasurements();
+  unsubCheckins = unsubWeights = unsubSettings = unsubMeasurements = null;
+  checkins = {}; weights = []; measurements = []; settings = defaultSettings();
 }
 
 auth.onAuthStateChanged((user) => {
@@ -618,6 +824,7 @@ auth.onAuthStateChanged((user) => {
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     authErr('');
+    currentCheckinDate = todayStr();
     subscribeData();
     initNotifications();
   } else {
@@ -638,6 +845,7 @@ function subscribeData(){
     } else {
       userRef.collection('meta').doc('settings').set(defaultSettings());
     }
+    document.title = `Coach — ${firstName()}`;
     renderAll();
   }, (err) => console.error('settings sync error', err));
 
@@ -652,6 +860,12 @@ function subscribeData(){
     snap.forEach((d) => weights.push(Object.assign({ id: d.id }, d.data())));
     renderAll();
   }, (err) => console.error('weights sync error', err));
+
+  unsubMeasurements = userRef.collection('measurements').orderBy('date', 'desc').onSnapshot((snap) => {
+    measurements = [];
+    snap.forEach((d) => measurements.push(Object.assign({ id: d.id }, d.data())));
+    renderAll();
+  }, (err) => console.error('measurements sync error', err));
 }
 
 function markSynced(ok){
@@ -728,27 +942,35 @@ if(messaging){
   });
 }
 
+function toggleOtherField(selectId, otherId){
+  const sel = document.getElementById(selectId);
+  const other = document.getElementById(otherId);
+  other.style.display = (sel.value === 'other') ? '' : 'none';
+}
+
 // ── COACH MESSAGES ───────────────────────────────────────────────────────
 function getCoachMessage(){
   const h = new Date().getHours();
   const td = checkins[todayStr()] || {};
   const streak = getStreaks();
+  const name = firstName();
+  const foodApp = foodAppName();
 
   if(td.alcohol === 'yes') return {
-    emoji:'😤', msg:'You had a drink. That\'s done — it doesn\'t define today or tomorrow. Reset right now. The streak restarts tomorrow and you know exactly how good you feel when you\'re clean.',
-    sub:'One slip doesn\'t erase your progress. Get back on track immediately.'
+    emoji:'😤', msg:`You had a drink, ${name}. That's done — it doesn't define today or tomorrow. Reset right now. The streak restarts tomorrow and you know exactly how good you feel when you're clean.`,
+    sub: `Your sprint just got a day longer, and that's slip #${settings.lifetimeAlcoholSlips || 1} since you started. The clock doesn't shorten because of a slip.`
   };
   if(h < 7 && !td.mobility) return {
-    emoji:'🌅', msg:'Good morning. Before you do anything else — get on that mat. 20 minutes of mobility. Your body needs it, your back needs it, and it sets the tone for every decision you make today.',
+    emoji:'🌅', msg:`Good morning, ${name}. Before you do anything else — get on that mat. 20 minutes of mobility. Your body needs it, and it sets the tone for every decision you make today.`,
     sub:'Water first, then mat. Go.'
   };
   if(h >= 7 && h < 9 && !td.breakfast) return {
     emoji:'🍳', msg:'Breakfast is non-negotiable. Skipping it spikes cortisol, crashes your blood sugar by 10 AM, and makes the afternoon cravings 10x harder to resist. Eat protein NOW.',
-    sub:'Eggs, Greek yogurt, protein shake — anything. Log it in MFP.'
+    sub:`Eggs, Greek yogurt, protein shake — anything. Log it in ${foodApp}.`
   };
   if(h >= 12 && h < 14 && !td.lunch) return {
-    emoji:'🥗', msg:'It\'s lunch time. Don\'t skip it — an empty gut in the afternoon is your biggest enemy. Protein first. Log it in MFP before you eat.',
-    sub:'Prepped chicken bowl · tuna sandwich · whatever you have. Eat it.'
+    emoji:'🥗', msg:'It\'s lunch time. Don\'t skip it — an empty gut in the afternoon is your biggest enemy. Protein first. Log it before you eat.',
+    sub:`Prepped chicken bowl · tuna sandwich · whatever you have. Log it in ${foodApp}.`
   };
   if(h >= 15 && h < 17 && td.alcohol === undefined) return {
     emoji:'⚠️', msg:'3 PM is the danger zone. This is when cravings hit hardest and willpower is lowest. Have your hot tea RIGHT NOW. If you feel tempted — hit the craving button below.',
@@ -759,12 +981,12 @@ function getCoachMessage(){
     sub:'30 minutes is all you need. Push. Pull. Legs. Whatever — just move.'
   };
   if(h >= 20 && !td.dinner) return {
-    emoji:'🍽️', msg:'Log your dinner in MFP before you close the day. No skipping — incomplete logging is incomplete accountability.',
-    sub:'Then check your steps. Did you hit 10k?'
+    emoji:'🍽️', msg:`Log your dinner in ${foodApp} before you close the day. No skipping — incomplete logging is incomplete accountability.`,
+    sub:'Then check your steps. Did you hit your goal?'
   };
 
   if(streak.alcohol >= 7) return {
-    emoji:'🔥', msg:`${streak.alcohol} days alcohol free. That is serious commitment. Your gut is healing, your sleep is deeper, your fat loss is accelerating. This is what it looks like when you mean it.`,
+    emoji:'🔥', msg:`${streak.alcohol} days alcohol free, ${name}. That is serious commitment. Your gut is healing, your sleep is deeper, your fat loss is accelerating. This is what it looks like when you mean it.`,
     sub:'Keep the streak alive. Every day adds to something real.'
   };
   if(streak.alcohol >= 3) return {
@@ -772,44 +994,70 @@ function getCoachMessage(){
     sub:'Stay the course.'
   };
 
-  if(h < 12) return { emoji:'💪', msg:'Today is another chance to prove to yourself that you\'re serious about this. Every clean day is a vote for the person you\'re becoming.', sub:'Check off your morning habits.' };
+  if(h < 12) return { emoji:'💪', msg:`Today is another chance to prove to yourself that you're serious about this, ${name}. Every clean day is a vote for the person you're becoming.`, sub:'Check off your morning habits.' };
   if(h < 17) return { emoji:'🎯', msg:'Midday check — are you on track? Steps, water, meals logged? Small consistent actions every single day beat perfect days followed by nothing.', sub:'Stay focused. You\'ve got this.' };
   return { emoji:'🌙', msg:'Close the day strong. Log dinner, check your steps, drink your water. How you finish today is how you start tomorrow.', sub:'Screens off by 9:30. Sleep is when you actually change.' };
 }
 
-function getCravingMessages(){
-  const msgs = [
-    'You set a goal and you are not there yet. A drink right now is a vote against the person you\'re becoming. The craving passes in 15 minutes. This moment does not.',
+function getCravingMessages(type){
+  const name = firstName();
+  if(type === 'sugar'){
+    return [
+      `The sugar craving is real, but so is the goal, ${name}. Reach for the berries, not the candy — you'll feel just as satisfied in ten minutes with zero guilt tomorrow.`,
+      'Sugar cravings pass in about 15 minutes. Drink a glass of water first — half the time it\'s dehydration wearing a candy costume.',
+      'You know how you feel after a sugar crash — foggy, tired, hungry again in an hour. You know how you feel after choosing protein and fiber instead — steady, clear, proud. Choose steady.',
+      `${name}, this craving is loud right now, but it's not in charge. You are. Make the swap, and prove to yourself — again — that you don't need it.`,
+      'Nobody regrets the dessert they skipped. Plenty of people regret the one that broke their streak. Make the choice future-you will thank you for.',
+    ];
+  }
+  return [
+    `You set a goal and you are not there yet, ${name}. A drink right now is a vote against the person you're becoming. The craving passes in 15 minutes. This moment does not.`,
     'Every single day you stay clean, your gut heals a little more, your sleep improves, your fat burns faster. One drink sets all of that back 24 hours. Is that drink worth one day of progress? It never is.',
     'You know how you feel the morning after a drink — bloated, backed up, low energy, guilt. You know how you feel after a clean night — clearer, lighter, proud. Choose the feeling you want tomorrow morning.',
     'The streak is real. The progress is real. The discomfort of this craving is temporary. The results of your commitment are permanent. Pick up that sparkling water and get through the next 20 minutes.',
-    'Angela — you set a goal. You\'re not there yet. Every clean day is one day closer. Don\'t let a temporary craving steal a permanent result from you.',
+    `${name} — you set a goal. You're not there yet. Every clean day is one day closer. Don't let a temporary craving steal a permanent result from you.`,
     'This craving is loud right now, but it is not in charge. You are. Get up, make the mocktail, and prove to yourself — again — that you don\'t need it.',
     'Nobody regrets the drink they didn\'t have. Everybody regrets the one that reset their streak. Make the choice future-you will thank you for.',
   ];
-  return msgs[Math.floor(Math.random() * msgs.length)];
 }
 
 // ── STREAKS ──────────────────────────────────────────────────────────────
 function getStreaks(){
-  const dates = Object.keys(checkins).sort().reverse();
+  const datesDesc = Object.keys(checkins).sort().reverse();
   let alcohol = 0, sugar = 0, mobility = 0;
-  for(let d of dates){ if(checkins[d].alcohol === 'no') alcohol++; else break; }
-  for(let d of dates){ if(checkins[d].sugar === 'no') sugar++; else break; }
-  for(let d of dates){ if(checkins[d].mobility === 'yes' || checkins[d].mobility === 'partial') mobility++; else break; }
+  for(let d of datesDesc){ if(checkins[d].alcohol === 'no') alcohol++; else break; }
+  for(let d of datesDesc){ if(checkins[d].sugar === 'no') sugar++; else break; }
+  for(let d of datesDesc){ if(checkins[d].mobility === 'yes' || checkins[d].mobility === 'partial') mobility++; else break; }
+
+  const datesAsc = Object.keys(checkins).sort();
+  let run = 0, alcoholBest = 0;
+  for(let d of datesAsc){ if(checkins[d].alcohol === 'no'){ run++; alcoholBest = Math.max(alcoholBest, run); } else { run = 0; } }
+  alcoholBest = Math.max(alcoholBest, alcohol);
+
   const now = new Date();
   const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
   weekStart.setHours(0,0,0,0);
   let workouts = 0;
-  dates.forEach((d) => {
+  datesDesc.forEach((d) => {
     const dd = parseDateStr(d);
     if(dd >= weekStart && checkins[d].workout === 'full') workouts++;
   });
-  return { alcohol, sugar, mobility, workouts };
+  return { alcohol, alcoholBest, sugar, mobility, workouts };
+}
+
+function countRestDaysInWeekUpTo(dateStr){
+  const d = parseDateStr(dateStr);
+  const weekStart = new Date(d); weekStart.setDate(d.getDate() - d.getDay()); weekStart.setHours(0,0,0,0);
+  let count = 0;
+  Object.keys(checkins).forEach((k) => {
+    const kd = parseDateStr(k);
+    if(kd >= weekStart && kd <= d && checkins[k].workout === 'rest') count++;
+  });
+  return count;
 }
 
 // ── SCORE ────────────────────────────────────────────────────────────────
-function calcScore(data){
+function calcScore(data, dateStr){
   if(!data) return { score:0, details:[] };
   let pts = 0;
   const details = [];
@@ -820,10 +1068,16 @@ function calcScore(data){
   if(data.sugar === 'no'){ pts+=1; details.push('No sugar ✅'); }
   if(data.workout === 'full'){ pts+=2; details.push('Full workout ✅'); }
   else if(data.workout === 'partial'){ pts+=1; details.push('Partial workout'); }
-  else if(data.workout === 'rest'){ pts+=0.5; details.push('Rest day'); }
+  else if(data.workout === 'rest'){
+    const restAllowance = Math.max(0, 7 - (parseInt(settings.workoutDaysPerWeek)||4));
+    const restCount = dateStr ? countRestDaysInWeekUpTo(dateStr) : 1;
+    if(restCount <= restAllowance){ pts+=2; details.push('Planned rest day ✅'); }
+    else { pts+=0.5; details.push('Rest day (beyond plan)'); }
+  }
   const steps = parseInt(data.stepsFinal) || 0;
-  if(steps >= 10000){ pts+=1.5; details.push('10k steps ✅'); }
-  else if(steps >= 7500){ pts+=0.75; details.push('7.5k steps'); }
+  const goal = stepGoal();
+  if(steps >= goal){ pts+=1.5; details.push('Step goal ✅'); }
+  else if(steps >= goal*0.75){ pts+=0.75; details.push('75% of step goal'); }
   if(data.breakfast === 'yes') pts+=0.5;
   if(data.lunch === 'yes') pts+=0.5;
   if(data.dinner === 'yes') pts+=0.5;
@@ -836,14 +1090,30 @@ function calcScore(data){
 // ── RENDER ───────────────────────────────────────────────────────────────
 function renderAll(){
   markSynced(true);
+  applyDynamicLabels();
   renderToday();
   const weightPage = document.getElementById('page-weight');
-  if(weightPage && weightPage.classList.contains('active')) renderWeight();
+  if(weightPage && weightPage.classList.contains('active')){ renderWeight(); renderMeasurements(); }
   const histPage = document.getElementById('page-history');
   if(histPage && histPage.classList.contains('active')) renderHistory();
+  const macroPage = document.getElementById('page-macros');
+  if(macroPage && macroPage.classList.contains('active')) renderMacros();
   renderGoals();
   const gwInput = document.getElementById('goal-weight-input');
   if(gwInput && document.activeElement !== gwInput) gwInput.value = settings.goalWeight;
+}
+
+function applyDynamicLabels(){
+  const foodApp = foodAppName();
+  const workoutApp = workoutAppName();
+  document.getElementById('navTitle').textContent = `Coach 💪`;
+  const bf = document.getElementById('lbl-breakfast-app'); if(bf) bf.textContent = `Breakfast logged in ${foodApp}?`;
+  const ln = document.getElementById('lbl-lunch-app'); if(ln) ln.textContent = `Lunch logged in ${foodApp}?`;
+  const dn = document.getElementById('lbl-dinner-app'); if(dn) dn.textContent = `Dinner logged in ${foodApp}?`;
+  const cal = document.getElementById('lbl-caliber-app'); if(cal) cal.textContent = `Did you log it in ${workoutApp}?`;
+  const stepTitle = document.getElementById('stepGoalTitle'); if(stepTitle) stepTitle.textContent = `${stepGoal().toLocaleString()} steps every day`;
+  const woDaysTitle = document.getElementById('workoutDaysTitle'); if(woDaysTitle) woDaysTitle.textContent = `${parseInt(settings.workoutDaysPerWeek)||4} workout sessions per week`;
+  const logMealsTitle = document.getElementById('logMealsTitle'); if(logMealsTitle) logMealsTitle.textContent = `Log every meal in ${foodApp}`;
 }
 
 function renderToday(){
@@ -857,9 +1127,11 @@ function renderToday(){
   document.getElementById('streakSugar').textContent = s.sugar;
   document.getElementById('streakWorkout').textContent = s.workouts;
   document.getElementById('streakMobility').textContent = s.mobility;
+  document.getElementById('alcoholAccountabilityLine').textContent =
+    `Best streak: ${s.alcoholBest} day${s.alcoholBest===1?'':'s'} · ${settings.lifetimeAlcoholSlips||0} slip${(settings.lifetimeAlcoholSlips||0)===1?'':'s'} all-time`;
 
   const td = checkins[todayStr()];
-  const sc = calcScore(td);
+  const sc = calcScore(td, todayStr());
   const scoreEl = document.getElementById('scoreNum');
   const circleEl = document.getElementById('scoreCircle');
   if(td && Object.keys(td).length > 2){
@@ -875,13 +1147,14 @@ function renderToday(){
     document.getElementById('scoreDetail').textContent = 'Complete your check-in to get your daily score';
   }
 
+  const goal = stepGoal();
   const checks = [
     { label:'Morning Mobility', sub:'20 min on the mat', icon:'🌅', done: td?.mobility === 'yes', partial: td?.mobility === 'partial' },
     { label:'Alcohol Free', sub:'No exceptions', icon:'🚫', done: td?.alcohol === 'no', failed: td?.alcohol === 'yes' },
     { label:'No Desserts / Candy', sub:'Natural sugar from fruit is fine', icon:'🍬', done: td?.sugar === 'no', failed: td?.sugar === 'yes' },
-    { label:'Workout', sub: td?.workoutDetail || 'Push · Pull · Legs · Active · Saturday', icon:'💪', done: td?.workout === 'full', partial: td?.workout === 'partial' },
-    { label:'10,000 Steps', sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon:'🚶', done: (parseInt(td?.stepsFinal)||0) >= 10000, partial: (parseInt(td?.stepsFinal)||0) >= 7500 },
-    { label:'All Meals Logged in MFP', sub:'Breakfast + lunch + dinner', icon:'📱', done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' },
+    { label:'Workout', sub: td?.workoutDetail || (td?.workout === 'rest' ? 'Planned rest day' : 'Push · Pull · Legs · Active'), icon:'💪', done: td?.workout === 'full' || td?.workout === 'rest', partial: td?.workout === 'partial' },
+    { label:`${goal.toLocaleString()} Steps`, sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon:'🚶', done: (parseInt(td?.stepsFinal)||0) >= goal, partial: (parseInt(td?.stepsFinal)||0) >= goal*0.75 },
+    { label:'All Meals Logged', sub: `Breakfast + lunch + dinner in ${foodAppName()}`, icon:'📱', done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' },
     { label:'90 oz Water', sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon:'💧', done: (parseInt(td?.waterOz)||0) >= 90, partial: (parseInt(td?.waterOz)||0) >= 60 },
   ];
 
@@ -900,8 +1173,32 @@ function renderToday(){
   if(cc) cc.textContent = settings.cravingCount ? `You've talked yourself out of ${settings.cravingCount} craving${settings.cravingCount===1?'':'s'} so far. Keep going.` : '';
 }
 
+// ── CHECK-IN FORM (backdating + editing) ─────────────────────────────────
+function loadCheckinForm(dateStr){
+  currentCheckinDate = dateStr || todayStr();
+  document.getElementById('ci-date').value = currentCheckinDate;
+  document.getElementById('ci-date-hint').textContent = currentCheckinDate === todayStr() ? 'Editing today' : `Editing ${currentCheckinDate}`;
+  const d = checkins[currentCheckinDate] || {};
+  document.getElementById('ci-mobility').value = d.mobility || '';
+  document.getElementById('ci-water').value = d.water || '';
+  document.getElementById('ci-breakfast').value = d.breakfast || '';
+  document.getElementById('ci-lunch').value = d.lunch || '';
+  document.getElementById('ci-steps').value = d.steps || '';
+  document.getElementById('ci-workout').value = d.workout || '';
+  document.getElementById('ci-workout-detail').value = d.workoutDetail || '';
+  document.getElementById('ci-caliber').value = d.caliber || '';
+  document.getElementById('ci-alcohol').value = d.alcohol || '';
+  document.getElementById('ci-sugar').value = d.sugar || '';
+  document.getElementById('ci-dinner').value = d.dinner || '';
+  document.getElementById('ci-steps-final').value = d.stepsFinal || '';
+  document.getElementById('ci-water-oz').value = d.waterOz || '';
+  document.getElementById('ci-notes').value = d.notes || '';
+}
+
 // ── SAVE CHECK-IN ────────────────────────────────────────────────────────
 function saveCheckin(){
+  const dateStr = currentCheckinDate || todayStr();
+  const existing = checkins[dateStr] || {};
   const data = {
     saved: Date.now(),
     mobility: document.getElementById('ci-mobility').value,
@@ -920,14 +1217,28 @@ function saveCheckin(){
     notes: document.getElementById('ci-notes').value,
   };
 
-  db.collection('users').doc(uid).collection('checkins').doc(todayStr()).set(data)
+  let slipCounted = existing.alcoholSlipCounted || false;
+  let isNewSlip = false;
+  if(data.alcohol === 'yes' && !slipCounted){ isNewSlip = true; slipCounted = true; }
+  else if(data.alcohol !== 'yes'){ slipCounted = false; }
+  data.alcoholSlipCounted = slipCounted;
+
+  db.collection('users').doc(uid).collection('checkins').doc(dateStr).set(data)
     .then(() => {
-      const sc = calcScore(data);
+      if(isNewSlip){
+        return db.collection('users').doc(uid).collection('meta').doc('settings').set({
+          sprintLength: firebase.firestore.FieldValue.increment(1),
+          lifetimeAlcoholSlips: firebase.firestore.FieldValue.increment(1)
+        }, { merge: true });
+      }
+    })
+    .then(() => {
+      const sc = calcScore(data, dateStr);
       let feedbackMsg = '';
-      if(sc.score >= 8) feedbackMsg = `Score: ${sc.score}/10 — Outstanding day Angela! 🔥`;
+      if(sc.score >= 8) feedbackMsg = `Score: ${sc.score}/10 — Outstanding day, ${firstName()}! 🔥`;
       else if(sc.score >= 5) feedbackMsg = `Score: ${sc.score}/10 — Solid day. Keep building. 💪`;
       else feedbackMsg = `Score: ${sc.score}/10 — Tomorrow you go harder. No excuses.`;
-      if(data.alcohol === 'yes') feedbackMsg += '\n\nThe alcohol breaks your streak. It\'s done — reset tomorrow and don\'t let it happen again.';
+      if(isNewSlip) feedbackMsg += '\n\nThat slip extends your sprint by a day — the clock doesn\'t shorten because you cheated. Reset tomorrow.';
       alert(feedbackMsg);
       showPage('today', document.querySelectorAll('.nav-tab')[0]);
     })
@@ -972,6 +1283,163 @@ function renderWeight(){
   }).join('');
 }
 
+// ── MEASUREMENTS ─────────────────────────────────────────────────────────
+function saveMeasurements(){
+  const unit = document.getElementById('ms-unit').value;
+  const entry = {
+    date: todayStr(),
+    unit,
+    waist: document.getElementById('ms-waist').value,
+    chest: document.getElementById('ms-chest').value,
+    thighL: document.getElementById('ms-thigh-l').value,
+    thighR: document.getElementById('ms-thigh-r').value,
+    calfL: document.getElementById('ms-calf-l').value,
+    calfR: document.getElementById('ms-calf-r').value,
+    bicepL: document.getElementById('ms-bicep-l').value,
+    bicepR: document.getElementById('ms-bicep-r').value,
+    createdAt: Date.now()
+  };
+  const hasAny = ['waist','chest','thighL','thighR','calfL','calfR','bicepL','bicepR'].some((k) => entry[k]);
+  if(!hasAny){ alert('Enter at least one measurement.'); return; }
+  db.collection('users').doc(uid).collection('measurements').add(entry)
+    .then(() => {
+      db.collection('users').doc(uid).collection('meta').doc('settings').set({ measurementUnit: unit }, { merge: true });
+      alert('Measurements logged.');
+    })
+    .catch((e) => { markSynced(false); alert('Could not save: ' + e.message); });
+}
+
+function renderMeasurements(){
+  const unitSel = document.getElementById('ms-unit');
+  if(unitSel && document.activeElement !== unitSel) unitSel.value = settings.measurementUnit || 'in';
+  const hist = document.getElementById('measureHistory');
+  if(!hist) return;
+  if(measurements.length === 0){ hist.innerHTML = '<div class="empty">No measurements logged yet.<br>Log your first set above.</div>'; return; }
+  hist.innerHTML = measurements.slice(0,14).map((m) => {
+    const u = m.unit || 'in';
+    const parts = [];
+    if(m.waist) parts.push(`Waist ${m.waist}${u}`);
+    if(m.chest) parts.push(`Chest ${m.chest}${u}`);
+    if(m.thighL || m.thighR) parts.push(`Thigh L/R ${m.thighL||'—'}/${m.thighR||'—'}${u}`);
+    if(m.calfL || m.calfR) parts.push(`Calf L/R ${m.calfL||'—'}/${m.calfR||'—'}${u}`);
+    if(m.bicepL || m.bicepR) parts.push(`Bicep L/R ${m.bicepL||'—'}/${m.bicepR||'—'}${u}`);
+    return `<div class="ms-entry"><div class="ms-entry-date">${m.date}</div><div class="ms-entry-vals">${parts.join(' · ')}</div></div>`;
+  }).join('');
+}
+
+// ── MACROS / NUTRITION PROFILE ───────────────────────────────────────────
+function calcMacros(){
+  const currentWeight = weights.length > 0 ? weights[0].weight : (parseFloat(settings.goalWeight) || null);
+  const heightFt = parseFloat(settings.heightFt);
+  const heightIn = parseFloat(settings.heightIn) || 0;
+  const age = parseFloat(settings.age);
+  const sex = settings.sex;
+  if(!heightFt || !age || !sex || !currentWeight) return null;
+
+  const heightCm = ((heightFt * 12) + heightIn) * 2.54;
+  const weightKg = currentWeight * 0.453592;
+
+  let bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age);
+  bmr += (sex === 'male') ? 5 : -161;
+
+  const activityMultipliers = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725 };
+  const tdee = bmr * (activityMultipliers[settings.activityLevel] || 1.375);
+
+  const goalAdjustments = { 'lose-gentle': -250, 'lose-moderate': -500, 'lose-faster': -750, 'maintain': 0, 'gain-lean': 250 };
+  let targetCalories = tdee + (goalAdjustments[settings.goalType] ?? -500);
+
+  const floor = sex === 'male' ? 1500 : 1200;
+  targetCalories = Math.max(floor, Math.round(targetCalories));
+
+  const proteinG = Math.round(currentWeight * 1.0);
+  const proteinCal = proteinG * 4;
+  const fatCal = targetCalories * 0.25;
+  const fatG = Math.round(fatCal / 9);
+  const carbsCal = Math.max(0, targetCalories - proteinCal - fatCal);
+  const carbsG = Math.round(carbsCal / 4);
+
+  return { bmr: Math.round(bmr), tdee: Math.round(tdee), targetCalories, proteinG, carbsG, fatG, currentWeight };
+}
+
+function renderMacros(){
+  const sexEl = document.getElementById('mc-sex');
+  const ageEl = document.getElementById('mc-age');
+  const hFtEl = document.getElementById('mc-height-ft');
+  const hInEl = document.getElementById('mc-height-in');
+  const actEl = document.getElementById('mc-activity');
+  const goalEl = document.getElementById('mc-goal');
+  if(!sexEl) return;
+  if(document.activeElement !== sexEl) sexEl.value = settings.sex || '';
+  if(document.activeElement !== ageEl) ageEl.value = settings.age || '';
+  if(document.activeElement !== hFtEl) hFtEl.value = settings.heightFt || '';
+  if(document.activeElement !== hInEl) hInEl.value = settings.heightIn || '';
+  if(document.activeElement !== actEl) actEl.value = settings.activityLevel || 'moderate';
+  if(document.activeElement !== goalEl) goalEl.value = settings.goalType || 'lose-moderate';
+
+  const stepGoalEl = document.getElementById('pref-step-goal');
+  if(stepGoalEl && document.activeElement !== stepGoalEl) stepGoalEl.value = settings.stepGoal || 10000;
+  const workoutDaysEl = document.getElementById('pref-workout-days');
+  if(workoutDaysEl && document.activeElement !== workoutDaysEl) workoutDaysEl.value = settings.workoutDaysPerWeek || 4;
+  const foodAppEl = document.getElementById('pref-food-app');
+  if(foodAppEl && document.activeElement !== foodAppEl){
+    const knownFood = ['MyFitnessPal','Lose It!','Cronometer','Noom'];
+    foodAppEl.value = knownFood.includes(settings.foodApp) ? settings.foodApp : 'other';
+    toggleOtherField('pref-food-app','pref-food-app-other');
+    document.getElementById('pref-food-app-other').value = settings.foodAppOther || '';
+  }
+  const workoutAppEl = document.getElementById('pref-workout-app');
+  if(workoutAppEl && document.activeElement !== workoutAppEl){
+    const knownWorkout = ['Caliber','Strong','Hevy','JEFIT'];
+    workoutAppEl.value = knownWorkout.includes(settings.workoutApp) ? settings.workoutApp : 'other';
+    toggleOtherField('pref-workout-app','pref-workout-app-other');
+    document.getElementById('pref-workout-app-other').value = settings.workoutAppOther || '';
+  }
+
+  const result = calcMacros();
+  const resultCard = document.getElementById('macroResultCard');
+  const emptyEl = document.getElementById('macroEmpty');
+  if(!result){
+    resultCard.style.display = 'none';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  resultCard.style.display = 'block';
+  emptyEl.style.display = 'none';
+  document.getElementById('mcCalories').textContent = result.targetCalories.toLocaleString();
+  document.getElementById('mcProtein').textContent = result.proteinG + 'g';
+  document.getElementById('mcCarbs').textContent = result.carbsG + 'g';
+  document.getElementById('mcFat').textContent = result.fatG + 'g';
+  document.getElementById('mcDetail').textContent = `BMR ${result.bmr} · TDEE ${result.tdee} · based on current weight ${result.currentWeight} lbs`;
+}
+
+function saveProfile(){
+  const sex = document.getElementById('mc-sex').value;
+  const age = document.getElementById('mc-age').value;
+  const heightFt = document.getElementById('mc-height-ft').value;
+  const heightIn = document.getElementById('mc-height-in').value;
+  const activityLevel = document.getElementById('mc-activity').value;
+  const goalType = document.getElementById('mc-goal').value;
+  if(!sex || !age || !heightFt){ alert('Enter at least sex, age, and height (feet) to calculate macros.'); return; }
+  db.collection('users').doc(uid).collection('meta').doc('settings').set(
+    { sex, age, heightFt, heightIn, activityLevel, goalType }, { merge: true }
+  ).then(() => alert('Profile saved — your macros are updated below.'))
+    .catch((e) => alert('Could not save: ' + e.message));
+}
+
+function savePreferences(){
+  const stepGoalVal = parseInt(document.getElementById('pref-step-goal').value) || 10000;
+  const workoutDays = Math.max(0, Math.min(7, parseInt(document.getElementById('pref-workout-days').value) || 4));
+  const foodApp = document.getElementById('pref-food-app').value;
+  const foodAppOther = document.getElementById('pref-food-app-other').value;
+  const workoutApp = document.getElementById('pref-workout-app').value;
+  const workoutAppOther = document.getElementById('pref-workout-app-other').value;
+  db.collection('users').doc(uid).collection('meta').doc('settings').set(
+    { stepGoal: stepGoalVal, workoutDaysPerWeek: workoutDays, foodApp, foodAppOther, workoutApp, workoutAppOther },
+    { merge: true }
+  ).then(() => alert('Preferences saved.'))
+    .catch((e) => alert('Could not save: ' + e.message));
+}
+
 // ── HISTORY ──────────────────────────────────────────────────────────────
 function renderHistory(){
   const list = document.getElementById('historyList');
@@ -979,24 +1447,30 @@ function renderHistory(){
   if(dates.length === 0){ list.innerHTML = '<div class="empty">No check-ins yet.<br>Complete your first check-in today.</div>'; return; }
   list.innerHTML = dates.map(d => {
     const c = checkins[d];
-    const sc = calcScore(c);
+    const sc = calcScore(c, d);
     const color = sc.score >= 8 ? 'var(--teal)' : sc.score >= 5 ? 'var(--amber)' : 'var(--red)';
     const pills = [
       c.alcohol === 'no' ? {l:'No alcohol',done:true} : c.alcohol === 'yes' ? {l:'Drank',done:false} : null,
       c.mobility === 'yes' ? {l:'Mobility',done:true} : c.mobility === 'no' ? {l:'No mobility',done:false} : null,
-      c.workout === 'full' ? {l:'Workout',done:true} : c.workout === 'no' ? {l:'No workout',done:false} : null,
-      (parseInt(c.stepsFinal)||0) >= 10000 ? {l:'10k steps',done:true} : null,
+      c.workout === 'full' ? {l:'Workout',done:true} : c.workout === 'rest' ? {l:'Rest day',done:true} : c.workout === 'no' ? {l:'No workout',done:false} : null,
+      (parseInt(c.stepsFinal)||0) >= stepGoal() ? {l:'Step goal',done:true} : null,
       c.sugar === 'no' ? {l:'No sugar',done:true} : c.sugar === 'yes' ? {l:'Had sugar',done:false} : null,
     ].filter(Boolean);
-    return `<div class="hist-day">
+    return `<div class="hist-day" onclick="editHistoryDay('${d}')">
       <div class="hist-header">
         <div class="hist-date">${d}</div>
         <div class="hist-score" style="color:${color}">${sc.score}/10</div>
       </div>
       <div class="hist-pills">${pills.map(p=>`<span class="hist-pill ${p.done?'pill-done':'pill-miss'}">${p.l}</span>`).join('')}</div>
       ${c.notes ? `<div style="font-size:11px;color:var(--gray);margin-top:6px;font-style:italic;">"${c.notes}"</div>` : ''}
+      <div class="hist-edit-hint">Tap to edit</div>
     </div>`;
   }).join('');
+}
+
+function editHistoryDay(dateStr){
+  loadCheckinForm(dateStr);
+  showPage('checkin', document.querySelectorAll('.nav-tab')[1]);
 }
 
 // ── GOALS / SPRINT ───────────────────────────────────────────────────────
@@ -1016,38 +1490,85 @@ function renderGoals(){
   const pct = Math.min(100, Math.max(0, Math.round(((now - start) / (end - start)) * 100)));
   document.getElementById('sprintProgress').style.width = pct + '%';
   document.getElementById('sprintPct').textContent = dayNum > 0 ? `Day ${Math.min(dayNum, settings.sprintLength)} of ${settings.sprintLength}` : 'Not started';
+
+  const lenInput = document.getElementById('sprint-length-input');
+  if(lenInput && document.activeElement !== lenInput) lenInput.value = settings.sprintLength;
+  const startInput = document.getElementById('sprint-start-input');
+  if(startInput && document.activeElement !== startInput) startInput.value = todayStr();
 }
 
-function startNewSprint(days){
+function startNewSprint(){
+  const days = parseInt(document.getElementById('sprint-length-input').value);
+  const startDateStr = document.getElementById('sprint-start-input').value || todayStr();
   const goalWeight = parseFloat(document.getElementById('goal-weight-input').value) || settings.goalWeight;
-  if(!confirm(`Start a fresh ${days}-day sprint starting today? Your history stays saved.`)) return;
+  if(!days || days < 1){ alert('Enter a sprint length of at least 1 day.'); return; }
+  if(!confirm(`Start a ${days}-day sprint starting ${startDateStr}? Your history stays saved.`)) return;
   const prevSprint = { start: settings.sprintStart, length: settings.sprintLength, endedAt: Date.now() };
-  const newSettings = {
-    sprintStart: todayStr(),
+  const newSettings = Object.assign({}, settings, {
+    sprintStart: startDateStr,
     sprintLength: days,
     goalWeight: goalWeight,
-    sprintHistory: (settings.sprintHistory || []).concat([prevSprint]),
-    cravingCount: settings.cravingCount || 0
-  };
+    sprintHistory: (settings.sprintHistory || []).concat([prevSprint])
+  });
   db.collection('users').doc(uid).collection('meta').doc('settings').set(newSettings)
-    .then(() => alert(`New ${days}-day sprint started. Let's go. 💪`))
+    .then(() => alert(`${firstName()}, your ${days}-day sprint is set. Let's go. 💪`))
     .catch((e) => alert('Could not save: ' + e.message));
 }
 
 // ── CRAVING ──────────────────────────────────────────────────────────────
-function toggleCraving(){
-  const panel = document.getElementById('cravingPanel');
-  panel.classList.toggle('open');
-  if(panel.classList.contains('open')){
-    document.getElementById('cravingMsg').textContent = getCravingMessages();
-    document.getElementById('cravingMotivation').textContent = 'The craving will pass in 15 minutes. Here\'s what to drink right now instead:';
-    panel.scrollIntoView({ behavior:'smooth', block:'start' });
-    if(uid){
-      db.collection('users').doc(uid).collection('meta').doc('settings').set(
-        { cravingCount: firebase.firestore.FieldValue.increment(1) }, { merge: true }
-      ).catch(() => {});
-    }
+const cravingContent = {
+  alcohol: {
+    title: 'You\'ve got this. Here\'s what to do right now.',
+    intro: 'The craving will pass in 15 minutes. Here\'s what to drink right now instead:',
+    items: [
+      { emoji:'🫧', name:'Sparkling water + fresh lime', detail:'Squeeze half a lime over ice with sparkling water. Feels like a drink, zero consequences.' },
+      { emoji:'🍹', name:'Virgin Paloma', detail:'Grapefruit juice + sparkling water + lime + salt rim. Feels like a real cocktail.' },
+      { emoji:'🌿', name:'Sparkling water + muddled mint + lime', detail:'Muddle a few mint leaves, add ice, sparkling water, squeeze of lime. Virgin mojito essentially.' },
+      { emoji:'🫖', name:'Hot tea with zero sugar syrup', detail:'Your afternoon tea habit — this is already part of your routine. Make it now.' },
+      { emoji:'🍋', name:'Sparkling water + cucumber + lemon', detail:'Slice cucumber and lemon into a glass of sparkling water. Spa water — refreshing and sophisticated.' },
+      { emoji:'🥤', name:'Kombucha', detail:'GT\'s Original or Ginger Lemon — slightly fizzy, complex flavor, feels like a treat.' },
+    ]
+  },
+  sugar: {
+    title: 'You\'ve got this. Here\'s a low-sugar option instead.',
+    intro: 'The craving will pass in 15 minutes. Here\'s what to reach for right now:',
+    items: [
+      { emoji:'🫐', name:'Berries + a dollop of Greek yogurt', detail:'Naturally sweet, high protein, feels indulgent without the sugar crash.' },
+      { emoji:'🍇', name:'Frozen grapes', detail:'Pop a handful in the freezer for 30 minutes — tastes like little sorbet bites.' },
+      { emoji:'🍫', name:'A square or two of 85%+ dark chocolate', detail:'Real chocolate flavor, a fraction of the sugar of milk chocolate or candy.' },
+      { emoji:'🍎', name:'Apple slices + natural peanut butter', detail:'Sweet, filling, and the fiber + protein combo keeps you steady for hours.' },
+      { emoji:'🍮', name:'Chia pudding (unsweetened almond milk)', detail:'Make a batch ahead of time — creamy, satisfying, almost no added sugar.' },
+      { emoji:'☕', name:'Chai or peppermint tea', detail:'The warmth and ritual of a "treat" without any sugar at all.' },
+    ]
   }
+};
+
+function toggleCravingChoice(){
+  document.getElementById('cravingChoice').classList.toggle('hidden');
+}
+
+function openCraving(type){
+  currentCravingType = type;
+  document.getElementById('cravingChoice').classList.add('hidden');
+  const content = cravingContent[type];
+  const panel = document.getElementById('cravingPanel');
+  document.getElementById('cravingTitle').textContent = content.title;
+  document.getElementById('cravingMotivation').textContent = content.intro;
+  document.getElementById('cravingSuggestions').innerHTML = content.items.map(i => `
+    <div class="drink-item"><div class="drink-emoji">${i.emoji}</div><div class="drink-body"><div class="drink-name">${i.name}</div><div class="drink-detail">${i.detail}</div></div></div>
+  `).join('');
+  document.getElementById('cravingMsg').textContent = getCravingMessages(type)[Math.floor(Math.random() * getCravingMessages(type).length)];
+  panel.classList.add('open');
+  panel.scrollIntoView({ behavior:'smooth', block:'start' });
+  if(uid){
+    db.collection('users').doc(uid).collection('meta').doc('settings').set(
+      { cravingCount: firebase.firestore.FieldValue.increment(1) }, { merge: true }
+    ).catch(() => {});
+  }
+}
+
+function closeCraving(){
+  document.getElementById('cravingPanel').classList.remove('open');
 }
 
 // ── HEADER ───────────────────────────────────────────────────────────────
@@ -1071,7 +1592,9 @@ function showPage(id, tabEl){
   document.getElementById('page-'+id).classList.add('active');
   if(tabEl) tabEl.classList.add('active');
   if(id==='today') renderToday();
-  if(id==='weight') renderWeight();
+  if(id==='checkin' && document.getElementById('ci-date').value === '') loadCheckinForm(todayStr());
+  if(id==='weight'){ renderWeight(); renderMeasurements(); }
+  if(id==='macros') renderMacros();
   if(id==='history') renderHistory();
   if(id==='goals') renderGoals();
 }
