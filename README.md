@@ -82,6 +82,18 @@ After your cruise (or anytime), open **Goals → Start a New Sprint**, enter any
 
 A logged drink does three things automatically: it doesn't silently reset your streak counter without consequence — it extends your current sprint by one day, adds to a lifetime slip counter shown next to your best-ever streak on Today, and resets the current streak. The sprint clock never gets shorter because of a slip, only longer.
 
+## Logging through the day without a bad score at 7am
+
+Check-In has two buttons once you're editing today: **Save Progress** (log as you go, no score shown, no judgment) and **Close Out Day** (finalizes today and calculates your real /10 score). Today's card shows "X of 8 logged so far" while the day is open, and only shows a number once you close out — usually in the evening, or via the 9:30pm reminder. Past days you edit through History are always treated as closed since they're already over.
+
+## Mindful goal tracking
+
+Optional and separate from your score. Turn on any of Prayer, Bible reading, Journaling, or Meditation (or add your own custom practice) under Profile → Preferences, and they'll show as checkboxes on Check-In and build their own streak on Today — purely personal, no scoring impact.
+
+## Theme
+
+Tap the 🌙/☀️ icon in the top-right of the nav (or the auth screen before logging in) to switch between light (cream, blue, pink) and dark (deep green/blue) themes. The choice is saved per account and syncs across devices.
+
 ## Notes on reliability
 
 - Foreground and background push both work once installed as described above — this is real APNs-backed web push, not a best-effort local alarm.

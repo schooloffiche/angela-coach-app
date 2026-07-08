@@ -14,10 +14,11 @@
 <title>Coach</title>
 <style>
 :root {
-  --teal: #0F6E56;
-  --teal-mid: #1D9E75;
-  --teal-lt: #E1F5EE;
-  --dark: #1A2E2B;
+  /* Light theme (default) — cream base with blue + pink accents */
+  --teal: #3E7CB1;
+  --teal-mid: #6FA8D6;
+  --teal-lt: #E6F1FA;
+  --dark: #1E2A3A;
   --amber: #B07D2A;
   --amber-lt: #FDF3E3;
   --red: #C0392B;
@@ -27,22 +28,57 @@
   --white: #ffffff;
   --cream: #FBF6EE;
   --off: #FBF6EE;
-  --border: #EDE0CC;
-  --border-soft: #F1E7D4;
-  --gray: #93887a;
-  --dark-gray: #4a423c;
-  --coral-lt: #FAECE7;
-  --coral-mid: #F0997B;
-  --coral: #D85A30;
-  --coral-dark: #993C1D;
-  --coral-darkest: #712B13;
+  --border: #E7DFE9;
+  --border-soft: #F0EAF3;
+  --gray: #93899a;
+  --dark-gray: #453f4a;
+  --card-text: #1E2A3A;
+  --coral-lt: #FAEBEF;
+  --coral-mid: #E38FA6;
+  --coral: #D8577F;
+  --coral-dark: #A83A5C;
+  --coral-darkest: #7A2942;
+  --input-bg: #FFFDF9;
+  /* accent text on card/tinted backgrounds — dark theme swaps these to light tints
+     below, since --coral-darkest would be near-invisible on a dark card. */
+  --accent-text: #7A2942;
+  --accent-text-mid: #A83A5C;
   --font-voice: 'Lora', Georgia, serif;
 }
+body.theme-dark {
+  /* Dark theme — deep green/blue chrome, per Angela's request */
+  --teal: #4FA3E0;
+  --teal-mid: #7FC0EC;
+  --teal-lt: rgba(79,163,224,0.18);
+  --dark: #0A1613;
+  --amber: #E0A83D;
+  --amber-lt: rgba(224,168,61,0.15);
+  --red: #E8695A;
+  --red-lt: rgba(232,105,90,0.15);
+  --purple: #8B84D6;
+  --purple-lt: rgba(139,132,214,0.15);
+  --white: #16302B;
+  --cream: #1B3530;
+  --off: #10201E;
+  --border: rgba(255,255,255,0.09);
+  --border-soft: rgba(255,255,255,0.06);
+  --gray: #8FA79F;
+  --dark-gray: #D8E6E1;
+  --card-text: #EAF3EF;
+  --coral-lt: rgba(47,160,137,0.18);
+  --coral-mid: #5FC2AC;
+  --coral: #2FA089;
+  --coral-dark: #1F7A66;
+  --coral-darkest: #123F33;
+  --input-bg: #1C3833;
+  --accent-text: #8FE0CC;
+  --accent-text-mid: #6FD4BB;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: -apple-system, Arial, sans-serif; background: var(--off); color: var(--dark-gray); min-height: 100vh; max-width: 430px; margin: 0 auto; }
+body { font-family: -apple-system, Arial, sans-serif; background: var(--off); color: var(--dark-gray); min-height: 100vh; max-width: 430px; margin: 0 auto; transition: background 0.2s, color 0.2s; }
 
 /* AUTH SCREEN */
-.auth-screen { min-height: 100vh; background: var(--dark); display: flex; flex-direction: column; justify-content: center; padding: 28px 24px; }
+.auth-screen { position: relative; min-height: 100vh; background: var(--dark); display: flex; flex-direction: column; justify-content: center; padding: 28px 24px; }
 .auth-screen.hidden { display: none; }
 .auth-logo { font-size: 34px; margin-bottom: 6px; }
 .auth-title { font-size: 22px; font-weight: 700; color: white; margin-bottom: 4px; }
@@ -75,8 +111,8 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .coach-banner { background: var(--white); border: 0.5px solid var(--border); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
 .coach-banner::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: var(--coral-lt); border-radius: 50%; }
 .coach-emoji { font-size: 28px; margin-bottom: 6px; position: relative; }
-.coach-label { font-size: 10px; font-weight: 700; color: var(--coral-dark); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; position: relative; }
-.coach-msg { font-size: 14.5px; color: var(--coral-darkest); line-height: 1.65; font-weight: 500; font-family: var(--font-voice); font-style: italic; position: relative; }
+.coach-label { font-size: 10px; font-weight: 700; color: var(--accent-text-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; position: relative; }
+.coach-msg { font-size: 14.5px; color: var(--accent-text); line-height: 1.65; font-weight: 500; font-family: var(--font-voice); font-style: italic; position: relative; }
 .coach-sub { font-size: 11px; color: var(--gray); margin-top: 6px; position: relative; }
 
 /* NOTIFICATION BANNER */
@@ -86,25 +122,25 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .notif-ok { background: var(--teal-lt); border-color: #bfe6d8; color: var(--teal); }
 
 /* STREAK ROW */
-.streak-row { display: flex; gap: 8px; margin-bottom: 8px; }
-.streak-card { flex: 1; background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; }
-.streak-num { font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 3px; color: var(--coral-dark); }
+.streak-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.streak-card { flex: 1 1 30%; min-width: 90px; background: var(--white); border-radius: 14px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; }
+.streak-num { font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 3px; color: var(--accent-text-mid); }
 .streak-label { font-size: 9px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
 .streak-icon { font-size: 14px; margin-bottom: 4px; }
 .streak-sub-line { font-size: 11px; color: var(--gray); text-align: center; margin-bottom: 14px; }
 
 /* SCORE */
-.score-card { background: white; border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+.score-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
 .score-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 0; border: 3px solid var(--border); }
 .score-num { font-size: 22px; font-weight: 700; line-height: 1; }
 .score-denom { font-size: 10px; color: var(--gray); }
 .score-body { flex: 1; }
-.score-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.score-title { font-size: 14px; font-weight: 700; color: var(--card-text); margin-bottom: 4px; }
 .score-detail { font-size: 12px; color: var(--gray); line-height: 1.5; }
 
 /* CHECKLIST */
 .section-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; margin-top: 4px; }
-.check-card { background: white; border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+.check-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
 .check-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid var(--border-soft); cursor: pointer; transition: background 0.1s; }
 .check-item:last-child { border-bottom: none; }
 .check-item:active { background: var(--cream); }
@@ -112,7 +148,7 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .check-box.done { background: var(--teal); border-color: var(--teal); color: white; }
 .check-box.failed { background: var(--red); border-color: var(--red); color: white; }
 .check-body { flex: 1; }
-.check-title { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 1px; }
+.check-title { font-size: 13px; font-weight: 600; color: var(--card-text); margin-bottom: 1px; }
 .check-sub { font-size: 11px; color: var(--gray); }
 .check-icon { font-size: 18px; flex-shrink: 0; }
 
@@ -123,34 +159,34 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 /* CRAVING PANEL */
 .craving-choice { display: flex; gap: 8px; margin-bottom: 14px; }
 .craving-choice.hidden { display: none; }
-.craving-choice-btn { flex: 1; background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 8px; text-align: center; cursor: pointer; font-family: inherit; }
+.craving-choice-btn { flex: 1; background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 8px; text-align: center; cursor: pointer; font-family: inherit; }
 .craving-choice-btn .cc-emoji { font-size: 24px; display: block; margin-bottom: 6px; }
-.craving-choice-btn .cc-label { font-size: 12px; font-weight: 700; color: var(--dark); }
-.craving-panel { background: white; border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: none; }
+.craving-choice-btn .cc-label { font-size: 12px; font-weight: 700; color: var(--card-text); }
+.craving-panel { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: none; }
 .craving-panel.open { display: block; }
-.craving-panel h3 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.craving-panel h3 { font-size: 14px; font-weight: 700; color: var(--card-text); margin-bottom: 4px; }
 .craving-panel p { font-size: 12px; color: var(--gray); margin-bottom: 12px; line-height: 1.5; }
 .drink-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); font-size: 12px; }
 .drink-item:last-child { border-bottom: none; }
 .drink-emoji { font-size: 18px; flex-shrink: 0; width: 24px; }
 .drink-body { flex: 1; }
-.drink-name { font-weight: 600; color: var(--dark); margin-bottom: 1px; font-size: 13px; }
+.drink-name { font-weight: 600; color: var(--card-text); margin-bottom: 1px; font-size: 13px; }
 .drink-detail { color: var(--gray); }
-.craving-msg { background: var(--coral-lt); border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--coral-darkest); line-height: 1.6; font-weight: 600; font-family: var(--font-voice); font-style: italic; }
+.craving-msg { background: var(--coral-lt); border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--accent-text); line-height: 1.6; font-weight: 600; font-family: var(--font-voice); font-style: italic; }
 .craving-count { font-size: 11px; color: var(--gray); margin-top: 8px; text-align: center; }
 .craving-back { background: none; border: none; color: var(--gray); font-size: 11px; text-decoration: underline; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 
 /* INPUT */
-.input-card { background: white; border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
-.input-card h3 { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+.input-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
+.input-card h3 { font-size: 13px; font-weight: 700; color: var(--card-text); margin-bottom: 10px; }
 .input-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); }
 .input-row:last-child { border-bottom: none; }
 .input-label { font-size: 12px; color: var(--dark-gray); flex: 1; font-weight: 500; }
-.input-val { font-size: 13px; font-weight: 700; color: var(--coral-dark); min-width: 50px; text-align: right; }
+.input-val { font-size: 13px; font-weight: 700; color: var(--accent-text-mid); min-width: 50px; text-align: right; }
 input[type=number], input[type=text], input[type=email], input[type=password], input[type=date], textarea, select {
   border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px;
-  font-size: 13px; font-family: inherit; color: var(--dark); width: 100%;
-  background: #fffdf9; outline: none; margin-top: 4px;
+  font-size: 13px; font-family: inherit; color: var(--card-text); width: 100%;
+  background: var(--input-bg); outline: none; margin-top: 4px;
 }
 .auth-screen input { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15); color: white; }
 .auth-screen input::placeholder { color: #cf9c88; }
@@ -168,11 +204,22 @@ textarea { resize: none; height: 70px; }
 .measure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
 .measure-field label { font-size: 11px; color: var(--gray); font-weight: 600; display: block; margin-bottom: 2px; }
 
+/* MINDFUL CHECKLIST */
+.mindful-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--border-soft); font-size: 13px; }
+.mindful-row:last-child { border-bottom: none; }
+.mindful-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--coral); flex-shrink: 0; }
+.mindful-row label { color: var(--card-text); font-weight: 500; }
+
+/* SAVE BUTTON ROW */
+.save-btn-row { display: flex; gap: 8px; margin-top: 4px; }
+.save-btn-row .save-btn { margin-top: 0; }
+.progress-line { font-size: 11px; color: var(--gray); text-align: center; margin-top: 8px; }
+
 /* WEIGHT LOG */
 .wt-entry { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); font-size: 13px; }
 .wt-entry:last-child { border-bottom: none; }
 .wt-date { color: var(--gray); }
-.wt-val { font-weight: 700; color: var(--coral-dark); }
+.wt-val { font-weight: 700; color: var(--accent-text-mid); }
 .wt-diff { font-size: 11px; }
 .ms-entry { padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); font-size: 12px; }
 .ms-entry:last-child { border-bottom: none; }
@@ -180,10 +227,10 @@ textarea { resize: none; height: 70px; }
 .ms-entry-vals { color: var(--dark-gray); line-height: 1.6; }
 
 /* HISTORY */
-.hist-day { background: white; border-radius: 14px; border: 0.5px solid var(--border); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
+.hist-day { background: var(--white); border-radius: 14px; border: 0.5px solid var(--border); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
 .hist-day:active { background: var(--cream); }
 .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.hist-date { font-size: 13px; font-weight: 700; color: var(--dark); }
+.hist-date { font-size: 13px; font-weight: 700; color: var(--card-text); }
 .hist-score { font-size: 13px; font-weight: 700; }
 .hist-pills { display: flex; gap: 5px; flex-wrap: wrap; }
 .hist-pill { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600; }
@@ -206,7 +253,7 @@ textarea { resize: none; height: 70px; }
 .macro-label { font-size: 10px; color: #f0c9b8; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 2px; }
 
 /* BOTTOM NAV */
-.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: white; border-top: 0.5px solid var(--border); display: flex; padding: 8px 0 16px; z-index: 100; }
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--white); border-top: 0.5px solid var(--border); display: flex; padding: 8px 0 16px; z-index: 100; }
 .bn-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; border: none; background: transparent; cursor: pointer; padding: 6px 0; font-family: inherit; color: var(--gray); }
 .bn-btn.active { color: var(--coral); }
 .bn-icon { font-size: 20px; }
@@ -221,12 +268,14 @@ textarea { resize: none; height: 70px; }
 .sync-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--teal-mid); margin-right:5px; vertical-align:middle; }
 .sync-dot.off { background: var(--red); }
 .link-btn { background:none;border:none;color:var(--gray);font-size:11px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:6px 0; }
+.theme-toggle-btn { background: rgba(255,255,255,0.08); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 </style>
 </head>
 <body>
 
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
+  <button class="theme-toggle-btn" id="authThemeToggleBtn" onclick="toggleTheme()" title="Switch theme" style="position:absolute;top:20px;right:20px;">🌙</button>
   <div class="auth-logo">💪</div>
   <div class="auth-title" id="authTitle">Coach</div>
   <div class="auth-sub">This app is just for you. Create your account once, then sign in with the same email on any device to keep everything in sync.</div>
@@ -247,12 +296,15 @@ textarea { resize: none; height: 70px; }
 <div class="nav">
   <div class="nav-top">
     <div>
-      <div class="nav-title" id="navTitle">Coach 💪</div>
+      <div class="nav-title" id="navTitle">Coach</div>
       <div class="nav-date" id="navDate"></div>
     </div>
-    <div style="text-align:right;">
-      <div class="nav-day" id="navDay"></div>
-      <div class="nav-date" id="navCountdown"></div>
+    <div style="text-align:right;display:flex;align-items:center;gap:10px;">
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Switch theme">🌙</button>
+      <div>
+        <div class="nav-day" id="navDay"></div>
+        <div class="nav-date" id="navCountdown"></div>
+      </div>
     </div>
   </div>
   <div class="nav-tabs">
@@ -300,6 +352,11 @@ textarea { resize: none; height: 70px; }
       <div class="streak-icon">🌅</div>
       <div class="streak-num" id="streakMobility">0</div>
       <div class="streak-label">Mobility<br>Streak</div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-icon">🙏</div>
+      <div class="streak-num" id="streakMindful">0</div>
+      <div class="streak-label">Mindful<br>Streak</div>
     </div>
   </div>
   <div class="streak-sub-line" id="alcoholAccountabilityLine">Best streak: 0 days · 0 slips all-time</div>
@@ -446,6 +503,12 @@ textarea { resize: none; height: 70px; }
     </div>
   </div>
 
+  <div class="input-card" id="ci-mindful-card">
+    <h3>🙏 Mindful Moment</h3>
+    <p style="font-size:11px;color:var(--gray);margin-bottom:10px;">Optional — check off whatever you did today. Doesn't affect your score, just yours to keep.</p>
+    <div id="ci-mindful-list"></div>
+  </div>
+
   <div class="input-card">
     <h3>🌙 Evening Close</h3>
     <div style="margin-bottom:8px;">
@@ -465,13 +528,22 @@ textarea { resize: none; height: 70px; }
       <div class="input-label">Total water today (oz)</div>
       <input type="number" id="ci-water-oz" placeholder="e.g. 90" />
     </div>
+    <div style="margin-bottom:8px;">
+      <div class="input-label">Calories vs. your target</div>
+      <select id="ci-calorie-target">
+        <option value="">— select —</option>
+        <option value="under">✅ Under my target</option>
+        <option value="on">✅ Right on target</option>
+        <option value="over">⚠️ Over my target</option>
+      </select>
+    </div>
     <div>
       <div class="input-label">How do you feel? (optional)</div>
       <textarea id="ci-notes" placeholder="Energy, mood, wins, struggles..."></textarea>
     </div>
   </div>
 
-  <button class="save-btn coral" onclick="saveCheckin()">💾 Save Check-In</button>
+  <div id="ci-save-buttons"></div>
 
 </div>
 
@@ -555,7 +627,7 @@ textarea { resize: none; height: 70px; }
       </div>
     </div>
     <div style="margin-bottom:8px;">
-      <div class="input-label">Activity level (outside of planned workouts)</div>
+      <div class="input-label">Activity level (daily movement, outside of planned workouts)</div>
       <select id="mc-activity">
         <option value="sedentary">Sedentary — desk job, little walking</option>
         <option value="light">Lightly active — some daily walking</option>
@@ -563,7 +635,7 @@ textarea { resize: none; height: 70px; }
         <option value="active">Very active — physically demanding day</option>
       </select>
     </div>
-    <div>
+    <div style="margin-bottom:8px;">
       <div class="input-label">Goal</div>
       <select id="mc-goal">
         <option value="lose-gentle">Lose weight — gentle (~0.5 lb/wk)</option>
@@ -573,7 +645,12 @@ textarea { resize: none; height: 70px; }
         <option value="gain-lean">Gain weight — lean (~0.25–0.5 lb/wk)</option>
       </select>
     </div>
-    <button class="save-btn" onclick="saveProfile()">Save Profile &amp; Calculate</button>
+    <div>
+      <div class="input-label">Protein target: <span id="mc-protein-lb-val">0.8</span> g per lb of bodyweight</div>
+      <input type="range" id="mc-protein-lb" min="0.5" max="1.2" step="0.05" value="0.8" oninput="document.getElementById('mc-protein-lb-val').textContent = this.value" style="width:100%;margin-top:6px;" />
+      <div style="font-size:11px;color:var(--gray);margin-top:2px;">Lower = more room for carbs. Higher = more muscle-preserving on a cut. 0.7–0.9 is a solid range for most people.</div>
+    </div>
+    <button class="save-btn" onclick="saveProfile()" style="margin-top:14px;">Save Profile &amp; Calculate</button>
   </div>
 
   <div class="goal-card" id="macroResultCard" style="display:none;">
@@ -623,7 +700,18 @@ textarea { resize: none; height: 70px; }
       </select>
       <input type="text" id="pref-workout-app-other" placeholder="App name" style="margin-top:6px;display:none;" />
     </div>
-    <button class="save-btn" onclick="savePreferences()">Save Preferences</button>
+    <div style="margin-top:12px;">
+      <div class="input-label">Mindful practices to track (optional)</div>
+      <div class="mindful-row"><input type="checkbox" id="pref-mindful-prayer" /><label for="pref-mindful-prayer">🙏 Prayer</label></div>
+      <div class="mindful-row"><input type="checkbox" id="pref-mindful-bible" /><label for="pref-mindful-bible">📖 Bible reading</label></div>
+      <div class="mindful-row"><input type="checkbox" id="pref-mindful-journal" /><label for="pref-mindful-journal">📝 Journaling</label></div>
+      <div class="mindful-row"><input type="checkbox" id="pref-mindful-meditation" /><label for="pref-mindful-meditation">🧘 Meditation</label></div>
+      <div style="margin-top:8px;">
+        <div class="input-label">Custom practice (optional)</div>
+        <input type="text" id="pref-mindful-custom" placeholder="e.g. Yoga, gratitude list" />
+      </div>
+    </div>
+    <button class="save-btn" onclick="savePreferences()" style="margin-top:14px;">Save Preferences</button>
   </div>
 
   <div class="input-card">
@@ -761,8 +849,24 @@ function defaultSettings(){
     workoutDaysPerWeek: 4,
     foodApp: 'MyFitnessPal', foodAppOther: '',
     workoutApp: 'Caliber', workoutAppOther: '',
-    measurementUnit: 'in'
+    measurementUnit: 'in',
+    proteinPerLb: 0.8,
+    theme: 'light',
+    mindfulPractices: ['prayer', 'bible', 'journal', 'meditation'],
+    mindfulCustomLabel: ''
   };
+}
+
+const MINDFUL_PRESETS = {
+  prayer: { label: 'Prayer', icon: '🙏' },
+  bible: { label: 'Bible reading', icon: '📖' },
+  journal: { label: 'Journaling', icon: '📝' },
+  meditation: { label: 'Meditation', icon: '🧘' },
+};
+function mindfulOptions(){
+  const opts = (settings.mindfulPractices || []).map((k) => Object.assign({ key: k }, MINDFUL_PRESETS[k])).filter((o) => o.label);
+  if(settings.mindfulCustomLabel) opts.push({ key: 'custom', label: settings.mindfulCustomLabel, icon: '✨' });
+  return opts;
 }
 
 function todayStr(d){
@@ -842,11 +946,16 @@ function subscribeData(){
   unsubSettings = userRef.collection('meta').doc('settings').onSnapshot((doc) => {
     if(doc.exists){
       settings = Object.assign(defaultSettings(), doc.data());
-    } else {
+      applyTheme();
+      document.title = `Coach — ${firstName()}`;
+      renderAll();
+    } else if(!doc.metadata.fromCache){
+      // Only create defaults once we get a server-confirmed "really doesn't exist" —
+      // an offline-cache snapshot briefly reporting !exists must never be allowed to
+      // stomp real settings (this was silently resetting sprintStart to "today").
       userRef.collection('meta').doc('settings').set(defaultSettings());
     }
-    document.title = `Coach — ${firstName()}`;
-    renderAll();
+    // If !doc.exists && doc.metadata.fromCache, do nothing — wait for the real snapshot.
   }, (err) => console.error('settings sync error', err));
 
   unsubCheckins = userRef.collection('checkins').onSnapshot((snap) => {
@@ -965,23 +1074,23 @@ function getCoachMessage(){
     sub:'Water first, then mat. Go.'
   };
   if(h >= 7 && h < 9 && !td.breakfast) return {
-    emoji:'🍳', msg:'Breakfast is non-negotiable. Skipping it spikes cortisol, crashes your blood sugar by 10 AM, and makes the afternoon cravings 10x harder to resist. Eat protein NOW.',
+    emoji:'🍳', msg:`Breakfast is non-negotiable, ${name}. Skipping it spikes cortisol, crashes your blood sugar by 10 AM, and makes the afternoon cravings 10x harder to resist. Eat protein NOW.`,
     sub:`Eggs, Greek yogurt, protein shake — anything. Log it in ${foodApp}.`
   };
   if(h >= 12 && h < 14 && !td.lunch) return {
-    emoji:'🥗', msg:'It\'s lunch time. Don\'t skip it — an empty gut in the afternoon is your biggest enemy. Protein first. Log it before you eat.',
+    emoji:'🥗', msg:`It's lunch time, ${name}. Don't skip it — an empty gut in the afternoon is your biggest enemy. Protein first. Log it before you eat.`,
     sub:`Prepped chicken bowl · tuna sandwich · whatever you have. Log it in ${foodApp}.`
   };
   if(h >= 15 && h < 17 && td.alcohol === undefined) return {
-    emoji:'⚠️', msg:'3 PM is the danger zone. This is when cravings hit hardest and willpower is lowest. Have your hot tea RIGHT NOW. If you feel tempted — hit the craving button below.',
+    emoji:'⚠️', msg:`3 PM is the danger zone, ${name}. This is when cravings hit hardest and willpower is lowest. Have your hot tea RIGHT NOW. If you feel tempted — hit the craving button below.`,
     sub:'You committed to this goal. Honor it.'
   };
   if(h >= 17 && h < 19 && !td.workout) return {
-    emoji:'💪', msg:'It\'s workout time and there\'s no excuse not to go. You don\'t have to feel like it. You just have to start. The hardest part is putting your shoes on — after that your body takes over.',
+    emoji:'💪', msg:`It's workout time, ${name}, and there's no excuse not to go. You don't have to feel like it. You just have to start. The hardest part is putting your shoes on — after that your body takes over.`,
     sub:'30 minutes is all you need. Push. Pull. Legs. Whatever — just move.'
   };
   if(h >= 20 && !td.dinner) return {
-    emoji:'🍽️', msg:`Log your dinner in ${foodApp} before you close the day. No skipping — incomplete logging is incomplete accountability.`,
+    emoji:'🍽️', msg:`Log your dinner in ${foodApp} before you close the day, ${name}. No skipping — incomplete logging is incomplete accountability.`,
     sub:'Then check your steps. Did you hit your goal?'
   };
 
@@ -995,8 +1104,8 @@ function getCoachMessage(){
   };
 
   if(h < 12) return { emoji:'💪', msg:`Today is another chance to prove to yourself that you're serious about this, ${name}. Every clean day is a vote for the person you're becoming.`, sub:'Check off your morning habits.' };
-  if(h < 17) return { emoji:'🎯', msg:'Midday check — are you on track? Steps, water, meals logged? Small consistent actions every single day beat perfect days followed by nothing.', sub:'Stay focused. You\'ve got this.' };
-  return { emoji:'🌙', msg:'Close the day strong. Log dinner, check your steps, drink your water. How you finish today is how you start tomorrow.', sub:'Screens off by 9:30. Sleep is when you actually change.' };
+  if(h < 17) return { emoji:'🎯', msg:`Midday check, ${name} — are you on track? Steps, water, meals logged? Small consistent actions every single day beat perfect days followed by nothing.`, sub:'Stay focused. You\'ve got this.' };
+  return { emoji:'🌙', msg:`Close the day strong, ${name}. Log dinner, check your steps, drink your water. How you finish today is how you start tomorrow.`, sub:'Screens off by 9:30. Sleep is when you actually change.' };
 }
 
 function getCravingMessages(type){
@@ -1028,6 +1137,8 @@ function getStreaks(){
   for(let d of datesDesc){ if(checkins[d].alcohol === 'no') alcohol++; else break; }
   for(let d of datesDesc){ if(checkins[d].sugar === 'no') sugar++; else break; }
   for(let d of datesDesc){ if(checkins[d].mobility === 'yes' || checkins[d].mobility === 'partial') mobility++; else break; }
+  let mindful = 0;
+  for(let d of datesDesc){ if(checkins[d].mindfulDone && checkins[d].mindfulDone.length > 0) mindful++; else break; }
 
   const datesAsc = Object.keys(checkins).sort();
   let run = 0, alcoholBest = 0;
@@ -1042,7 +1153,7 @@ function getStreaks(){
     const dd = parseDateStr(d);
     if(dd >= weekStart && checkins[d].workout === 'full') workouts++;
   });
-  return { alcohol, alcoholBest, sugar, mobility, workouts };
+  return { alcohol, alcoholBest, sugar, mobility, workouts, mindful };
 }
 
 function countRestDaysInWeekUpTo(dateStr){
@@ -1087,6 +1198,15 @@ function calcScore(data, dateStr){
   return { score: Math.min(10, Math.round(pts*10)/10), details };
 }
 
+// Progress tracker for the "still logging today" view — counts anything answered,
+// regardless of whether the answer was good or bad, so mid-day logging never
+// looks like a failing grade. Deliberately separate from calcScore().
+const PROGRESS_KEYS = ['mobility', 'water', 'breakfast', 'lunch', 'workout', 'alcohol', 'sugar', 'dinner'];
+function countProgress(data){
+  const done = PROGRESS_KEYS.filter((k) => data && data[k]).length;
+  return { done, total: PROGRESS_KEYS.length };
+}
+
 // ── RENDER ───────────────────────────────────────────────────────────────
 function renderAll(){
   markSynced(true);
@@ -1106,7 +1226,8 @@ function renderAll(){
 function applyDynamicLabels(){
   const foodApp = foodAppName();
   const workoutApp = workoutAppName();
-  document.getElementById('navTitle').textContent = `Coach 💪`;
+  const navTitleEl = document.getElementById('navTitle');
+  if(navTitleEl) navTitleEl.textContent = settings.firstName ? `Hey, ${settings.firstName} 💪` : 'Coach 💪';
   const bf = document.getElementById('lbl-breakfast-app'); if(bf) bf.textContent = `Breakfast logged in ${foodApp}?`;
   const ln = document.getElementById('lbl-lunch-app'); if(ln) ln.textContent = `Lunch logged in ${foodApp}?`;
   const dn = document.getElementById('lbl-dinner-app'); if(dn) dn.textContent = `Dinner logged in ${foodApp}?`;
@@ -1127,24 +1248,38 @@ function renderToday(){
   document.getElementById('streakSugar').textContent = s.sugar;
   document.getElementById('streakWorkout').textContent = s.workouts;
   document.getElementById('streakMobility').textContent = s.mobility;
+  document.getElementById('streakMindful').textContent = s.mindful;
   document.getElementById('alcoholAccountabilityLine').textContent =
     `Best streak: ${s.alcoholBest} day${s.alcoholBest===1?'':'s'} · ${settings.lifetimeAlcoholSlips||0} slip${(settings.lifetimeAlcoholSlips||0)===1?'':'s'} all-time`;
 
   const td = checkins[todayStr()];
-  const sc = calcScore(td, todayStr());
   const scoreEl = document.getElementById('scoreNum');
   const circleEl = document.getElementById('scoreCircle');
-  if(td && Object.keys(td).length > 2){
+  const scoreDenomEl = document.querySelector('#scoreCircle .score-denom');
+  if(td && td.closed){
+    const sc = calcScore(td, todayStr());
+    if(scoreDenomEl) scoreDenomEl.textContent = '/10';
     scoreEl.textContent = sc.score;
     const color = sc.score >= 8 ? '#0F6E56' : sc.score >= 5 ? '#B07D2A' : '#C0392B';
     circleEl.style.borderColor = color;
     scoreEl.style.color = color;
     document.getElementById('scoreTitle').textContent = sc.score >= 8 ? 'Crushing it! 🔥' : sc.score >= 5 ? 'Good day 👍' : 'Room to grow 💪';
     document.getElementById('scoreDetail').textContent = sc.details.join(' · ') || 'Keep going';
+  } else if(td && Object.keys(td).length > 2){
+    // Progress, not yet closed out — no judgmental number, just a count.
+    const { done, total } = countProgress(td);
+    if(scoreDenomEl) scoreDenomEl.textContent = `/${total}`;
+    scoreEl.textContent = done;
+    circleEl.style.borderColor = '#B07D2A';
+    scoreEl.style.color = '#B07D2A';
+    document.getElementById('scoreTitle').textContent = 'In Progress';
+    document.getElementById('scoreDetail').textContent = `${done} of ${total} logged so far — close out tonight for your score.`;
   } else {
+    if(scoreDenomEl) scoreDenomEl.textContent = '/10';
     scoreEl.textContent = '—';
     circleEl.style.borderColor = '#e0e0e0';
-    document.getElementById('scoreDetail').textContent = 'Complete your check-in to get your daily score';
+    document.getElementById('scoreTitle').textContent = "Today's Score";
+    document.getElementById('scoreDetail').textContent = 'Start your check-in any time today — no score until you close out tonight.';
   }
 
   const goal = stepGoal();
@@ -1163,7 +1298,7 @@ function renderToday(){
     <div class="check-item" onclick="showPage('checkin', document.querySelectorAll('.nav-tab')[1])">
       <div class="check-box ${c.failed ? 'failed' : c.done ? 'done' : c.partial ? 'done' : ''}">${c.failed ? '✗' : c.done || c.partial ? '✓' : ''}</div>
       <div class="check-body">
-        <div class="check-title" style="color:${c.failed ? 'var(--red)' : c.done ? 'var(--teal)' : 'var(--dark)'}">${c.label}</div>
+        <div class="check-title" style="color:${c.failed ? 'var(--red)' : c.done ? 'var(--teal)' : 'var(--card-text)'}">${c.label}</div>
         <div class="check-sub">${c.sub}</div>
       </div>
       <div class="check-icon">${c.icon}</div>
@@ -1192,13 +1327,46 @@ function loadCheckinForm(dateStr){
   document.getElementById('ci-dinner').value = d.dinner || '';
   document.getElementById('ci-steps-final').value = d.stepsFinal || '';
   document.getElementById('ci-water-oz').value = d.waterOz || '';
+  document.getElementById('ci-calorie-target').value = d.calorieTarget || '';
   document.getElementById('ci-notes').value = d.notes || '';
+
+  const mindfulDone = d.mindfulDone || [];
+  const opts = mindfulOptions();
+  const mindfulList = document.getElementById('ci-mindful-list');
+  if(opts.length === 0){
+    mindfulList.innerHTML = `<div style="font-size:12px;color:var(--gray);">No mindful practices selected yet — add some on the Profile tab under Preferences.</div>`;
+  } else {
+    mindfulList.innerHTML = opts.map((o) => `
+      <div class="mindful-row">
+        <input type="checkbox" id="ci-mindful-${o.key}" ${mindfulDone.includes(o.key) ? 'checked' : ''} />
+        <label for="ci-mindful-${o.key}">${o.icon} ${o.label}</label>
+      </div>`).join('');
+  }
+
+  const isToday = currentCheckinDate === todayStr();
+  const btnWrap = document.getElementById('ci-save-buttons');
+  if(isToday){
+    btnWrap.innerHTML = `
+      <div class="save-btn-row">
+        <button class="save-btn secondary" onclick="saveCheckin(false)">💾 Save Progress</button>
+        <button class="save-btn coral" onclick="saveCheckin(true)">✅ Close Out Day</button>
+      </div>
+      <div class="progress-line">Save Progress any time through the day — no score shown until you Close Out.</div>`;
+  } else {
+    btnWrap.innerHTML = `<button class="save-btn coral" onclick="saveCheckin(true)">💾 Save Check-In</button>`;
+  }
 }
 
 // ── SAVE CHECK-IN ────────────────────────────────────────────────────────
-function saveCheckin(){
+function saveCheckin(finalize){
   const dateStr = currentCheckinDate || todayStr();
   const existing = checkins[dateStr] || {};
+  const isToday = dateStr === todayStr();
+
+  const mindfulDone = mindfulOptions()
+    .map((o) => o.key)
+    .filter((key) => { const el = document.getElementById(`ci-mindful-${key}`); return el && el.checked; });
+
   const data = {
     saved: Date.now(),
     mobility: document.getElementById('ci-mobility').value,
@@ -1214,8 +1382,15 @@ function saveCheckin(){
     dinner: document.getElementById('ci-dinner').value,
     stepsFinal: document.getElementById('ci-steps-final').value,
     waterOz: document.getElementById('ci-water-oz').value,
+    calorieTarget: document.getElementById('ci-calorie-target').value,
     notes: document.getElementById('ci-notes').value,
+    mindfulDone: mindfulDone,
+    // Only "today" has an open/in-progress state. Backdated/past-day entries are
+    // always treated as closed — there's no "still logging" concept for history.
+    closed: isToday ? !!finalize : true,
   };
+  if(data.closed && !existing.closed) data.closedAt = Date.now();
+  else if(existing.closedAt) data.closedAt = existing.closedAt;
 
   let slipCounted = existing.alcoholSlipCounted || false;
   let isNewSlip = false;
@@ -1233,11 +1408,19 @@ function saveCheckin(){
       }
     })
     .then(() => {
-      const sc = calcScore(data, dateStr);
       let feedbackMsg = '';
-      if(sc.score >= 8) feedbackMsg = `Score: ${sc.score}/10 — Outstanding day, ${firstName()}! 🔥`;
-      else if(sc.score >= 5) feedbackMsg = `Score: ${sc.score}/10 — Solid day. Keep building. 💪`;
-      else feedbackMsg = `Score: ${sc.score}/10 — Tomorrow you go harder. No excuses.`;
+      if(!data.closed){
+        // Progress save — no score, just an encouraging nudge.
+        feedbackMsg = `Saved, ${firstName()}. Keep going — close out tonight to get your score.`;
+      } else {
+        const sc = calcScore(data, dateStr);
+        if(sc.score >= 8) feedbackMsg = `Score: ${sc.score}/10 — Outstanding day, ${firstName()}! 🔥`;
+        else if(sc.score >= 5) feedbackMsg = `Score: ${sc.score}/10 — Solid day. Keep building. 💪`;
+        else feedbackMsg = `Score: ${sc.score}/10 — Tomorrow you go harder. No excuses.`;
+      }
+      if(data.calorieTarget === 'under') feedbackMsg += '\n\nUnder your calorie target today — that discipline compounds.';
+      else if(data.calorieTarget === 'on') feedbackMsg += '\n\nRight on target — that\'s exactly the consistency that wins.';
+      else if(data.calorieTarget === 'over') feedbackMsg += '\n\nOver today — no big deal, tomorrow\'s a clean slate. Don\'t spiral over one day.';
       if(isNewSlip) feedbackMsg += '\n\nThat slip extends your sprint by a day — the clock doesn\'t shorten because you cheated. Reset tomorrow.';
       alert(feedbackMsg);
       showPage('today', document.querySelectorAll('.nav-tab')[0]);
@@ -1343,7 +1526,15 @@ function calcMacros(){
   bmr += (sex === 'male') ? 5 : -161;
 
   const activityMultipliers = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725 };
-  const tdee = bmr * (activityMultipliers[settings.activityLevel] || 1.375);
+  const baseTdee = bmr * (activityMultipliers[settings.activityLevel] || 1.375);
+
+  // Workout days are collected in Preferences but were never actually used here —
+  // that's the bug that made calories feel too low for anyone training regularly.
+  // Add an explicit, visible credit: ~250 kcal per planned workout session,
+  // averaged across the week into a daily TDEE addition.
+  const workoutDays = Math.max(0, Math.min(7, parseInt(settings.workoutDaysPerWeek) || 0));
+  const exerciseCal = Math.round((workoutDays * 250) / 7);
+  const tdee = baseTdee + exerciseCal;
 
   const goalAdjustments = { 'lose-gentle': -250, 'lose-moderate': -500, 'lose-faster': -750, 'maintain': 0, 'gain-lean': 250 };
   let targetCalories = tdee + (goalAdjustments[settings.goalType] ?? -500);
@@ -1351,14 +1542,15 @@ function calcMacros(){
   const floor = sex === 'male' ? 1500 : 1200;
   targetCalories = Math.max(floor, Math.round(targetCalories));
 
-  const proteinG = Math.round(currentWeight * 1.0);
+  const proteinPerLb = parseFloat(settings.proteinPerLb) || 0.8;
+  const proteinG = Math.round(currentWeight * proteinPerLb);
   const proteinCal = proteinG * 4;
   const fatCal = targetCalories * 0.25;
   const fatG = Math.round(fatCal / 9);
   const carbsCal = Math.max(0, targetCalories - proteinCal - fatCal);
   const carbsG = Math.round(carbsCal / 4);
 
-  return { bmr: Math.round(bmr), tdee: Math.round(tdee), targetCalories, proteinG, carbsG, fatG, currentWeight };
+  return { bmr: Math.round(bmr), tdee: Math.round(tdee), exerciseCal, workoutDays, targetCalories, proteinG, carbsG, fatG, currentWeight };
 }
 
 function renderMacros(){
@@ -1375,6 +1567,12 @@ function renderMacros(){
   if(document.activeElement !== hInEl) hInEl.value = settings.heightIn || '';
   if(document.activeElement !== actEl) actEl.value = settings.activityLevel || 'moderate';
   if(document.activeElement !== goalEl) goalEl.value = settings.goalType || 'lose-moderate';
+  const proteinSliderEl = document.getElementById('mc-protein-lb');
+  if(proteinSliderEl && document.activeElement !== proteinSliderEl){
+    const p = settings.proteinPerLb || 0.8;
+    proteinSliderEl.value = p;
+    document.getElementById('mc-protein-lb-val').textContent = p;
+  }
 
   const stepGoalEl = document.getElementById('pref-step-goal');
   if(stepGoalEl && document.activeElement !== stepGoalEl) stepGoalEl.value = settings.stepGoal || 10000;
@@ -1394,6 +1592,15 @@ function renderMacros(){
     toggleOtherField('pref-workout-app','pref-workout-app-other');
     document.getElementById('pref-workout-app-other').value = settings.workoutAppOther || '';
   }
+  const mindfulCustomEl = document.getElementById('pref-mindful-custom');
+  if(mindfulCustomEl && document.activeElement !== mindfulCustomEl){
+    const active = settings.mindfulPractices || [];
+    ['prayer','bible','journal','meditation'].forEach((key) => {
+      const cb = document.getElementById(`pref-mindful-${key}`);
+      if(cb) cb.checked = active.includes(key);
+    });
+    mindfulCustomEl.value = settings.mindfulCustomLabel || '';
+  }
 
   const result = calcMacros();
   const resultCard = document.getElementById('macroResultCard');
@@ -1409,7 +1616,8 @@ function renderMacros(){
   document.getElementById('mcProtein').textContent = result.proteinG + 'g';
   document.getElementById('mcCarbs').textContent = result.carbsG + 'g';
   document.getElementById('mcFat').textContent = result.fatG + 'g';
-  document.getElementById('mcDetail').textContent = `BMR ${result.bmr} · TDEE ${result.tdee} · based on current weight ${result.currentWeight} lbs`;
+  const workoutLine = result.workoutDays > 0 ? ` (includes +${result.exerciseCal} cal/day for ${result.workoutDays} workouts/wk)` : '';
+  document.getElementById('mcDetail').textContent = `BMR ${result.bmr} · TDEE ${result.tdee}${workoutLine} · based on current weight ${result.currentWeight} lbs`;
 }
 
 function saveProfile(){
@@ -1419,9 +1627,10 @@ function saveProfile(){
   const heightIn = document.getElementById('mc-height-in').value;
   const activityLevel = document.getElementById('mc-activity').value;
   const goalType = document.getElementById('mc-goal').value;
+  const proteinPerLb = parseFloat(document.getElementById('mc-protein-lb').value) || 0.8;
   if(!sex || !age || !heightFt){ alert('Enter at least sex, age, and height (feet) to calculate macros.'); return; }
   db.collection('users').doc(uid).collection('meta').doc('settings').set(
-    { sex, age, heightFt, heightIn, activityLevel, goalType }, { merge: true }
+    { sex, age, heightFt, heightIn, activityLevel, goalType, proteinPerLb }, { merge: true }
   ).then(() => alert('Profile saved — your macros are updated below.'))
     .catch((e) => alert('Could not save: ' + e.message));
 }
@@ -1433,8 +1642,13 @@ function savePreferences(){
   const foodAppOther = document.getElementById('pref-food-app-other').value;
   const workoutApp = document.getElementById('pref-workout-app').value;
   const workoutAppOther = document.getElementById('pref-workout-app-other').value;
+  const mindfulPractices = ['prayer','bible','journal','meditation'].filter((key) => {
+    const cb = document.getElementById(`pref-mindful-${key}`);
+    return cb && cb.checked;
+  });
+  const mindfulCustomLabel = document.getElementById('pref-mindful-custom').value.trim();
   db.collection('users').doc(uid).collection('meta').doc('settings').set(
-    { stepGoal: stepGoalVal, workoutDaysPerWeek: workoutDays, foodApp, foodAppOther, workoutApp, workoutAppOther },
+    { stepGoal: stepGoalVal, workoutDaysPerWeek: workoutDays, foodApp, foodAppOther, workoutApp, workoutAppOther, mindfulPractices, mindfulCustomLabel },
     { merge: true }
   ).then(() => alert('Preferences saved.'))
     .catch((e) => alert('Could not save: ' + e.message));
@@ -1598,6 +1812,30 @@ function showPage(id, tabEl){
   if(id==='history') renderHistory();
   if(id==='goals') renderGoals();
 }
+
+// ── THEME ────────────────────────────────────────────────────────────────
+function applyTheme(){
+  // Firestore settings.theme (once loaded) wins; localStorage is just the
+  // fast, no-flash guess used before login / before the settings doc arrives.
+  const theme = (settings && settings.theme) || localStorage.getItem('coach-theme') || 'light';
+  document.body.classList.toggle('theme-dark', theme === 'dark');
+  const icon = theme === 'dark' ? '☀️' : '🌙';
+  const btn1 = document.getElementById('themeToggleBtn'); if(btn1) btn1.textContent = icon;
+  const btn2 = document.getElementById('authThemeToggleBtn'); if(btn2) btn2.textContent = icon;
+}
+function toggleTheme(){
+  const next = document.body.classList.contains('theme-dark') ? 'light' : 'dark';
+  localStorage.setItem('coach-theme', next);
+  settings.theme = next;
+  document.body.classList.toggle('theme-dark', next === 'dark');
+  const icon = next === 'dark' ? '☀️' : '🌙';
+  const btn1 = document.getElementById('themeToggleBtn'); if(btn1) btn1.textContent = icon;
+  const btn2 = document.getElementById('authThemeToggleBtn'); if(btn2) btn2.textContent = icon;
+  if(uid){
+    db.collection('users').doc(uid).collection('meta').doc('settings').set({ theme: next }, { merge: true }).catch(() => {});
+  }
+}
+applyTheme();
 
 // ── INIT ─────────────────────────────────────────────────────────────────
 updateHeader();
