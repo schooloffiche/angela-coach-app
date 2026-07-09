@@ -128,9 +128,12 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .streak-label { font-size: 9px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
 .streak-icon { font-size: 14px; margin-bottom: 4px; }
 .streak-sub-line { font-size: 11px; color: var(--gray); text-align: center; margin-bottom: 14px; }
+.streak-card.tier-warm { background: var(--amber-lt); border-color: #f0dfb8; }
+.streak-card.tier-fire { background: var(--coral-lt); border-color: var(--coral-mid); box-shadow: 0 0 0 1px var(--coral-mid) inset; }
+@keyframes coach-confetti-fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0.15; } }
 
 /* SCORE */
-.score-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+.score-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
 .score-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 0; border: 3px solid var(--border); }
 .score-num { font-size: 22px; font-weight: 700; line-height: 1; }
 .score-denom { font-size: 10px; color: var(--gray); }
@@ -333,35 +336,35 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="streak-row">
-    <div class="streak-card">
-      <div class="streak-icon">🚫🍷</div>
+    <div class="streak-card" id="streakCardAlcohol">
+      <div class="streak-icon" id="streakIconAlcohol">🚫🍷</div>
       <div class="streak-num" id="streakAlcohol">0</div>
       <div class="streak-label">Alcohol<br>Free Days</div>
     </div>
-    <div class="streak-card">
-      <div class="streak-icon">🚫🍬</div>
+    <div class="streak-card" id="streakCardSugar">
+      <div class="streak-icon" id="streakIconSugar">🚫🍬</div>
       <div class="streak-num" id="streakSugar">0</div>
       <div class="streak-label">Sugar<br>Free Days</div>
     </div>
-    <div class="streak-card">
+    <div class="streak-card" id="streakCardWorkout">
       <div class="streak-icon">💪</div>
       <div class="streak-num" id="streakWorkout">0</div>
       <div class="streak-label">Workouts<br>This Week</div>
     </div>
-    <div class="streak-card">
-      <div class="streak-icon">🌅</div>
+    <div class="streak-card" id="streakCardMobility">
+      <div class="streak-icon" id="streakIconMobility">🌅</div>
       <div class="streak-num" id="streakMobility">0</div>
       <div class="streak-label">Mobility<br>Streak</div>
     </div>
-    <div class="streak-card">
-      <div class="streak-icon">🙏</div>
+    <div class="streak-card" id="streakCardMindful">
+      <div class="streak-icon" id="streakIconMindful">🙏</div>
       <div class="streak-num" id="streakMindful">0</div>
       <div class="streak-label">Mindful<br>Streak</div>
     </div>
   </div>
   <div class="streak-sub-line" id="alcoholAccountabilityLine">Best streak: 0 days · 0 slips all-time</div>
 
-  <div class="score-card" id="scoreCard">
+  <div class="score-card" id="scoreCard" onclick="toggleScoreBreakdownView()">
     <div class="score-circle" id="scoreCircle">
       <div class="score-num" id="scoreNum">—</div>
       <div class="score-denom">/10</div>
@@ -675,6 +678,11 @@ textarea { resize: none; height: 70px; }
       <input type="number" id="pref-step-goal" placeholder="e.g. 10000" />
     </div>
     <div style="margin-bottom:8px;">
+      <div class="input-label">Daily water goal (oz)</div>
+      <input type="number" id="pref-water-goal" placeholder="e.g. 90" />
+      <div style="font-size:11px;color:var(--gray);margin-top:4px;" id="waterGoalHint"></div>
+    </div>
+    <div style="margin-bottom:8px;">
       <div class="input-label">Workout days per week (the rest are planned rest days)</div>
       <input type="number" id="pref-workout-days" placeholder="e.g. 4" min="0" max="7" />
     </div>
@@ -765,8 +773,13 @@ textarea { resize: none; height: 70px; }
     </div>
     <div class="check-item" style="cursor:default;">
       <div class="check-icon">💧</div>
-      <div class="check-body"><div class="check-title">90 oz water minimum daily</div><div class="check-sub">Start with 16 oz before anything else.</div></div>
+      <div class="check-body"><div class="check-title" id="waterGoalTitle">90 oz water minimum daily</div><div class="check-sub">Start with 16 oz before anything else.</div></div>
     </div>
+  </div>
+
+  <div class="input-card" id="weeklyRecapCard" style="display:none;">
+    <h3>📊 This Week</h3>
+    <div class="goal-stats" id="weeklyRecapStats" style="margin-top:2px;flex-direction:column;gap:6px;align-items:flex-start;color:var(--dark-gray);"></div>
   </div>
 
   <div class="input-card">
@@ -782,8 +795,8 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card">
-    <h3>🔄 Start a New Sprint</h3>
-    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Coming back from the cruise (or any break)? Set your own sprint length and start date. Your check-in history and streak math stay intact — only the sprint dates reset.</p>
+    <h3>🔄 Your Sprint</h3>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Two paths, pick the one that's true. Either way, your check-in history is never touched — that's your real record and it stays exactly as it happened.</p>
     <div style="margin-bottom:8px;">
       <div class="input-label">Sprint length (days) — any number</div>
       <input type="number" id="sprint-length-input" placeholder="e.g. 14" min="1" />
@@ -792,11 +805,14 @@ textarea { resize: none; height: 70px; }
       <div class="input-label">Start date</div>
       <input type="date" id="sprint-start-input" />
     </div>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:14px;">
       <div class="input-label">Goal weight (lbs)</div>
       <input type="number" id="goal-weight-input" step="0.1" />
     </div>
-    <button class="save-btn coral" onclick="startNewSprint()">Start Sprint</button>
+    <button class="save-btn secondary" onclick="startNewSprint(false)">▶️ Continue Current Sprint</button>
+    <div style="font-size:11px;color:var(--gray);margin:6px 0 16px;line-height:1.5;">Just fixing your dates. Every streak, your slip count, and your day-of-history stay exactly as they are.</div>
+    <button class="save-btn coral" onclick="startNewSprint(true)">🔄 Start Completely Over</button>
+    <div style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.5;">A real fresh start on new dates. You'll get the option to zero out your lifetime slip counter too.</div>
   </div>
 
   <button class="link-btn" onclick="handleSignOut()">Sign out</button>
@@ -834,6 +850,12 @@ let settings = defaultSettings();
 let unsubCheckins = null, unsubWeights = null, unsubSettings = null, unsubMeasurements = null;
 let currentCheckinDate = todayStr();
 let currentCravingType = 'alcohol';
+// Guards so the header/streaks never flash "Day 1" or "0" before real data
+// has actually arrived from Firestore — that flash was the root cause of
+// Angela's "day reverts / streaks go to 0" bug reports.
+let settingsLoaded = false;
+let checkinsLoaded = false;
+let scoreBreakdownExpanded = false;
 
 function defaultSettings(){
   return {
@@ -852,6 +874,7 @@ function defaultSettings(){
     measurementUnit: 'in',
     proteinPerLb: 0.8,
     theme: 'light',
+    waterGoal: 90,
     mindfulPractices: ['prayer', 'bible', 'journal', 'meditation'],
     mindfulCustomLabel: ''
   };
@@ -879,6 +902,7 @@ function firstName(){ return settings.firstName || 'there'; }
 function foodAppName(){ return (settings.foodApp === 'other' ? settings.foodAppOther : settings.foodApp) || 'MyFitnessPal'; }
 function workoutAppName(){ return (settings.workoutApp === 'other' ? settings.workoutAppOther : settings.workoutApp) || 'Caliber'; }
 function stepGoal(){ return parseInt(settings.stepGoal) || 10000; }
+function waterGoal(){ return parseInt(settings.waterGoal) || 90; }
 
 // ── AUTH ─────────────────────────────────────────────────────────────────
 function authErr(msg){ document.getElementById('authError').textContent = msg || ''; }
@@ -920,6 +944,7 @@ function cleanupSubscriptions(){
   if(unsubMeasurements) unsubMeasurements();
   unsubCheckins = unsubWeights = unsubSettings = unsubMeasurements = null;
   checkins = {}; weights = []; measurements = []; settings = defaultSettings();
+  settingsLoaded = false; checkinsLoaded = false;
 }
 
 auth.onAuthStateChanged((user) => {
@@ -946,6 +971,7 @@ function subscribeData(){
   unsubSettings = userRef.collection('meta').doc('settings').onSnapshot((doc) => {
     if(doc.exists){
       settings = Object.assign(defaultSettings(), doc.data());
+      settingsLoaded = true;
       applyTheme();
       document.title = `Coach — ${firstName()}`;
       renderAll();
@@ -961,6 +987,7 @@ function subscribeData(){
   unsubCheckins = userRef.collection('checkins').onSnapshot((snap) => {
     checkins = {};
     snap.forEach((d) => { checkins[d.id] = d.data(); });
+    checkinsLoaded = true;
     renderAll();
   }, (err) => console.error('checkins sync error', err));
 
@@ -1131,18 +1158,22 @@ function getCravingMessages(type){
 }
 
 // ── STREAKS ──────────────────────────────────────────────────────────────
-function getStreaks(){
-  const datesDesc = Object.keys(checkins).sort().reverse();
+// Accepts an optional checkins-shaped object so callers (e.g. a save-in-flight
+// "what would my streak become" check) can compute against a hypothetical
+// state without waiting on the Firestore round-trip.
+function getStreaks(src){
+  src = src || checkins;
+  const datesDesc = Object.keys(src).sort().reverse();
   let alcohol = 0, sugar = 0, mobility = 0;
-  for(let d of datesDesc){ if(checkins[d].alcohol === 'no') alcohol++; else break; }
-  for(let d of datesDesc){ if(checkins[d].sugar === 'no') sugar++; else break; }
-  for(let d of datesDesc){ if(checkins[d].mobility === 'yes' || checkins[d].mobility === 'partial') mobility++; else break; }
+  for(let d of datesDesc){ if(src[d].alcohol === 'no') alcohol++; else break; }
+  for(let d of datesDesc){ if(src[d].sugar === 'no') sugar++; else break; }
+  for(let d of datesDesc){ if(src[d].mobility === 'yes' || src[d].mobility === 'partial') mobility++; else break; }
   let mindful = 0;
-  for(let d of datesDesc){ if(checkins[d].mindfulDone && checkins[d].mindfulDone.length > 0) mindful++; else break; }
+  for(let d of datesDesc){ if(src[d].mindfulDone && src[d].mindfulDone.length > 0) mindful++; else break; }
 
-  const datesAsc = Object.keys(checkins).sort();
+  const datesAsc = Object.keys(src).sort();
   let run = 0, alcoholBest = 0;
-  for(let d of datesAsc){ if(checkins[d].alcohol === 'no'){ run++; alcoholBest = Math.max(alcoholBest, run); } else { run = 0; } }
+  for(let d of datesAsc){ if(src[d].alcohol === 'no'){ run++; alcoholBest = Math.max(alcoholBest, run); } else { run = 0; } }
   alcoholBest = Math.max(alcoholBest, alcohol);
 
   const now = new Date();
@@ -1151,7 +1182,7 @@ function getStreaks(){
   let workouts = 0;
   datesDesc.forEach((d) => {
     const dd = parseDateStr(d);
-    if(dd >= weekStart && checkins[d].workout === 'full') workouts++;
+    if(dd >= weekStart && src[d].workout === 'full') workouts++;
   });
   return { alcohol, alcoholBest, sugar, mobility, workouts, mindful };
 }
@@ -1168,34 +1199,105 @@ function countRestDaysInWeekUpTo(dateStr){
 }
 
 // ── SCORE ────────────────────────────────────────────────────────────────
+// Returns not just what you earned (details) but exactly what cost you
+// points (missed) — Angela asked to actually see what kept a day off a 10.
 function calcScore(data, dateStr){
-  if(!data) return { score:0, details:[] };
+  if(!data) return { score:0, details:[], missed:[] };
   let pts = 0;
   const details = [];
+  const missed = [];
+
   if(data.mobility === 'yes'){ pts+=1.5; details.push('Mobility ✅'); }
-  else if(data.mobility === 'partial'){ pts+=0.75; details.push('Mobility partial'); }
+  else if(data.mobility === 'partial'){ pts+=0.75; details.push('Mobility partial'); missed.push('Mobility: only partial (−0.75)'); }
+  else { missed.push('Mobility: not logged (−1.5)'); }
+
   if(data.alcohol === 'no'){ pts+=2; details.push('No alcohol ✅'); }
-  else if(data.alcohol === 'yes'){ details.push('Had alcohol ❌'); }
+  else if(data.alcohol === 'yes'){ details.push('Had alcohol ❌'); missed.push('Alcohol: had a drink (−2)'); }
+  else { missed.push('Alcohol: not logged (−2)'); }
+
   if(data.sugar === 'no'){ pts+=1; details.push('No sugar ✅'); }
+  else if(data.sugar === 'yes'){ missed.push('Sugar: had some (−1)'); }
+  else { missed.push('Sugar: not logged (−1)'); }
+
   if(data.workout === 'full'){ pts+=2; details.push('Full workout ✅'); }
-  else if(data.workout === 'partial'){ pts+=1; details.push('Partial workout'); }
+  else if(data.workout === 'partial'){ pts+=1; details.push('Partial workout'); missed.push('Workout: partial session (−1)'); }
   else if(data.workout === 'rest'){
     const restAllowance = Math.max(0, 7 - (parseInt(settings.workoutDaysPerWeek)||4));
     const restCount = dateStr ? countRestDaysInWeekUpTo(dateStr) : 1;
     if(restCount <= restAllowance){ pts+=2; details.push('Planned rest day ✅'); }
-    else { pts+=0.5; details.push('Rest day (beyond plan)'); }
-  }
+    else { pts+=0.5; details.push('Rest day (beyond plan)'); missed.push('Workout: rest day beyond your planned days off (−1.5)'); }
+  } else { missed.push('Workout: not logged (−2)'); }
+
   const steps = parseInt(data.stepsFinal) || 0;
   const goal = stepGoal();
   if(steps >= goal){ pts+=1.5; details.push('Step goal ✅'); }
-  else if(steps >= goal*0.75){ pts+=0.75; details.push('75% of step goal'); }
-  if(data.breakfast === 'yes') pts+=0.5;
-  if(data.lunch === 'yes') pts+=0.5;
-  if(data.dinner === 'yes') pts+=0.5;
-  if(data.breakfast === 'yes' && data.lunch === 'yes' && data.dinner === 'yes'){ details.push('All meals logged ✅'); }
+  else if(steps >= goal*0.75){ pts+=0.75; details.push('75% of step goal'); missed.push(`Steps: ${steps.toLocaleString()} logged, needed ${goal.toLocaleString()} (−0.75)`); }
+  else { missed.push(steps ? `Steps: only ${steps.toLocaleString()} logged, needed ${goal.toLocaleString()} (−1.5)` : 'Steps: not logged (−1.5)'); }
+
+  let mealPts = 0;
+  if(data.breakfast === 'yes'){ pts+=0.5; mealPts+=0.5; } else missed.push('Breakfast: not logged (−0.5)');
+  if(data.lunch === 'yes'){ pts+=0.5; mealPts+=0.5; } else missed.push('Lunch: not logged (−0.5)');
+  if(data.dinner === 'yes'){ pts+=0.5; mealPts+=0.5; } else missed.push('Dinner: not logged (−0.5)');
+  if(mealPts === 1.5){ details.push('All meals logged ✅'); }
+
   const water = parseInt(data.waterOz) || 0;
-  if(water >= 90){ pts+=0.5; details.push('Water goal ✅'); }
-  return { score: Math.min(10, Math.round(pts*10)/10), details };
+  const wGoal = waterGoal();
+  if(water >= wGoal){ pts+=0.5; details.push('Water goal ✅'); }
+  else { missed.push(`Water: ${water}oz logged, needed ${wGoal}oz (−0.5)`); }
+
+  return { score: Math.min(10, Math.round(pts*10)/10), details, missed };
+}
+
+// ── SCORE COMPARISONS (yesterday / personal best) ──────────────────────────
+function yesterdayStr(dateStr){
+  const d = parseDateStr(dateStr);
+  d.setDate(d.getDate() - 1);
+  return todayStr(d);
+}
+function bestScoreExcluding(excludeDateStr){
+  let best = null, bestDate = null;
+  Object.keys(checkins).forEach((d) => {
+    if(d === excludeDateStr) return;
+    const c = checkins[d];
+    if(!c || !c.closed) return;
+    const sc = calcScore(c, d).score;
+    if(best === null || sc > best){ best = sc; bestDate = d; }
+  });
+  return { best, bestDate };
+}
+function getComparisonLine(score, dateStr){
+  const name = firstName();
+  const y = yesterdayStr(dateStr);
+  const yData = checkins[y];
+  const { best, bestDate } = bestScoreExcluding(dateStr);
+  const lines = [];
+  if(yData && yData.closed){
+    const yScore = calcScore(yData, y).score;
+    const diff = Math.round((score - yScore) * 10) / 10;
+    if(diff > 0) lines.push(`That's up ${diff} from yesterday's ${yScore} — moving the right direction, ${name}.`);
+    else if(diff < 0) lines.push(`That's ${Math.abs(diff)} below yesterday's ${yScore}. One day doesn't erase the streak — get back after it tomorrow.`);
+    else lines.push(`Dead even with yesterday's ${yScore}. Consistency counts too.`);
+  }
+  if(best !== null){
+    if(score > best) lines.push(`New personal best — your previous high was ${best}${bestDate ? ` (${bestDate})` : ''}. That's the version of you this whole thing is about.`);
+    else if(score === best) lines.push(`That ties your best day yet (${best}${bestDate ? `, ${bestDate}` : ''}).`);
+  }
+  return lines.join(' ');
+}
+
+// ── CELEBRATION ─────────────────────────────────────────────────────────
+function celebrate(){
+  const layer = document.createElement('div');
+  layer.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;';
+  const emojis = ['🎉','✨','💪','🔥','⭐'];
+  for(let i=0;i<24;i++){
+    const s = document.createElement('span');
+    s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    s.style.cssText = `position:absolute;top:-30px;left:${Math.random()*100}%;font-size:${16+Math.random()*14}px;animation:coach-confetti-fall ${1.6+Math.random()*1.2}s ease-in forwards;animation-delay:${Math.random()*0.4}s;`;
+    layer.appendChild(s);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 3200);
 }
 
 // Progress tracker for the "still logging today" view — counts anything answered,
@@ -1210,6 +1312,7 @@ function countProgress(data){
 // ── RENDER ───────────────────────────────────────────────────────────────
 function renderAll(){
   markSynced(true);
+  updateHeader();
   applyDynamicLabels();
   renderToday();
   const weightPage = document.getElementById('page-weight');
@@ -1235,6 +1338,7 @@ function applyDynamicLabels(){
   const stepTitle = document.getElementById('stepGoalTitle'); if(stepTitle) stepTitle.textContent = `${stepGoal().toLocaleString()} steps every day`;
   const woDaysTitle = document.getElementById('workoutDaysTitle'); if(woDaysTitle) woDaysTitle.textContent = `${parseInt(settings.workoutDaysPerWeek)||4} workout sessions per week`;
   const logMealsTitle = document.getElementById('logMealsTitle'); if(logMealsTitle) logMealsTitle.textContent = `Log every meal in ${foodApp}`;
+  const waterTitle = document.getElementById('waterGoalTitle'); if(waterTitle) waterTitle.textContent = `${waterGoal()} oz water minimum daily`;
 }
 
 function renderToday(){
@@ -1244,13 +1348,31 @@ function renderToday(){
   document.getElementById('coachSub').textContent = cm.sub;
 
   const s = getStreaks();
-  document.getElementById('streakAlcohol').textContent = s.alcohol;
-  document.getElementById('streakSugar').textContent = s.sugar;
-  document.getElementById('streakWorkout').textContent = s.workouts;
-  document.getElementById('streakMobility').textContent = s.mobility;
-  document.getElementById('streakMindful').textContent = s.mindful;
-  document.getElementById('alcoholAccountabilityLine').textContent =
-    `Best streak: ${s.alcoholBest} day${s.alcoholBest===1?'':'s'} · ${settings.lifetimeAlcoholSlips||0} slip${(settings.lifetimeAlcoholSlips||0)===1?'':'s'} all-time`;
+  // Never show a streak number until the checkins listener has actually
+  // resolved — showing "0" while data is still loading is what made streaks
+  // look wiped on every app open.
+  const dash = (v) => checkinsLoaded ? v : '–';
+  document.getElementById('streakAlcohol').textContent = dash(s.alcohol);
+  document.getElementById('streakSugar').textContent = dash(s.sugar);
+  document.getElementById('streakWorkout').textContent = dash(s.workouts);
+  document.getElementById('streakMobility').textContent = dash(s.mobility);
+  document.getElementById('streakMindful').textContent = dash(s.mindful);
+  document.getElementById('alcoholAccountabilityLine').textContent = checkinsLoaded
+    ? `Best streak: ${s.alcoholBest} day${s.alcoholBest===1?'':'s'} · ${settings.lifetimeAlcoholSlips||0} slip${(settings.lifetimeAlcoholSlips||0)===1?'':'s'} all-time`
+    : 'Loading your streaks...';
+
+  // Streak "flame" tiers — the longer the streak, the warmer the card.
+  const tierClass = (n) => (!checkinsLoaded ? '' : n >= 14 ? 'tier-fire' : n >= 7 ? 'tier-warm' : '');
+  const applyTier = (cardId, iconId, n, hotIcon, baseIcon) => {
+    const card = document.getElementById(cardId);
+    if(card){ card.classList.remove('tier-warm','tier-fire'); const t = tierClass(n); if(t) card.classList.add(t); }
+    const icon = iconId ? document.getElementById(iconId) : null;
+    if(icon) icon.textContent = checkinsLoaded && n >= 7 ? hotIcon : baseIcon;
+  };
+  applyTier('streakCardAlcohol', 'streakIconAlcohol', s.alcohol, '🔥', '🚫🍷');
+  applyTier('streakCardSugar', 'streakIconSugar', s.sugar, '🔥', '🚫🍬');
+  applyTier('streakCardMobility', 'streakIconMobility', s.mobility, '🔥', '🌅');
+  applyTier('streakCardMindful', 'streakIconMindful', s.mindful, '🔥', '🙏');
 
   const td = checkins[todayStr()];
   const scoreEl = document.getElementById('scoreNum');
@@ -1263,8 +1385,17 @@ function renderToday(){
     const color = sc.score >= 8 ? '#0F6E56' : sc.score >= 5 ? '#B07D2A' : '#C0392B';
     circleEl.style.borderColor = color;
     scoreEl.style.color = color;
-    document.getElementById('scoreTitle').textContent = sc.score >= 8 ? 'Crushing it! 🔥' : sc.score >= 5 ? 'Good day 👍' : 'Room to grow 💪';
-    document.getElementById('scoreDetail').textContent = sc.details.join(' · ') || 'Keep going';
+    document.getElementById('scoreTitle').textContent = sc.score >= 10 ? 'Perfect day! 🎉' : sc.score >= 8 ? 'Crushing it! 🔥' : sc.score >= 5 ? 'Good day 👍' : 'Room to grow 💪';
+    let detailText;
+    if(!sc.missed.length){
+      detailText = 'Nothing left on the table — perfect score.';
+    } else if(scoreBreakdownExpanded){
+      detailText = sc.missed.join(' · ');
+    } else {
+      const shown = sc.missed.slice(0, 2);
+      detailText = shown.join(' · ') + (sc.missed.length > 2 ? ` · +${sc.missed.length - 2} more (tap for full breakdown)` : ' (tap for full breakdown)');
+    }
+    document.getElementById('scoreDetail').textContent = detailText;
   } else if(td && Object.keys(td).length > 2){
     // Progress, not yet closed out — no judgmental number, just a count.
     const { done, total } = countProgress(td);
@@ -1290,7 +1421,7 @@ function renderToday(){
     { label:'Workout', sub: td?.workoutDetail || (td?.workout === 'rest' ? 'Planned rest day' : 'Push · Pull · Legs · Active'), icon:'💪', done: td?.workout === 'full' || td?.workout === 'rest', partial: td?.workout === 'partial' },
     { label:`${goal.toLocaleString()} Steps`, sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon:'🚶', done: (parseInt(td?.stepsFinal)||0) >= goal, partial: (parseInt(td?.stepsFinal)||0) >= goal*0.75 },
     { label:'All Meals Logged', sub: `Breakfast + lunch + dinner in ${foodAppName()}`, icon:'📱', done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' },
-    { label:'90 oz Water', sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon:'💧', done: (parseInt(td?.waterOz)||0) >= 90, partial: (parseInt(td?.waterOz)||0) >= 60 },
+    { label:`${waterGoal()} oz Water`, sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon:'💧', done: (parseInt(td?.waterOz)||0) >= waterGoal(), partial: (parseInt(td?.waterOz)||0) >= waterGoal()*0.67 },
   ];
 
   const cl = document.getElementById('todayChecklist');
@@ -1306,6 +1437,11 @@ function renderToday(){
 
   const cc = document.getElementById('cravingCount');
   if(cc) cc.textContent = settings.cravingCount ? `You've talked yourself out of ${settings.cravingCount} craving${settings.cravingCount===1?'':'s'} so far. Keep going.` : '';
+}
+
+function toggleScoreBreakdownView(){
+  scoreBreakdownExpanded = !scoreBreakdownExpanded;
+  renderToday();
 }
 
 // ── CHECK-IN FORM (backdating + editing) ─────────────────────────────────
@@ -1398,6 +1534,13 @@ function saveCheckin(finalize){
   else if(data.alcohol !== 'yes'){ slipCounted = false; }
   data.alcoholSlipCounted = slipCounted;
 
+  // Compute a "what would my streak become" check against a hypothetical
+  // checkins state before the Firestore write resolves, so we know whether
+  // to celebrate without waiting on the listener round-trip.
+  const prevBest = getStreaks().alcoholBest;
+  const hypotheticalStreaks = getStreaks(Object.assign({}, checkins, { [dateStr]: data }));
+  const isNewBestStreak = data.closed && data.alcohol === 'no' && hypotheticalStreaks.alcohol > prevBest && hypotheticalStreaks.alcohol > 0;
+
   db.collection('users').doc(uid).collection('checkins').doc(dateStr).set(data)
     .then(() => {
       if(isNewSlip){
@@ -1409,20 +1552,39 @@ function saveCheckin(finalize){
     })
     .then(() => {
       let feedbackMsg = '';
+      let sc = null;
+      let isPerfect = false;
       if(!data.closed){
         // Progress save — no score, just an encouraging nudge.
         feedbackMsg = `Saved, ${firstName()}. Keep going — close out tonight to get your score.`;
       } else {
-        const sc = calcScore(data, dateStr);
-        if(sc.score >= 8) feedbackMsg = `Score: ${sc.score}/10 — Outstanding day, ${firstName()}! 🔥`;
+        sc = calcScore(data, dateStr);
+        isPerfect = sc.score >= 10;
+        if(isPerfect) feedbackMsg = `Score: ${sc.score}/10 — Perfect day, ${firstName()}! 🎉`;
+        else if(sc.score >= 8) feedbackMsg = `Score: ${sc.score}/10 — Outstanding day, ${firstName()}! 🔥`;
         else if(sc.score >= 5) feedbackMsg = `Score: ${sc.score}/10 — Solid day. Keep building. 💪`;
         else feedbackMsg = `Score: ${sc.score}/10 — Tomorrow you go harder. No excuses.`;
+
+        if(sc.missed.length){
+          feedbackMsg += `\n\nWhat cost you points:\n` + sc.missed.map(m => `• ${m}`).join('\n');
+        } else {
+          feedbackMsg += `\n\nNothing left on the table today. That's the whole game right there.`;
+        }
+        const compare = getComparisonLine(sc.score, dateStr);
+        if(compare) feedbackMsg += `\n\n${compare}`;
       }
       if(data.calorieTarget === 'under') feedbackMsg += '\n\nUnder your calorie target today — that discipline compounds.';
       else if(data.calorieTarget === 'on') feedbackMsg += '\n\nRight on target — that\'s exactly the consistency that wins.';
       else if(data.calorieTarget === 'over') feedbackMsg += '\n\nOver today — no big deal, tomorrow\'s a clean slate. Don\'t spiral over one day.';
       if(isNewSlip) feedbackMsg += '\n\nThat slip extends your sprint by a day — the clock doesn\'t shorten because you cheated. Reset tomorrow.';
-      alert(feedbackMsg);
+      if(isNewBestStreak) feedbackMsg += `\n\n🔥 New personal best — ${hypotheticalStreaks.alcohol} days alcohol free. That's a record you just set, ${firstName()}.`;
+
+      if(isPerfect || isNewBestStreak){
+        celebrate();
+        setTimeout(() => alert(feedbackMsg), 300);
+      } else {
+        alert(feedbackMsg);
+      }
       showPage('today', document.querySelectorAll('.nav-tab')[0]);
     })
     .catch((e) => { markSynced(false); alert('Could not save — check your connection. It will retry automatically.\n' + e.message); });
@@ -1576,6 +1738,15 @@ function renderMacros(){
 
   const stepGoalEl = document.getElementById('pref-step-goal');
   if(stepGoalEl && document.activeElement !== stepGoalEl) stepGoalEl.value = settings.stepGoal || 10000;
+  const waterGoalEl = document.getElementById('pref-water-goal');
+  if(waterGoalEl && document.activeElement !== waterGoalEl) waterGoalEl.value = settings.waterGoal || 90;
+  const waterHintEl = document.getElementById('waterGoalHint');
+  if(waterHintEl){
+    const currentWeight = weights.length > 0 ? weights[0].weight : null;
+    waterHintEl.textContent = currentWeight
+      ? `Suggested: about ${Math.round(currentWeight * 0.5)} oz for your current weight (roughly half your bodyweight in ounces). Adjust up for hard workouts or heat, down if that's not realistic.`
+      : 'A common guideline is about half your bodyweight in ounces. Adjust based on your workouts, climate, and what actually works for you.';
+  }
   const workoutDaysEl = document.getElementById('pref-workout-days');
   if(workoutDaysEl && document.activeElement !== workoutDaysEl) workoutDaysEl.value = settings.workoutDaysPerWeek || 4;
   const foodAppEl = document.getElementById('pref-food-app');
@@ -1637,6 +1808,7 @@ function saveProfile(){
 
 function savePreferences(){
   const stepGoalVal = parseInt(document.getElementById('pref-step-goal').value) || 10000;
+  const waterGoalVal = parseInt(document.getElementById('pref-water-goal').value) || 90;
   const workoutDays = Math.max(0, Math.min(7, parseInt(document.getElementById('pref-workout-days').value) || 4));
   const foodApp = document.getElementById('pref-food-app').value;
   const foodAppOther = document.getElementById('pref-food-app-other').value;
@@ -1648,7 +1820,7 @@ function savePreferences(){
   });
   const mindfulCustomLabel = document.getElementById('pref-mindful-custom').value.trim();
   db.collection('users').doc(uid).collection('meta').doc('settings').set(
-    { stepGoal: stepGoalVal, workoutDaysPerWeek: workoutDays, foodApp, foodAppOther, workoutApp, workoutAppOther, mindfulPractices, mindfulCustomLabel },
+    { stepGoal: stepGoalVal, waterGoal: waterGoalVal, workoutDaysPerWeek: workoutDays, foodApp, foodAppOther, workoutApp, workoutAppOther, mindfulPractices, mindfulCustomLabel },
     { merge: true }
   ).then(() => alert('Preferences saved.'))
     .catch((e) => alert('Could not save: ' + e.message));
@@ -1709,23 +1881,81 @@ function renderGoals(){
   if(lenInput && document.activeElement !== lenInput) lenInput.value = settings.sprintLength;
   const startInput = document.getElementById('sprint-start-input');
   if(startInput && document.activeElement !== startInput) startInput.value = todayStr();
+
+  renderWeeklyRecap();
 }
 
-function startNewSprint(){
+// Strava/Spotify-Wrapped-style recap of the last 7 days — a quick pulse check
+// on the week without having to dig through History day by day.
+function renderWeeklyRecap(){
+  const card = document.getElementById('weeklyRecapCard');
+  const statsEl = document.getElementById('weeklyRecapStats');
+  if(!card || !statsEl) return;
+  if(!checkinsLoaded){ card.style.display = 'none'; return; }
+
+  const today = new Date();
+  const days7 = [];
+  for(let i = 6; i >= 0; i--){
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    days7.push(todayStr(d));
+  }
+  const closedDays = days7.filter((d) => checkins[d] && checkins[d].closed);
+  if(closedDays.length === 0){ card.style.display = 'none'; return; }
+
+  const scores = closedDays.map((d) => calcScore(checkins[d], d).score);
+  const avg = Math.round((scores.reduce((a,b) => a+b, 0) / scores.length) * 10) / 10;
+  const bestIdx = scores.indexOf(Math.max(...scores));
+  const bestDay = closedDays[bestIdx];
+  const bestScore = scores[bestIdx];
+  const alcoholFreeDays = closedDays.filter((d) => checkins[d].alcohol === 'no').length;
+  const fullWorkouts = closedDays.filter((d) => checkins[d].workout === 'full').length;
+
+  const openerLine = avg >= 8
+    ? `${closedDays.length} days closed out, averaging ${avg}/10, ${firstName()}. That's a real week.`
+    : avg >= 5
+    ? `${closedDays.length} days closed out, averaging ${avg}/10. Solid — there's more in the tank.`
+    : `${closedDays.length} days closed out, averaging ${avg}/10. Rough stretch — next week's a clean slate.`;
+
+  statsEl.innerHTML = `
+    <div>${openerLine}</div>
+    <div>🏆 Best day: <strong>${bestDay}</strong> at ${bestScore}/10</div>
+    <div>🚫🍷 Alcohol-free: ${alcoholFreeDays} of ${closedDays.length} closed days</div>
+    <div>💪 Full workouts: ${fullWorkouts}</div>
+  `;
+  card.style.display = 'block';
+}
+
+// resetCounters === false → "Continue Current Sprint": dates only, nothing else touched.
+// resetCounters === true  → "Start Completely Over": fresh dates, with an explicit,
+// separate confirm on whether to also zero the lifetime slip counter. Check-in
+// history is never deleted or altered either way — that's the permanent record.
+function startNewSprint(resetCounters){
   const days = parseInt(document.getElementById('sprint-length-input').value);
   const startDateStr = document.getElementById('sprint-start-input').value || todayStr();
   const goalWeight = parseFloat(document.getElementById('goal-weight-input').value) || settings.goalWeight;
   if(!days || days < 1){ alert('Enter a sprint length of at least 1 day.'); return; }
-  if(!confirm(`Start a ${days}-day sprint starting ${startDateStr}? Your history stays saved.`)) return;
-  const prevSprint = { start: settings.sprintStart, length: settings.sprintLength, endedAt: Date.now() };
-  const newSettings = Object.assign({}, settings, {
+
+  let resetSlips = false;
+  if(resetCounters){
+    resetSlips = confirm(`Starting completely over, ${firstName()}. Your check-in history stays exactly as it happened — that's your real record, untouched.\n\nAlso reset your lifetime slip counter to 0?\n\nOK = yes, zero it out\nCancel = no, keep it as is`);
+    if(!confirm(`Confirm: fresh ${days}-day sprint starting ${startDateStr}${resetSlips ? ', slip counter reset to 0' : ''}?`)) return;
+  } else {
+    if(!confirm(`Continue your current sprint with corrected dates — ${days} days starting ${startDateStr}? Nothing else changes.`)) return;
+  }
+
+  const prevSprint = { start: settings.sprintStart, length: settings.sprintLength, endedAt: Date.now(), type: resetCounters ? 'restart' : 'continued' };
+  const newSettings = {
     sprintStart: startDateStr,
     sprintLength: days,
     goalWeight: goalWeight,
     sprintHistory: (settings.sprintHistory || []).concat([prevSprint])
-  });
-  db.collection('users').doc(uid).collection('meta').doc('settings').set(newSettings)
-    .then(() => alert(`${firstName()}, your ${days}-day sprint is set. Let's go. 💪`))
+  };
+  if(resetSlips) newSettings.lifetimeAlcoholSlips = 0;
+
+  db.collection('users').doc(uid).collection('meta').doc('settings').set(newSettings, { merge: true })
+    .then(() => alert(resetCounters
+      ? `Clean slate, ${firstName()}. ${days} days starting ${startDateStr}. Let's go. 💪`
+      : `Dates fixed, ${firstName()}. ${days} days starting ${startDateStr} — everything else stayed exactly as it was.`))
     .catch((e) => alert('Could not save: ' + e.message));
 }
 
@@ -1791,6 +2021,13 @@ function updateHeader(){
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   document.getElementById('navDate').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+  if(!settingsLoaded){
+    // Don't guess "Day 1" from default settings before the real sprint dates
+    // have loaded — that guess flashing on screen is what looked like a reset.
+    document.getElementById('navDay').textContent = '…';
+    document.getElementById('navCountdown').textContent = '';
+    return;
+  }
   const start = parseDateStr(settings.sprintStart);
   const end = new Date(start); end.setDate(end.getDate() + settings.sprintLength);
   const dayNum = Math.floor((now - start) / 86400000) + 1;
