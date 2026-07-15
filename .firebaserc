@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "health-coach-2ab07"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

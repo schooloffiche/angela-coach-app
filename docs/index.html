@@ -414,7 +414,7 @@ textarea { resize: none; height: 70px; }
 
   <div class="input-card">
     <h3>🌅 Morning</h3>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:8px;" id="ci-mobility-wrap">
       <div class="input-label">Did you do morning mobility? (20 min)</div>
       <select id="ci-mobility">
         <option value="">— select —</option>
@@ -423,7 +423,7 @@ textarea { resize: none; height: 70px; }
         <option value="no">❌ Not yet</option>
       </select>
     </div>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:8px;" id="ci-water-wrap">
       <div class="input-label">Did you drink 16 oz water first thing?</div>
       <select id="ci-water">
         <option value="">— select —</option>
@@ -431,7 +431,7 @@ textarea { resize: none; height: 70px; }
         <option value="no">❌ No</option>
       </select>
     </div>
-    <div>
+    <div id="ci-breakfast-wrap">
       <div class="input-label" id="lbl-breakfast-app">Breakfast logged in MyFitnessPal?</div>
       <select id="ci-breakfast">
         <option value="">— select —</option>
@@ -442,9 +442,9 @@ textarea { resize: none; height: 70px; }
     </div>
   </div>
 
-  <div class="input-card">
+  <div class="input-card" id="ci-midday-card">
     <h3>☀️ Midday</h3>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:8px;" id="ci-lunch-wrap">
       <div class="input-label" id="lbl-lunch-app">Lunch logged in MyFitnessPal?</div>
       <select id="ci-lunch">
         <option value="">— select —</option>
@@ -453,13 +453,13 @@ textarea { resize: none; height: 70px; }
         <option value="skipped">⏭ Skipped</option>
       </select>
     </div>
-    <div>
+    <div id="ci-steps-wrap">
       <div class="input-label">Current step count</div>
       <input type="number" id="ci-steps" placeholder="e.g. 6500" />
     </div>
   </div>
 
-  <div class="input-card">
+  <div class="input-card" id="ci-workout-card">
     <h3>💪 Workout</h3>
     <div style="margin-bottom:8px;">
       <div class="input-label">Did you work out today?</div>
@@ -486,9 +486,9 @@ textarea { resize: none; height: 70px; }
     </div>
   </div>
 
-  <div class="input-card">
+  <div class="input-card" id="ci-commitments-card">
     <h3>🚫 Commitments</h3>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:8px;" id="ci-alcohol-wrap">
       <div class="input-label">Alcohol today?</div>
       <select id="ci-alcohol">
         <option value="">— select —</option>
@@ -496,7 +496,7 @@ textarea { resize: none; height: 70px; }
         <option value="yes">❌ Had a drink</option>
       </select>
     </div>
-    <div>
+    <div id="ci-sugar-wrap">
       <div class="input-label">Added sugar / desserts / candy?</div>
       <select id="ci-sugar">
         <option value="">— select —</option>
@@ -514,7 +514,7 @@ textarea { resize: none; height: 70px; }
 
   <div class="input-card">
     <h3>🌙 Evening Close</h3>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:8px;" id="ci-dinner-wrap">
       <div class="input-label" id="lbl-dinner-app">Dinner logged in MyFitnessPal?</div>
       <select id="ci-dinner">
         <option value="">— select —</option>
@@ -523,11 +523,11 @@ textarea { resize: none; height: 70px; }
         <option value="skipped">⏭ Skipped dinner</option>
       </select>
     </div>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:8px;" id="ci-steps-final-wrap">
       <div class="input-label">Final step count</div>
       <input type="number" id="ci-steps-final" placeholder="e.g. 10200" />
     </div>
-    <div style="margin-bottom:8px;">
+    <div style="margin-bottom:8px;" id="ci-water-oz-wrap">
       <div class="input-label">Total water today (oz)</div>
       <input type="number" id="ci-water-oz" placeholder="e.g. 90" />
     </div>
@@ -723,6 +723,14 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card">
+    <h3>🔔 Notification Schedule</h3>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.6;">Pick up to 7 reminders and what time each should land. Times follow your phone's current timezone automatically — no changes needed when you travel.</p>
+    <div id="notif-schedule-list"></div>
+    <button class="save-btn secondary" onclick="addNotifRow()" id="notif-add-btn" style="margin-top:8px;">+ Add reminder</button>
+    <button class="save-btn coral" onclick="saveNotifSchedule()" style="margin-top:8px;">Save Notification Schedule</button>
+  </div>
+
+  <div class="input-card">
     <h3>ℹ️ How macros are calculated</h3>
     <p style="font-size:12px;color:var(--gray);line-height:1.6;">
       Uses the Mifflin-St Jeor formula for BMR × an activity multiplier for TDEE, then applies your goal's calorie adjustment based on your current logged weight. Protein is set to about 1g per lb of current bodyweight, fat to 25% of calories, and carbs fill the rest. This is a solid, widely-used estimate — not personalized medical or dietitian advice. Adjust based on real-world results after 2–3 weeks.
@@ -746,35 +754,22 @@ textarea { resize: none; height: 70px; }
     <div class="goal-stats"><span id="sprintStartLabel">Start</span><span id="sprintPct">Day 1</span><span id="sprintEndLabel">End</span></div>
   </div>
 
-  <div class="check-card">
-    <div class="check-item" style="cursor:default;">
-      <div class="check-icon">🚫</div>
-      <div class="check-body"><div class="check-title">Zero alcohol — dry till goal weight</div><div class="check-sub">No exceptions. Not even one.</div></div>
+  <div class="check-card" id="sprintRulesCard"></div>
+
+  <div class="input-card">
+    <h3>🎯 Sprint Goals</h3>
+    <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Choose what counts toward your score this sprint. Turn anything off that's not your focus right now — you can turn it back on next sprint. This applies whichever button you tap below.</p>
+    <div class="mindful-row"><input type="checkbox" id="goal-alcohol" /><label for="goal-alcohol">🚫 No alcohol</label></div>
+    <div class="mindful-row"><input type="checkbox" id="goal-sugar" /><label for="goal-sugar">🍬 No sugar</label></div>
+    <div class="mindful-row"><input type="checkbox" id="goal-mobility" onchange="toggleGoalFreqRow()" /><label for="goal-mobility">🌅 Mobility</label></div>
+    <div style="margin:2px 0 8px 32px;" id="goal-mobility-freq-row">
+      <div class="input-label">Times per week (7 = every day)</div>
+      <input type="number" id="goal-mobility-per-week" min="1" max="7" style="width:80px;" />
     </div>
-    <div class="check-item" style="cursor:default;">
-      <div class="check-icon">🍬</div>
-      <div class="check-body"><div class="check-title">No desserts or candy</div><div class="check-sub">Fruit is fine. Natural sugars ok.</div></div>
-    </div>
-    <div class="check-item" style="cursor:default;">
-      <div class="check-icon">🌅</div>
-      <div class="check-body"><div class="check-title">Morning mobility every single day</div><div class="check-sub">20 min. No exceptions.</div></div>
-    </div>
-    <div class="check-item" style="cursor:default;">
-      <div class="check-icon">🚶</div>
-      <div class="check-body"><div class="check-title" id="stepGoalTitle">10,000 steps every day</div><div class="check-sub">Walking pad + gym + daily movement.</div></div>
-    </div>
-    <div class="check-item" style="cursor:default;">
-      <div class="check-icon">💪</div>
-      <div class="check-body"><div class="check-title" id="workoutDaysTitle">3–4 weight sessions per week</div><div class="check-sub">Rest days within your plan are full credit.</div></div>
-    </div>
-    <div class="check-item" style="cursor:default;">
-      <div class="check-icon">📱</div>
-      <div class="check-body"><div class="check-title" id="logMealsTitle">Log every meal in MyFitnessPal</div><div class="check-sub">Every meal. No skipping.</div></div>
-    </div>
-    <div class="check-item" style="cursor:default;">
-      <div class="check-icon">💧</div>
-      <div class="check-body"><div class="check-title" id="waterGoalTitle">90 oz water minimum daily</div><div class="check-sub">Start with 16 oz before anything else.</div></div>
-    </div>
+    <div class="mindful-row"><input type="checkbox" id="goal-workout" /><label for="goal-workout">💪 Workouts</label></div>
+    <div class="mindful-row"><input type="checkbox" id="goal-steps" /><label for="goal-steps">🚶 Steps</label></div>
+    <div class="mindful-row"><input type="checkbox" id="goal-meals" /><label for="goal-meals">📱 Log meals</label></div>
+    <div class="mindful-row"><input type="checkbox" id="goal-water" /><label for="goal-water">💧 Water</label></div>
   </div>
 
   <div class="input-card" id="weeklyRecapCard" style="display:none;">
@@ -876,8 +871,33 @@ function defaultSettings(){
     theme: 'light',
     waterGoal: 90,
     mindfulPractices: ['prayer', 'bible', 'journal', 'meditation'],
-    mindfulCustomLabel: ''
+    mindfulCustomLabel: '',
+    activeGoals: { alcohol: true, sugar: true, mobility: true, mobilityPerWeek: 7, workout: true, steps: true, meals: true, water: true },
+    notifTimezone: '',
+    notifSchedule: []
   };
+}
+
+// Merges settings.activeGoals over sane defaults so older accounts (created
+// before goals became per-sprint configurable) behave exactly as before —
+// everything on, mobility daily.
+function activeGoals(){
+  return Object.assign({
+    alcohol: true, sugar: true, mobility: true, mobilityPerWeek: 7,
+    workout: true, steps: true, meals: true, water: true
+  }, settings.activeGoals || {});
+}
+
+// Reads the phone's current IANA timezone and syncs it to Firestore if it's
+// changed — this is what makes notification times "just follow you" when
+// traveling, with no manual switch to remember.
+function syncTimezone(){
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if(tz && uid && settings.notifTimezone !== tz){
+      db.collection('users').doc(uid).collection('meta').doc('settings').set({ notifTimezone: tz }, { merge: true }).catch(() => {});
+    }
+  } catch(e) { /* Intl not available — notifications fall back to server default tz */ }
 }
 
 const MINDFUL_PRESETS = {
@@ -974,6 +994,7 @@ function subscribeData(){
       settingsLoaded = true;
       applyTheme();
       document.title = `Coach — ${firstName()}`;
+      syncTimezone();
       renderAll();
     } else if(!doc.metadata.fromCache){
       // Only create defaults once we get a server-confirmed "really doesn't exist" —
@@ -1091,41 +1112,42 @@ function getCoachMessage(){
   const streak = getStreaks();
   const name = firstName();
   const foodApp = foodAppName();
+  const ag = activeGoals();
 
-  if(td.alcohol === 'yes') return {
+  if(ag.alcohol && td.alcohol === 'yes') return {
     emoji:'😤', msg:`You had a drink, ${name}. That's done — it doesn't define today or tomorrow. Reset right now. The streak restarts tomorrow and you know exactly how good you feel when you're clean.`,
     sub: `Your sprint just got a day longer, and that's slip #${settings.lifetimeAlcoholSlips || 1} since you started. The clock doesn't shorten because of a slip.`
   };
-  if(h < 7 && !td.mobility) return {
+  if(ag.mobility && h < 7 && !td.mobility) return {
     emoji:'🌅', msg:`Good morning, ${name}. Before you do anything else — get on that mat. 20 minutes of mobility. Your body needs it, and it sets the tone for every decision you make today.`,
     sub:'Water first, then mat. Go.'
   };
-  if(h >= 7 && h < 9 && !td.breakfast) return {
+  if(ag.meals && h >= 7 && h < 9 && !td.breakfast) return {
     emoji:'🍳', msg:`Breakfast is non-negotiable, ${name}. Skipping it spikes cortisol, crashes your blood sugar by 10 AM, and makes the afternoon cravings 10x harder to resist. Eat protein NOW.`,
     sub:`Eggs, Greek yogurt, protein shake — anything. Log it in ${foodApp}.`
   };
-  if(h >= 12 && h < 14 && !td.lunch) return {
+  if(ag.meals && h >= 12 && h < 14 && !td.lunch) return {
     emoji:'🥗', msg:`It's lunch time, ${name}. Don't skip it — an empty gut in the afternoon is your biggest enemy. Protein first. Log it before you eat.`,
     sub:`Prepped chicken bowl · tuna sandwich · whatever you have. Log it in ${foodApp}.`
   };
-  if(h >= 15 && h < 17 && td.alcohol === undefined) return {
+  if(ag.alcohol && h >= 15 && h < 17 && td.alcohol === undefined) return {
     emoji:'⚠️', msg:`3 PM is the danger zone, ${name}. This is when cravings hit hardest and willpower is lowest. Have your hot tea RIGHT NOW. If you feel tempted — hit the craving button below.`,
     sub:'You committed to this goal. Honor it.'
   };
-  if(h >= 17 && h < 19 && !td.workout) return {
+  if(ag.workout && h >= 17 && h < 19 && !td.workout) return {
     emoji:'💪', msg:`It's workout time, ${name}, and there's no excuse not to go. You don't have to feel like it. You just have to start. The hardest part is putting your shoes on — after that your body takes over.`,
     sub:'30 minutes is all you need. Push. Pull. Legs. Whatever — just move.'
   };
-  if(h >= 20 && !td.dinner) return {
+  if(ag.meals && h >= 20 && !td.dinner) return {
     emoji:'🍽️', msg:`Log your dinner in ${foodApp} before you close the day, ${name}. No skipping — incomplete logging is incomplete accountability.`,
     sub:'Then check your steps. Did you hit your goal?'
   };
 
-  if(streak.alcohol >= 7) return {
+  if(ag.alcohol && streak.alcohol >= 7) return {
     emoji:'🔥', msg:`${streak.alcohol} days alcohol free, ${name}. That is serious commitment. Your gut is healing, your sleep is deeper, your fat loss is accelerating. This is what it looks like when you mean it.`,
     sub:'Keep the streak alive. Every day adds to something real.'
   };
-  if(streak.alcohol >= 3) return {
+  if(ag.alcohol && streak.alcohol >= 3) return {
     emoji:'⚡', msg:`${streak.alcohol} days clean. You're building momentum. This is the window where habits form — don't break it now. The first two weeks are the hardest and you're in them.`,
     sub:'Stay the course.'
   };
@@ -1187,63 +1209,111 @@ function getStreaks(src){
   return { alcohol, alcoholBest, sugar, mobility, workouts, mindful };
 }
 
-function countRestDaysInWeekUpTo(dateStr){
+// Generic "how many days this week (up to and including dateStr) matched
+// predicate" — powers both the workout rest-day allowance and the new
+// mobility weekly-quota logic, so a goal doesn't have to be daily to be scored.
+function countGoalDaysInWeekUpTo(dateStr, predicate){
   const d = parseDateStr(dateStr);
   const weekStart = new Date(d); weekStart.setDate(d.getDate() - d.getDay()); weekStart.setHours(0,0,0,0);
   let count = 0;
   Object.keys(checkins).forEach((k) => {
     const kd = parseDateStr(k);
-    if(kd >= weekStart && kd <= d && checkins[k].workout === 'rest') count++;
+    if(kd >= weekStart && kd <= d && predicate(checkins[k])) count++;
   });
   return count;
 }
+function countRestDaysInWeekUpTo(dateStr){
+  return countGoalDaysInWeekUpTo(dateStr, (c) => c.workout === 'rest');
+}
 
 // ── SCORE ────────────────────────────────────────────────────────────────
+// Base point values for each goal — sum to 10 when everything's active. When
+// a sprint turns some goals off, the rest are scaled up proportionally so the
+// score is always out of a clean /10, no matter how many goals are in play.
+const GOAL_WEIGHTS = { mobility: 1.5, alcohol: 2, sugar: 1, workout: 2, steps: 1.5, meals: 1.5, water: 0.5 };
+
 // Returns not just what you earned (details) but exactly what cost you
 // points (missed) — Angela asked to actually see what kept a day off a 10.
 function calcScore(data, dateStr){
   if(!data) return { score:0, details:[], missed:[] };
+  const ag = activeGoals();
+  const activeKeys = Object.keys(GOAL_WEIGHTS).filter((k) => ag[k]);
+  const totalW = activeKeys.reduce((s,k) => s + GOAL_WEIGHTS[k], 0) || 1;
+  const scale = 10 / totalW;
+  const wt = (k) => GOAL_WEIGHTS[k] * scale;
+
   let pts = 0;
   const details = [];
   const missed = [];
 
-  if(data.mobility === 'yes'){ pts+=1.5; details.push('Mobility ✅'); }
-  else if(data.mobility === 'partial'){ pts+=0.75; details.push('Mobility partial'); missed.push('Mobility: only partial (−0.75)'); }
-  else { missed.push('Mobility: not logged (−1.5)'); }
+  if(ag.mobility){
+    const w = wt('mobility');
+    const perWeek = Math.min(7, Math.max(1, parseInt(ag.mobilityPerWeek) || 7));
+    if(data.mobility === 'yes'){ pts+=w; details.push('Mobility ✅'); }
+    else if(data.mobility === 'partial'){ pts+=w*0.5; missed.push(`Mobility: only partial (−${(w*0.5).toFixed(2)})`); }
+    else if(perWeek < 7){
+      // Frequency-based goal (e.g. 5x/week): missing a day is only a cost
+      // once you've used up your allowed "off" days for the week — exactly
+      // how workout rest-day allowance already works below.
+      const allowedMisses = 7 - perWeek;
+      const missesThisWeek = countGoalDaysInWeekUpTo(dateStr || todayStr(), (c) => c.mobility !== 'yes' && c.mobility !== 'partial');
+      if(missesThisWeek <= allowedMisses){ pts+=w; details.push(`Mobility — within your ${perWeek}x/week plan ✅`); }
+      else { missed.push(`Mobility: not logged, over your ${perWeek}x/week plan (−${w.toFixed(2)})`); }
+    } else { missed.push(`Mobility: not logged (−${w.toFixed(2)})`); }
+  }
 
-  if(data.alcohol === 'no'){ pts+=2; details.push('No alcohol ✅'); }
-  else if(data.alcohol === 'yes'){ details.push('Had alcohol ❌'); missed.push('Alcohol: had a drink (−2)'); }
-  else { missed.push('Alcohol: not logged (−2)'); }
+  if(ag.alcohol){
+    const w = wt('alcohol');
+    if(data.alcohol === 'no'){ pts+=w; details.push('No alcohol ✅'); }
+    else if(data.alcohol === 'yes'){ details.push('Had alcohol ❌'); missed.push(`Alcohol: had a drink (−${w.toFixed(2)})`); }
+    else { missed.push(`Alcohol: not logged (−${w.toFixed(2)})`); }
+  }
 
-  if(data.sugar === 'no'){ pts+=1; details.push('No sugar ✅'); }
-  else if(data.sugar === 'yes'){ missed.push('Sugar: had some (−1)'); }
-  else { missed.push('Sugar: not logged (−1)'); }
+  if(ag.sugar){
+    const w = wt('sugar');
+    if(data.sugar === 'no'){ pts+=w; details.push('No sugar ✅'); }
+    else if(data.sugar === 'yes'){ missed.push(`Sugar: had some (−${w.toFixed(2)})`); }
+    else { missed.push(`Sugar: not logged (−${w.toFixed(2)})`); }
+  }
 
-  if(data.workout === 'full'){ pts+=2; details.push('Full workout ✅'); }
-  else if(data.workout === 'partial'){ pts+=1; details.push('Partial workout'); missed.push('Workout: partial session (−1)'); }
-  else if(data.workout === 'rest'){
-    const restAllowance = Math.max(0, 7 - (parseInt(settings.workoutDaysPerWeek)||4));
-    const restCount = dateStr ? countRestDaysInWeekUpTo(dateStr) : 1;
-    if(restCount <= restAllowance){ pts+=2; details.push('Planned rest day ✅'); }
-    else { pts+=0.5; details.push('Rest day (beyond plan)'); missed.push('Workout: rest day beyond your planned days off (−1.5)'); }
-  } else { missed.push('Workout: not logged (−2)'); }
+  if(ag.workout){
+    const w = wt('workout');
+    if(data.workout === 'full'){ pts+=w; details.push('Full workout ✅'); }
+    else if(data.workout === 'partial'){ pts+=w*0.5; missed.push(`Workout: partial session (−${(w*0.5).toFixed(2)})`); }
+    else if(data.workout === 'rest'){
+      const restAllowance = Math.max(0, 7 - (parseInt(settings.workoutDaysPerWeek)||4));
+      const restCount = dateStr ? countRestDaysInWeekUpTo(dateStr) : 1;
+      if(restCount <= restAllowance){ pts+=w; details.push('Planned rest day ✅'); }
+      else { pts+=w*0.25; missed.push(`Workout: rest day beyond your planned days off (−${(w*0.75).toFixed(2)})`); }
+    } else { missed.push(`Workout: not logged (−${w.toFixed(2)})`); }
+  }
 
-  const steps = parseInt(data.stepsFinal) || 0;
-  const goal = stepGoal();
-  if(steps >= goal){ pts+=1.5; details.push('Step goal ✅'); }
-  else if(steps >= goal*0.75){ pts+=0.75; details.push('75% of step goal'); missed.push(`Steps: ${steps.toLocaleString()} logged, needed ${goal.toLocaleString()} (−0.75)`); }
-  else { missed.push(steps ? `Steps: only ${steps.toLocaleString()} logged, needed ${goal.toLocaleString()} (−1.5)` : 'Steps: not logged (−1.5)'); }
+  if(ag.steps){
+    const w = wt('steps');
+    const steps = parseInt(data.stepsFinal) || 0;
+    const goal = stepGoal();
+    if(steps >= goal){ pts+=w; details.push('Step goal ✅'); }
+    else if(steps >= goal*0.75){ pts+=w*0.5; missed.push(`Steps: ${steps.toLocaleString()} logged, needed ${goal.toLocaleString()} (−${(w*0.5).toFixed(2)})`); }
+    else { missed.push(steps ? `Steps: only ${steps.toLocaleString()} logged, needed ${goal.toLocaleString()} (−${w.toFixed(2)})` : `Steps: not logged (−${w.toFixed(2)})`); }
+  }
 
-  let mealPts = 0;
-  if(data.breakfast === 'yes'){ pts+=0.5; mealPts+=0.5; } else missed.push('Breakfast: not logged (−0.5)');
-  if(data.lunch === 'yes'){ pts+=0.5; mealPts+=0.5; } else missed.push('Lunch: not logged (−0.5)');
-  if(data.dinner === 'yes'){ pts+=0.5; mealPts+=0.5; } else missed.push('Dinner: not logged (−0.5)');
-  if(mealPts === 1.5){ details.push('All meals logged ✅'); }
+  if(ag.meals){
+    const w = wt('meals');
+    const per = w / 3;
+    let mealCount = 0;
+    if(data.breakfast === 'yes'){ pts+=per; mealCount++; } else missed.push(`Breakfast: not logged (−${per.toFixed(2)})`);
+    if(data.lunch === 'yes'){ pts+=per; mealCount++; } else missed.push(`Lunch: not logged (−${per.toFixed(2)})`);
+    if(data.dinner === 'yes'){ pts+=per; mealCount++; } else missed.push(`Dinner: not logged (−${per.toFixed(2)})`);
+    if(mealCount === 3){ details.push('All meals logged ✅'); }
+  }
 
-  const water = parseInt(data.waterOz) || 0;
-  const wGoal = waterGoal();
-  if(water >= wGoal){ pts+=0.5; details.push('Water goal ✅'); }
-  else { missed.push(`Water: ${water}oz logged, needed ${wGoal}oz (−0.5)`); }
+  if(ag.water){
+    const w = wt('water');
+    const water = parseInt(data.waterOz) || 0;
+    const wGoal = waterGoal();
+    if(water >= wGoal){ pts+=w; details.push('Water goal ✅'); }
+    else { missed.push(`Water: ${water}oz logged, needed ${wGoal}oz (−${w.toFixed(2)})`); }
+  }
 
   return { score: Math.min(10, Math.round(pts*10)/10), details, missed };
 }
@@ -1303,10 +1373,12 @@ function celebrate(){
 // Progress tracker for the "still logging today" view — counts anything answered,
 // regardless of whether the answer was good or bad, so mid-day logging never
 // looks like a failing grade. Deliberately separate from calcScore().
-const PROGRESS_KEYS = ['mobility', 'water', 'breakfast', 'lunch', 'workout', 'alcohol', 'sugar', 'dinner'];
+const PROGRESS_KEY_GATE = { mobility:'mobility', water:'water', breakfast:'meals', lunch:'meals', workout:'workout', alcohol:'alcohol', sugar:'sugar', dinner:'meals' };
 function countProgress(data){
-  const done = PROGRESS_KEYS.filter((k) => data && data[k]).length;
-  return { done, total: PROGRESS_KEYS.length };
+  const ag = activeGoals();
+  const keys = Object.keys(PROGRESS_KEY_GATE).filter((k) => ag[PROGRESS_KEY_GATE[k]]);
+  const done = keys.filter((k) => data && data[k]).length;
+  return { done, total: keys.length || 1 };
 }
 
 // ── RENDER ───────────────────────────────────────────────────────────────
@@ -1414,15 +1486,18 @@ function renderToday(){
   }
 
   const goal = stepGoal();
-  const checks = [
-    { label:'Morning Mobility', sub:'20 min on the mat', icon:'🌅', done: td?.mobility === 'yes', partial: td?.mobility === 'partial' },
-    { label:'Alcohol Free', sub:'No exceptions', icon:'🚫', done: td?.alcohol === 'no', failed: td?.alcohol === 'yes' },
-    { label:'No Desserts / Candy', sub:'Natural sugar from fruit is fine', icon:'🍬', done: td?.sugar === 'no', failed: td?.sugar === 'yes' },
-    { label:'Workout', sub: td?.workoutDetail || (td?.workout === 'rest' ? 'Planned rest day' : 'Push · Pull · Legs · Active'), icon:'💪', done: td?.workout === 'full' || td?.workout === 'rest', partial: td?.workout === 'partial' },
-    { label:`${goal.toLocaleString()} Steps`, sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon:'🚶', done: (parseInt(td?.stepsFinal)||0) >= goal, partial: (parseInt(td?.stepsFinal)||0) >= goal*0.75 },
-    { label:'All Meals Logged', sub: `Breakfast + lunch + dinner in ${foodAppName()}`, icon:'📱', done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' },
-    { label:`${waterGoal()} oz Water`, sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon:'💧', done: (parseInt(td?.waterOz)||0) >= waterGoal(), partial: (parseInt(td?.waterOz)||0) >= waterGoal()*0.67 },
-  ];
+  const ag = activeGoals();
+  const checks = [];
+  if(ag.mobility){
+    const perWeek = Math.min(7, Math.max(1, parseInt(ag.mobilityPerWeek) || 7));
+    checks.push({ label: perWeek < 7 ? `Mobility (${perWeek}x/week)` : 'Morning Mobility', sub: perWeek < 7 ? 'Any time of day works' : '20 min on the mat', icon:'🌅', done: td?.mobility === 'yes', partial: td?.mobility === 'partial' });
+  }
+  if(ag.alcohol) checks.push({ label:'Alcohol Free', sub:'No exceptions', icon:'🚫', done: td?.alcohol === 'no', failed: td?.alcohol === 'yes' });
+  if(ag.sugar) checks.push({ label:'No Desserts / Candy', sub:'Natural sugar from fruit is fine', icon:'🍬', done: td?.sugar === 'no', failed: td?.sugar === 'yes' });
+  if(ag.workout) checks.push({ label:'Workout', sub: td?.workoutDetail || (td?.workout === 'rest' ? 'Planned rest day' : 'Push · Pull · Legs · Active'), icon:'💪', done: td?.workout === 'full' || td?.workout === 'rest', partial: td?.workout === 'partial' });
+  if(ag.steps) checks.push({ label:`${goal.toLocaleString()} Steps`, sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon:'🚶', done: (parseInt(td?.stepsFinal)||0) >= goal, partial: (parseInt(td?.stepsFinal)||0) >= goal*0.75 });
+  if(ag.meals) checks.push({ label:'All Meals Logged', sub: `Breakfast + lunch + dinner in ${foodAppName()}`, icon:'📱', done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' });
+  if(ag.water) checks.push({ label:`${waterGoal()} oz Water`, sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon:'💧', done: (parseInt(td?.waterOz)||0) >= waterGoal(), partial: (parseInt(td?.waterOz)||0) >= waterGoal()*0.67 });
 
   const cl = document.getElementById('todayChecklist');
   cl.innerHTML = checks.map(c => `
@@ -1444,8 +1519,31 @@ function toggleScoreBreakdownView(){
   renderToday();
 }
 
+// Hides/shows check-in fields to match this sprint's active goals — a sprint
+// that's only tracking alcohol shouldn't force you through meal-logging
+// questions every day.
+function applyActiveGoalsToCheckinForm(){
+  const ag = activeGoals();
+  const set = (id, on) => { const el = document.getElementById(id); if(el) el.style.display = on ? '' : 'none'; };
+  set('ci-mobility-wrap', ag.mobility);
+  set('ci-water-wrap', ag.water);
+  set('ci-water-oz-wrap', ag.water);
+  set('ci-breakfast-wrap', ag.meals);
+  set('ci-lunch-wrap', ag.meals);
+  set('ci-dinner-wrap', ag.meals);
+  set('ci-steps-wrap', ag.steps);
+  set('ci-steps-final-wrap', ag.steps);
+  set('ci-alcohol-wrap', ag.alcohol);
+  set('ci-sugar-wrap', ag.sugar);
+  set('ci-workout-card', ag.workout);
+  set('ci-commitments-card', ag.alcohol || ag.sugar);
+  const midday = document.getElementById('ci-midday-card');
+  if(midday) midday.style.display = (ag.meals || ag.steps) ? '' : 'none';
+}
+
 // ── CHECK-IN FORM (backdating + editing) ─────────────────────────────────
 function loadCheckinForm(dateStr){
+  applyActiveGoalsToCheckinForm();
   currentCheckinDate = dateStr || todayStr();
   document.getElementById('ci-date').value = currentCheckinDate;
   document.getElementById('ci-date-hint').textContent = currentCheckinDate === todayStr() ? 'Editing today' : `Editing ${currentCheckinDate}`;
@@ -1747,6 +1845,7 @@ function renderMacros(){
       ? `Suggested: about ${Math.round(currentWeight * 0.5)} oz for your current weight (roughly half your bodyweight in ounces). Adjust up for hard workouts or heat, down if that's not realistic.`
       : 'A common guideline is about half your bodyweight in ounces. Adjust based on your workouts, climate, and what actually works for you.';
   }
+  renderNotifSchedule();
   const workoutDaysEl = document.getElementById('pref-workout-days');
   if(workoutDaysEl && document.activeElement !== workoutDaysEl) workoutDaysEl.value = settings.workoutDaysPerWeek || 4;
   const foodAppEl = document.getElementById('pref-food-app');
@@ -1803,6 +1902,59 @@ function saveProfile(){
   db.collection('users').doc(uid).collection('meta').doc('settings').set(
     { sex, age, heightFt, heightIn, activityLevel, goalType, proteinPerLb }, { merge: true }
   ).then(() => alert('Profile saved — your macros are updated below.'))
+    .catch((e) => alert('Could not save: ' + e.message));
+}
+
+// ── NOTIFICATION SCHEDULE ────────────────────────────────────────────────
+const NOTIF_TYPE_LABELS = {
+  mobility: '🌅 Mobility / Water', breakfast: '🍳 Breakfast', lunch: '🥗 Lunch + Steps',
+  danger: '⚠️ Danger Zone', workout: '💪 Workout', dinner: '🍽️ Dinner + Close', windDown: '🌙 Wind Down'
+};
+let notifScheduleInitialized = false;
+
+function renderNotifSchedule(){
+  if(notifScheduleInitialized) return; // don't stomp in-progress edits on re-render
+  const list = document.getElementById('notif-schedule-list');
+  if(!list) return;
+  list.innerHTML = '';
+  const schedule = Array.isArray(settings.notifSchedule) ? settings.notifSchedule : [];
+  schedule.forEach((s) => addNotifRow(s.time, s.type));
+  refreshNotifAddBtn();
+  notifScheduleInitialized = true;
+}
+
+function addNotifRow(time, type){
+  const list = document.getElementById('notif-schedule-list');
+  if(!list || list.children.length >= 7) return;
+  const row = document.createElement('div');
+  row.className = 'input-row';
+  row.style.gap = '8px';
+  row.setAttribute('data-notif-row', '');
+  row.innerHTML = `
+    <input type="time" step="900" class="notif-time" style="flex:1;" value="${time || '07:00'}" />
+    <select class="notif-type" style="flex:1.4;">
+      ${Object.keys(NOTIF_TYPE_LABELS).map((k) => `<option value="${k}" ${k===(type||'mobility')?'selected':''}>${NOTIF_TYPE_LABELS[k]}</option>`).join('')}
+    </select>
+    <button class="link-btn" onclick="this.closest('[data-notif-row]').remove(); refreshNotifAddBtn();" style="padding:8px;">✕</button>`;
+  list.appendChild(row);
+  refreshNotifAddBtn();
+}
+
+function refreshNotifAddBtn(){
+  const list = document.getElementById('notif-schedule-list');
+  const btn = document.getElementById('notif-add-btn');
+  if(list && btn) btn.style.display = list.children.length >= 7 ? 'none' : '';
+}
+
+function saveNotifSchedule(){
+  const rows = Array.from(document.querySelectorAll('[data-notif-row]'));
+  const schedule = rows.map((row) => ({
+    time: row.querySelector('.notif-time').value || '07:00',
+    type: row.querySelector('.notif-type').value,
+  })).filter((s) => s.time);
+  if(schedule.length > 7){ alert('Max 7 reminders for now.'); return; }
+  db.collection('users').doc(uid).collection('meta').doc('settings').set({ notifSchedule: schedule }, { merge: true })
+    .then(() => alert(schedule.length ? `Notification schedule saved — ${schedule.length} reminder${schedule.length===1?'':'s'} set.` : 'Notification schedule cleared — no reminders will fire.'))
     .catch((e) => alert('Could not save: ' + e.message));
 }
 
@@ -1883,6 +2035,65 @@ function renderGoals(){
   if(startInput && document.activeElement !== startInput) startInput.value = todayStr();
 
   renderWeeklyRecap();
+  renderSprintRulesCard();
+  renderSprintGoalsForm();
+}
+
+// Dynamic replacement for the old static 7-item rules list — only shows the
+// goals actually active this sprint, with copy that reflects real settings
+// (frequency, step goal, water goal, food app) instead of hardcoded numbers.
+function renderSprintRulesCard(){
+  const card = document.getElementById('sprintRulesCard');
+  if(!card) return;
+  const ag = activeGoals();
+  const items = [];
+  if(ag.alcohol) items.push({ icon:'🚫', title:'Zero alcohol — dry till goal weight', sub:'No exceptions. Not even one.' });
+  if(ag.sugar) items.push({ icon:'🍬', title:'No desserts or candy', sub:'Fruit is fine. Natural sugars ok.' });
+  if(ag.mobility){
+    const perWeek = Math.min(7, Math.max(1, parseInt(ag.mobilityPerWeek) || 7));
+    items.push({ icon:'🌅', title: perWeek < 7 ? `Mobility ${perWeek}x per week` : 'Morning mobility every single day', sub: perWeek < 7 ? 'Any time of day works.' : '20 min. No exceptions.' });
+  }
+  if(ag.steps) items.push({ icon:'🚶', title:`${stepGoal().toLocaleString()} steps every day`, sub:'Walking pad + gym + daily movement.' });
+  if(ag.workout) items.push({ icon:'💪', title:`${parseInt(settings.workoutDaysPerWeek)||4} workout sessions per week`, sub:'Rest days within your plan are full credit.' });
+  if(ag.meals) items.push({ icon:'📱', title:`Log every meal in ${foodAppName()}`, sub:'Every meal. No skipping.' });
+  if(ag.water) items.push({ icon:'💧', title:`${waterGoal()} oz water minimum daily`, sub:'Start with 16 oz before anything else.' });
+
+  card.innerHTML = items.length ? items.map((i) => `
+    <div class="check-item" style="cursor:default;">
+      <div class="check-icon">${i.icon}</div>
+      <div class="check-body"><div class="check-title">${i.title}</div><div class="check-sub">${i.sub}</div></div>
+    </div>`).join('') : `<div class="empty">No goals turned on for this sprint yet — set them below.</div>`;
+}
+
+function toggleGoalFreqRow(){
+  const row = document.getElementById('goal-mobility-freq-row');
+  const cb = document.getElementById('goal-mobility');
+  if(row && cb) row.style.display = cb.checked ? '' : 'none';
+}
+
+function renderSprintGoalsForm(){
+  const ag = activeGoals();
+  const map = { alcohol:'goal-alcohol', sugar:'goal-sugar', mobility:'goal-mobility', workout:'goal-workout', steps:'goal-steps', meals:'goal-meals', water:'goal-water' };
+  Object.keys(map).forEach((k) => {
+    const el = document.getElementById(map[k]);
+    if(el && document.activeElement !== el) el.checked = !!ag[k];
+  });
+  const freqEl = document.getElementById('goal-mobility-per-week');
+  if(freqEl && document.activeElement !== freqEl) freqEl.value = ag.mobilityPerWeek || 7;
+  toggleGoalFreqRow();
+}
+
+function readActiveGoalsFromForm(){
+  return {
+    alcohol: !!document.getElementById('goal-alcohol').checked,
+    sugar: !!document.getElementById('goal-sugar').checked,
+    mobility: !!document.getElementById('goal-mobility').checked,
+    mobilityPerWeek: Math.min(7, Math.max(1, parseInt(document.getElementById('goal-mobility-per-week').value) || 7)),
+    workout: !!document.getElementById('goal-workout').checked,
+    steps: !!document.getElementById('goal-steps').checked,
+    meals: !!document.getElementById('goal-meals').checked,
+    water: !!document.getElementById('goal-water').checked,
+  };
 }
 
 // Strava/Spotify-Wrapped-style recap of the last 7 days — a quick pulse check
@@ -1948,6 +2159,7 @@ function startNewSprint(resetCounters){
     sprintStart: startDateStr,
     sprintLength: days,
     goalWeight: goalWeight,
+    activeGoals: readActiveGoalsFromForm(),
     sprintHistory: (settings.sprintHistory || []).concat([prevSprint])
   };
   if(resetSlips) newSettings.lifetimeAlcoholSlips = 0;

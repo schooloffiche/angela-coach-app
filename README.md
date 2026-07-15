@@ -5,7 +5,7 @@
 An installable app (PWA) built so anyone can use it — not tied to one person's stats. Includes:
 - **Firebase Auth** (email/password) so your data is tied to your account, not your device.
 - **Firestore** for check-ins, weights, measurements, streaks, and settings — synced live, works offline, catches up when back online.
-- **Cloud Functions + Cloud Scheduler** sending real push notifications at 6:00, 9:00, 12:30, 3:00, 5:00, 8:00, and 9:30 daily, personalized with your first name, your check-in state, and your chosen food/workout apps.
+- **Cloud Functions + Cloud Scheduler** sending real push notifications at up to 7 times a day, each fully customizable (time + message type) per person under Profile → Preferences, personalized with your first name, your check-in state, and your chosen food/workout apps. Times follow your phone's detected timezone automatically, so nothing needs adjusting when you travel.
 - **GitHub Pages** hosting the static frontend.
 - A built-in **nutrition/macro calculator**, a **flexible-length sprint goal setter** with backdating, a **body measurements tracker**, and a **craving button** split between alcohol and sweet-tooth cravings.
 
@@ -19,19 +19,13 @@ One-time setup below. After that, it just runs.
 4. **Build → Authentication → Get started → Sign-in method → Email/Password → Enable.**
 5. **Build → Firestore Database → Create database** → production mode → pick a location close to you (e.g. `nam5 (us-central)`) → Enable.
 6. **Project settings → Cloud Messaging tab → Web configuration → Web Push certificates → Generate key pair.** Copy the key string into `VAPID_KEY` in `docs/firebase-config.js`.
-7. **Project settings → Usage and billing → Modify plan → Blaze (pay as you go).** Cloud Scheduler (needed for the 7 fixed-time pushes) requires Blaze. At this scale (7 sends/day, one user) you'll stay inside the free tier — realistically $0/month, but Google requires a card on file for Blaze.
+7. **Project settings → Usage and billing → Modify plan → Blaze (pay as you go).** Cloud Scheduler (needed for the notification checks) requires Blaze. At this scale (a handful of users, checked every 15 minutes) you'll stay inside the free tier — realistically $0/month, but Google requires a card on file for Blaze.
 
-## 2. Set your timezone
+## 2. Timezones — nothing to configure
 
-Open `functions/index.js` and check the top:
+Unlike earlier versions of this app, there's no timezone constant to edit in `functions/index.js` anymore. Each person's phone timezone is auto-detected by the app and stored per-account, so notification times are always computed in *their* local time — including automatically adjusting when someone travels.
 
-```js
-const TIMEZONE = 'America/New_York';
-```
-
-Change this to your local [IANA timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) if you're not in US Eastern (e.g. `America/Chicago`, `America/Los_Angeles`). This is what makes "6:00 AM" actually mean 6:00 AM where you are.
-
-## 3. Deploy Firestore rules + the push-notification functions
+## 3. Deploy Firestore rules + the push-notification function
 
 From your computer, in the `angela-coach-app` folder:
 
@@ -43,7 +37,7 @@ cd functions && npm install && cd ..
 firebase deploy --only firestore:rules,functions
 ```
 
-That deploys the security rules (so only you can read/write your own data) and the 7 scheduled functions. You can re-run `firebase deploy --only functions` any time you edit the reminder copy in `functions/index.js`.
+That deploys the security rules (so only you can read/write your own data) and the single scheduled function that checks everyone's custom notification times every 15 minutes. Re-run `firebase deploy --only functions` any time you edit the reminder copy in `functions/index.js`.
 
 ## 4. Host the frontend on GitHub Pages
 
@@ -64,12 +58,22 @@ Requires iOS 16.4 or later. If you ever use a second device (iPad, laptop), just
 
 ## 6. Test it
 
-- In the Firebase Console → Functions, you can manually trigger a run of any `push____` function to confirm delivery without waiting.
-- Or temporarily edit one function's `schedule` cron to a couple minutes out, `firebase deploy --only functions`, confirm the push lands, then set it back.
+- In the Firebase Console → Functions, you can manually trigger a run of `checkNotifications` to confirm delivery without waiting a full 15-minute cycle.
+- Or just add a reminder in the app for a few minutes from now (Profile → Preferences → Notification Schedule) and wait for the next 15-minute check.
 
 ## Starting a new sprint
 
-After your cruise (or anytime), open **Goals → Start a New Sprint**, enter any sprint length in days (7, 14, 30, 45 — whatever you want), a start date (including a past date if you technically started before you set this up), and your goal weight. Your check-in history and streak math stay intact — only the sprint start/end dates reset.
+After your cruise (or anytime), open **Goals**. There you'll set sprint length in days (7, 14, 30, 45 — whatever you want), a start date (including a past date if you technically started before you set this up), your goal weight, and which goals count this sprint (see below). Then tap either **Continue Current Sprint** (fixes dates only — everything else, including your goals and history, stays exactly as it is) or **Start Completely Over** (fresh dates, with an optional prompt to zero out your lifetime slip counter). Either way, your check-in history is never touched — that's your permanent record.
+
+## Configurable sprint goals
+
+Under Goals → **Sprint Goals**, toggle which of the 7 tracked goals (alcohol, sugar, mobility, workout, steps, meal logging, water) actually count toward your score this sprint. A 30-day sprint can be alcohol-only; the next one can shift focus to workouts — whatever's on gets full weight, so the score always comes out of a clean /10 no matter how many goals are active. Mobility also supports a weekly target (e.g. 5x/week instead of daily) instead of requiring it every single day.
+
+Whatever's toggled off also disappears from the daily Check-In form and from the coach's nudges for that sprint — no dead fields, no reminders about something you're not tracking right now.
+
+## Notification schedule
+
+Under Profile → Preferences → **Notification Schedule**, add up to 7 reminders, each with its own time and message type (Mobility, Breakfast, Lunch, Danger Zone, Workout, Dinner, Wind Down) — pick as many or as few as you want, in any order. Times are checked against your phone's detected timezone, so travel is automatic. A reminder tied to a goal you've turned off this sprint (e.g. Danger Zone when alcohol tracking is off) simply stays quiet without needing to be removed.
 
 ## First-time setup inside the app
 
@@ -84,7 +88,7 @@ A logged drink does three things automatically: it doesn't silently reset your s
 
 ## Logging through the day without a bad score at 7am
 
-Check-In has two buttons once you're editing today: **Save Progress** (log as you go, no score shown, no judgment) and **Close Out Day** (finalizes today and calculates your real /10 score). Today's card shows "X of 8 logged so far" while the day is open, and only shows a number once you close out — usually in the evening, or via the 9:30pm reminder. Past days you edit through History are always treated as closed since they're already over.
+Check-In has two buttons once you're editing today: **Save Progress** (log as you go, no score shown, no judgment) and **Close Out Day** (finalizes today and calculates your real /10 score). Today's card shows "X of N logged so far" while the day is open (N matches however many goals are active this sprint), and only shows a number once you close out — usually in the evening, or via your wind-down reminder. Past days you edit through History are always treated as closed since they're already over.
 
 ## Mindful goal tracking
 
