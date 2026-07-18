@@ -43,6 +43,7 @@
      below, since --coral-darkest would be near-invisible on a dark card. */
   --accent-text: #7A2942;
   --accent-text-mid: #A83A5C;
+  --ring-track: #D9CFD4;
   --font-voice: 'Lora', Georgia, serif;
 }
 body.theme-dark {
@@ -73,6 +74,7 @@ body.theme-dark {
   --input-bg: #1C3833;
   --accent-text: #8FE0CC;
   --accent-text-mid: #6FD4BB;
+  --ring-track: rgba(255,255,255,0.24);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: -apple-system, Arial, sans-serif; background: var(--off); color: var(--dark-gray); min-height: 100vh; max-width: 430px; margin: 0 auto; transition: background 0.2s, color 0.2s; }
@@ -378,8 +380,8 @@ textarea { resize: none; height: 70px; }
   <div class="score-card" id="scoreCard" onclick="toggleScoreBreakdownView()">
     <div class="score-ring-wrap">
       <svg width="68" height="68" viewBox="0 0 68 68" class="score-ring-svg">
-        <circle cx="34" cy="34" r="28" fill="none" stroke="var(--border)" stroke-width="7"></circle>
-        <circle cx="34" cy="34" r="28" fill="none" stroke="#e0e0e0" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 34 34)" id="scoreRingProgress"></circle>
+        <circle cx="34" cy="34" r="28" fill="none" stroke="var(--ring-track)" stroke-width="8"></circle>
+        <circle cx="34" cy="34" r="28" fill="none" stroke="#e0e0e0" stroke-width="8" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 34 34)" id="scoreRingProgress"></circle>
       </svg>
       <div class="score-ring-center">
         <div class="score-num" id="scoreNum">—</div>
