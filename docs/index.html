@@ -108,9 +108,9 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .page.active { display: block; }
 
 /* COACH BANNER */
-.coach-banner { background: var(--white); border: 0.5px solid var(--border); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.coach-banner { background: var(--white); border: 0.5px solid var(--border); border-radius: 20px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
 .coach-banner::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: var(--coral-lt); border-radius: 50%; }
-.coach-emoji { font-size: 28px; margin-bottom: 6px; position: relative; }
+.coach-emoji { font-size: 22px; width: 42px; height: 42px; border-radius: 50%; background: var(--coral-lt); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
 .coach-label { font-size: 10px; font-weight: 700; color: var(--accent-text-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; position: relative; }
 .coach-msg { font-size: 14.5px; color: var(--accent-text); line-height: 1.65; font-weight: 500; font-family: var(--font-voice); font-style: italic; position: relative; }
 .coach-sub { font-size: 11px; color: var(--gray); margin-top: 6px; position: relative; }
@@ -123,31 +123,42 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 
 /* STREAK ROW */
 .streak-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.streak-card { flex: 1 1 30%; min-width: 90px; background: var(--white); border-radius: 14px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; }
+.streak-card { flex: 1 1 30%; min-width: 90px; background: var(--white); border-radius: 18px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; transition: box-shadow 0.2s; }
 .streak-num { font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 3px; color: var(--accent-text-mid); }
 .streak-label { font-size: 9px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
 .streak-icon { font-size: 14px; margin-bottom: 4px; }
 .streak-sub-line { font-size: 11px; color: var(--gray); text-align: center; margin-bottom: 14px; }
-.streak-card.tier-warm { background: var(--amber-lt); border-color: #f0dfb8; }
-.streak-card.tier-fire { background: var(--coral-lt); border-color: var(--coral-mid); box-shadow: 0 0 0 1px var(--coral-mid) inset; }
+/* Category tints — always-on color per goal, independent of streak length */
+.streak-card.tint-coral { background: var(--coral-lt); }
+.streak-card.tint-purple { background: var(--purple-lt); }
+.streak-card.tint-teal { background: var(--teal-lt); }
+.streak-card.tint-amber { background: var(--amber-lt); }
+/* Tier escalation — a highlighted ring at 7+/14+ days, layered on top of the tint */
+.streak-card.tier-warm { box-shadow: inset 0 0 0 2px var(--amber); }
+.streak-card.tier-fire { box-shadow: inset 0 0 0 2px var(--coral); }
 @keyframes coach-confetti-fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0.15; } }
+@keyframes coach-page-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.page.active { animation: coach-page-in 0.25s ease; }
 
 /* SCORE */
-.score-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
-.score-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 0; border: 3px solid var(--border); }
-.score-num { font-size: 22px; font-weight: 700; line-height: 1; }
-.score-denom { font-size: 10px; color: var(--gray); }
+.score-card { background: var(--white); border-radius: 20px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: transform 0.1s; }
+.score-card:active { transform: scale(0.98); }
+.score-ring-wrap { position: relative; width: 68px; height: 68px; flex-shrink: 0; }
+.score-ring-svg circle:last-child { transition: stroke-dashoffset 0.6s ease, stroke 0.3s ease; }
+.score-ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.score-num { font-size: 20px; font-weight: 700; line-height: 1; }
+.score-denom { font-size: 9px; color: var(--gray); }
 .score-body { flex: 1; }
 .score-title { font-size: 14px; font-weight: 700; color: var(--card-text); margin-bottom: 4px; }
 .score-detail { font-size: 12px; color: var(--gray); line-height: 1.5; }
 
 /* CHECKLIST */
 .section-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; margin-top: 4px; }
-.check-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
-.check-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid var(--border-soft); cursor: pointer; transition: background 0.1s; }
+.check-card { background: var(--white); border-radius: 20px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+.check-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid var(--border-soft); cursor: pointer; transition: background 0.1s, transform 0.1s; }
 .check-item:last-child { border-bottom: none; }
-.check-item:active { background: var(--cream); }
-.check-box { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 13px; }
+.check-item:active { background: var(--cream); transform: scale(0.99); }
+.check-box { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 14px; }
 .check-box.done { background: var(--teal); border-color: var(--teal); color: white; }
 .check-box.failed { background: var(--red); border-color: var(--red); color: white; }
 .check-body { flex: 1; }
@@ -156,8 +167,8 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .check-icon { font-size: 18px; flex-shrink: 0; }
 
 /* CRAVING BUTTON */
-.craving-btn { background: var(--coral); color: white; border: none; border-radius: 16px; padding: 16px; width: 100%; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.craving-btn:active { opacity: 0.85; }
+.craving-btn { background: var(--coral); color: white; border: none; border-radius: 20px; padding: 16px; width: 100%; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.1s, opacity 0.1s; }
+.craving-btn:active { opacity: 0.85; transform: scale(0.98); }
 
 /* CRAVING PANEL */
 .craving-choice { display: flex; gap: 8px; margin-bottom: 14px; }
@@ -180,7 +191,7 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .craving-back { background: none; border: none; color: var(--gray); font-size: 11px; text-decoration: underline; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 
 /* INPUT */
-.input-card { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
+.input-card { background: var(--white); border-radius: 20px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
 .input-card h3 { font-size: 13px; font-weight: 700; color: var(--card-text); margin-bottom: 10px; }
 .input-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); }
 .input-row:last-child { border-bottom: none; }
@@ -195,8 +206,8 @@ input[type=number], input[type=text], input[type=email], input[type=password], i
 .auth-screen input::placeholder { color: #cf9c88; }
 input:focus, textarea:focus, select:focus { border-color: var(--coral); }
 textarea { resize: none; height: 70px; }
-.save-btn { background: var(--teal); color: white; border: none; border-radius: 10px; padding: 11px; width: 100%; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 10px; }
-.save-btn:active { opacity: 0.85; }
+.save-btn { background: var(--teal); color: white; border: none; border-radius: 12px; padding: 11px; width: 100%; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 10px; transition: transform 0.1s, opacity 0.1s; }
+.save-btn:active { opacity: 0.85; transform: scale(0.98); }
 .save-btn.secondary { background: var(--dark); }
 .save-btn.coral { background: var(--coral); }
 .save-btn.ghost { background: transparent; color: var(--red); border: 1.5px solid var(--red-lt); }
@@ -242,7 +253,7 @@ textarea { resize: none; height: 70px; }
 .hist-edit-hint { font-size: 10px; color: var(--gray); margin-top: 6px; }
 
 /* GOAL CARD */
-.goal-card { background: var(--dark); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+.goal-card { background: var(--dark); border-radius: 20px; padding: 16px 18px; margin-bottom: 14px; }
 .goal-card h2 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
 .goal-card p { font-size: 11px; color: #d9a98f; margin-bottom: 12px; }
 .goal-progress { background: rgba(255,255,255,0.1); border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 6px; }
@@ -336,27 +347,27 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="streak-row">
-    <div class="streak-card" id="streakCardAlcohol">
+    <div class="streak-card tint-coral" id="streakCardAlcohol">
       <div class="streak-icon" id="streakIconAlcohol">🚫🍷</div>
       <div class="streak-num" id="streakAlcohol">0</div>
       <div class="streak-label">Alcohol<br>Free Days</div>
     </div>
-    <div class="streak-card" id="streakCardSugar">
+    <div class="streak-card tint-purple" id="streakCardSugar">
       <div class="streak-icon" id="streakIconSugar">🚫🍬</div>
       <div class="streak-num" id="streakSugar">0</div>
       <div class="streak-label">Sugar<br>Free Days</div>
     </div>
-    <div class="streak-card" id="streakCardWorkout">
+    <div class="streak-card tint-amber" id="streakCardWorkout">
       <div class="streak-icon">💪</div>
       <div class="streak-num" id="streakWorkout">0</div>
       <div class="streak-label">Workouts<br>This Week</div>
     </div>
-    <div class="streak-card" id="streakCardMobility">
+    <div class="streak-card tint-teal" id="streakCardMobility">
       <div class="streak-icon" id="streakIconMobility">🌅</div>
       <div class="streak-num" id="streakMobility">0</div>
       <div class="streak-label">Mobility<br>Streak</div>
     </div>
-    <div class="streak-card" id="streakCardMindful">
+    <div class="streak-card tint-teal" id="streakCardMindful">
       <div class="streak-icon" id="streakIconMindful">🙏</div>
       <div class="streak-num" id="streakMindful">0</div>
       <div class="streak-label">Mindful<br>Streak</div>
@@ -365,9 +376,15 @@ textarea { resize: none; height: 70px; }
   <div class="streak-sub-line" id="alcoholAccountabilityLine">Best streak: 0 days · 0 slips all-time</div>
 
   <div class="score-card" id="scoreCard" onclick="toggleScoreBreakdownView()">
-    <div class="score-circle" id="scoreCircle">
-      <div class="score-num" id="scoreNum">—</div>
-      <div class="score-denom">/10</div>
+    <div class="score-ring-wrap">
+      <svg width="68" height="68" viewBox="0 0 68 68" class="score-ring-svg">
+        <circle cx="34" cy="34" r="28" fill="none" stroke="var(--border)" stroke-width="7"></circle>
+        <circle cx="34" cy="34" r="28" fill="none" stroke="#e0e0e0" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 34 34)" id="scoreRingProgress"></circle>
+      </svg>
+      <div class="score-ring-center">
+        <div class="score-num" id="scoreNum">—</div>
+        <div class="score-denom" id="scoreDenomEl">/10</div>
+      </div>
     </div>
     <div class="score-body">
       <div class="score-title" id="scoreTitle">Today's Score</div>
@@ -1448,14 +1465,23 @@ function renderToday(){
 
   const td = checkins[todayStr()];
   const scoreEl = document.getElementById('scoreNum');
-  const circleEl = document.getElementById('scoreCircle');
-  const scoreDenomEl = document.querySelector('#scoreCircle .score-denom');
+  const ringEl = document.getElementById('scoreRingProgress');
+  const scoreDenomEl = document.getElementById('scoreDenomEl');
+  // SVG ring: r=28, circumference = 2*PI*28 ≈ 175.9. dashoffset counts down
+  // from full (empty ring) to 0 (full ring) as the fraction completes.
+  const RING_CIRC = 175.9;
+  const setRing = (frac, color) => {
+    if(!ringEl) return;
+    const clamped = Math.max(0, Math.min(1, frac));
+    ringEl.style.strokeDashoffset = String(RING_CIRC * (1 - clamped));
+    ringEl.style.stroke = color;
+  };
   if(td && td.closed){
     const sc = calcScore(td, todayStr());
     if(scoreDenomEl) scoreDenomEl.textContent = '/10';
     scoreEl.textContent = sc.score;
     const color = sc.score >= 8 ? '#0F6E56' : sc.score >= 5 ? '#B07D2A' : '#C0392B';
-    circleEl.style.borderColor = color;
+    setRing(sc.score / 10, color);
     scoreEl.style.color = color;
     document.getElementById('scoreTitle').textContent = sc.score >= 10 ? 'Perfect day! 🎉' : sc.score >= 8 ? 'Crushing it! 🔥' : sc.score >= 5 ? 'Good day 👍' : 'Room to grow 💪';
     let detailText;
@@ -1473,14 +1499,15 @@ function renderToday(){
     const { done, total } = countProgress(td);
     if(scoreDenomEl) scoreDenomEl.textContent = `/${total}`;
     scoreEl.textContent = done;
-    circleEl.style.borderColor = '#B07D2A';
+    setRing(total ? done / total : 0, '#B07D2A');
     scoreEl.style.color = '#B07D2A';
     document.getElementById('scoreTitle').textContent = 'In Progress';
     document.getElementById('scoreDetail').textContent = `${done} of ${total} logged so far — close out tonight for your score.`;
   } else {
     if(scoreDenomEl) scoreDenomEl.textContent = '/10';
     scoreEl.textContent = '—';
-    circleEl.style.borderColor = '#e0e0e0';
+    setRing(0, '#e0e0e0');
+    scoreEl.style.color = '';
     document.getElementById('scoreTitle').textContent = "Today's Score";
     document.getElementById('scoreDetail').textContent = 'Start your check-in any time today — no score until you close out tonight.';
   }
