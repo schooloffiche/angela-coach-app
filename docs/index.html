@@ -321,7 +321,7 @@ textarea { resize: none; height: 70px; }
 .section-label::before { content: ''; display: inline-block; width: 3px; height: 12px; border-radius: 2px; background: var(--coral); }
 
 /* Nav bar — subtle gradient + stronger separation from content below */
-.nav { background: linear-gradient(160deg, var(--dark), color-mix(in srgb, var(--dark) 100%, black 20%)); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+.nav { background: linear-gradient(160deg, var(--dark), color-mix(in srgb, var(--dark) 100%, black 20%)); box-shadow: 0 4px 16px rgba(0,0,0,0.25); z-index: 300; }
 
 /* Coach banner — soft gradient wash + richer badge instead of flat white/flat fill */
 .coach-banner { background: linear-gradient(155deg, var(--white), color-mix(in srgb, var(--coral-lt) 100%, var(--white) 35%)); }
@@ -394,10 +394,6 @@ input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px color-mix(in s
         <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
       </button>
       <div class="nav-menu" id="navMenu">
-        <button class="nav-menu-item" onclick="showPage('weight'); closeNavMenu();">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
-          Weight
-        </button>
         <button class="nav-menu-item" onclick="showPage('macros'); closeNavMenu();">
           <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.2" r="3"/><path d="M4 17c1-4 3.5-6 6-6s5 2 6 6"/></svg>
           Profile
@@ -420,6 +416,7 @@ input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px color-mix(in s
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('today',this)">Today</button>
     <button class="nav-tab" onclick="showPage('checkin',this)">Check-In</button>
+    <button class="nav-tab" onclick="showPage('weight',this)">Weight</button>
   </div>
 </div>
 <div class="nav-menu-backdrop" id="navMenuBackdrop" onclick="closeNavMenu()"></div>
