@@ -291,7 +291,17 @@ textarea { resize: none; height: 70px; }
 .sync-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--teal-mid); margin-right:5px; vertical-align:middle; }
 .sync-dot.off { background: var(--red); }
 .link-btn { background:none;border:none;color:var(--gray);font-size:11px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:6px 0; }
-.theme-toggle-btn { background: rgba(255,255,255,0.08); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.theme-toggle-btn { background: rgba(255,255,255,0.08); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff; }
+
+/* Overflow nav menu — Weight/Profile/History/Goals live here instead of as
+   permanent tabs, so the main tab row stays to just Today + Check-In. */
+.nav-menu { display: none; position: absolute; top: 40px; right: 0; background: var(--white); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); padding: 6px; min-width: 168px; z-index: 200; }
+.nav-menu.open { display: block; animation: coach-page-in 0.15s ease; }
+.nav-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; background: none; border: none; text-align: left; padding: 10px 12px; border-radius: 9px; font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--card-text); cursor: pointer; }
+.nav-menu-item svg { flex-shrink: 0; color: var(--coral); }
+.nav-menu-item:active { background: var(--cream); }
+.nav-menu-backdrop { display: none; position: fixed; inset: 0; z-index: 150; }
+.nav-menu-backdrop.open { display: block; }
 
 /* ============================================================
    DESIGN REFINEMENT PASS — typography, depth & gradient polish
@@ -378,8 +388,29 @@ input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px color-mix(in s
       <div class="nav-title" id="navTitle">Coach</div>
       <div class="nav-date" id="navDate"></div>
     </div>
-    <div style="text-align:right;display:flex;align-items:center;gap:10px;">
+    <div style="text-align:right;display:flex;align-items:center;gap:10px;position:relative;">
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Switch theme">🌙</button>
+      <button class="theme-toggle-btn" id="navMenuBtn" onclick="toggleNavMenu(event)" title="More">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+      <div class="nav-menu" id="navMenu">
+        <button class="nav-menu-item" onclick="showPage('weight'); closeNavMenu();">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+          Weight
+        </button>
+        <button class="nav-menu-item" onclick="showPage('macros'); closeNavMenu();">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.2" r="3"/><path d="M4 17c1-4 3.5-6 6-6s5 2 6 6"/></svg>
+          Profile
+        </button>
+        <button class="nav-menu-item" onclick="showPage('history'); closeNavMenu();">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.2" width="14" height="12.6" rx="1.5"/><path d="M3 8.2h14M7 2.2v4M13 2.2v4"/></svg>
+          History
+        </button>
+        <button class="nav-menu-item" onclick="showPage('goals'); closeNavMenu();">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="4"/><circle cx="10" cy="10" r="1" fill="currentColor"/></svg>
+          Goals
+        </button>
+      </div>
       <div>
         <div class="nav-day" id="navDay"></div>
         <div class="nav-date" id="navCountdown"></div>
@@ -389,12 +420,9 @@ input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px color-mix(in s
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('today',this)">Today</button>
     <button class="nav-tab" onclick="showPage('checkin',this)">Check-In</button>
-    <button class="nav-tab" onclick="showPage('weight',this)">Weight</button>
-    <button class="nav-tab" onclick="showPage('macros',this)">Profile</button>
-    <button class="nav-tab" onclick="showPage('history',this)">History</button>
-    <button class="nav-tab" onclick="showPage('goals',this)">Goals</button>
   </div>
 </div>
+<div class="nav-menu-backdrop" id="navMenuBackdrop" onclick="closeNavMenu()"></div>
 
 <!-- TODAY PAGE -->
 <div class="page active" id="page-today">
@@ -2378,6 +2406,15 @@ function updateHeader(){
 }
 
 // ── NAV ──────────────────────────────────────────────────────────────────
+function toggleNavMenu(e){
+  if(e) e.stopPropagation();
+  document.getElementById('navMenu').classList.toggle('open');
+  document.getElementById('navMenuBackdrop').classList.toggle('open');
+}
+function closeNavMenu(){
+  document.getElementById('navMenu').classList.remove('open');
+  document.getElementById('navMenuBackdrop').classList.remove('open');
+}
 function showPage(id, tabEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
