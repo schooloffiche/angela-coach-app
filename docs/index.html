@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;1,500&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <title>Coach</title>
 <style>
 :root {
@@ -45,6 +45,7 @@
   --accent-text-mid: #A83A5C;
   --ring-track: #D9CFD4;
   --font-voice: 'Lora', Georgia, serif;
+  --font-head: 'Manrope', -apple-system, sans-serif;
 }
 body.theme-dark {
   /* Dark theme — deep green/blue chrome, per Angela's request */
@@ -102,7 +103,8 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .nav-date { font-size: 11px; color: #d9a98f; }
 .nav-day { font-size: 12px; color: #ffd080; font-weight: 600; }
 .nav-tabs { display: flex; gap: 2px; overflow-x: auto; }
-.nav-tab { flex: 1; padding: 8px 4px; font-size: 10px; font-weight: 700; text-align: center; color: #c99b85; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; }
+.nav-tab { flex: 1; padding: 8px 4px; font-size: 10px; font-weight: 700; text-align: center; color: #c99b85; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; border-radius: 10px 10px 0 0; transition: background 0.15s; }
+.nav-tab.active { background: rgba(255,255,255,0.08); }
 .nav-tab.active { color: var(--coral-mid); border-bottom-color: var(--coral-mid); }
 
 /* PAGES */
@@ -110,9 +112,9 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .page.active { display: block; }
 
 /* COACH BANNER */
-.coach-banner { background: var(--white); border: 0.5px solid var(--border); border-radius: 20px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.coach-banner { background: var(--white); border: none; box-shadow: 0 4px 14px rgba(0,0,0,0.09); border-radius: 20px; padding: 16px 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
 .coach-banner::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: var(--coral-lt); border-radius: 50%; }
-.coach-emoji { font-size: 22px; width: 42px; height: 42px; border-radius: 50%; background: var(--coral-lt); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
+.coach-emoji { font-size: 24px; width: 46px; height: 46px; border-radius: 50%; background: var(--coral); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
 .coach-label { font-size: 10px; font-weight: 700; color: var(--accent-text-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; position: relative; }
 .coach-msg { font-size: 14.5px; color: var(--accent-text); line-height: 1.65; font-weight: 500; font-family: var(--font-voice); font-style: italic; position: relative; }
 .coach-sub { font-size: 11px; color: var(--gray); margin-top: 6px; position: relative; }
@@ -124,49 +126,53 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .notif-ok { background: var(--teal-lt); border-color: #bfe6d8; color: var(--teal); }
 
 /* STREAK ROW */
-.streak-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.streak-card { flex: 1 1 30%; min-width: 90px; background: var(--white); border-radius: 18px; border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; transition: box-shadow 0.2s; }
-.streak-num { font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 3px; color: var(--accent-text-mid); }
-.streak-label { font-size: 9px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
-.streak-icon { font-size: 14px; margin-bottom: 4px; }
+.streak-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+.streak-card { flex: 1 1 30%; min-width: 90px; background: var(--white); border-radius: 18px; border: none; padding: 14px 10px; text-align: center; transition: box-shadow 0.2s, transform 0.1s; box-shadow: 0 3px 10px rgba(0,0,0,0.10); }
+.streak-card:active { transform: scale(0.97); }
+.streak-num { font-size: 26px; font-weight: 800; line-height: 1; margin-bottom: 3px; }
+.streak-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; font-weight: 700; }
+.streak-icon { font-size: 18px; margin-bottom: 5px; }
 .streak-sub-line { font-size: 11px; color: var(--gray); text-align: center; margin-bottom: 14px; }
-/* Category tints — always-on color per goal, independent of streak length */
-.streak-card.tint-coral { background: var(--coral-lt); }
-.streak-card.tint-purple { background: var(--purple-lt); }
-.streak-card.tint-teal { background: var(--teal-lt); }
-.streak-card.tint-amber { background: var(--amber-lt); }
-/* Tier escalation — a highlighted ring at 7+/14+ days, layered on top of the tint */
-.streak-card.tier-warm { box-shadow: inset 0 0 0 2px var(--amber); }
-.streak-card.tier-fire { box-shadow: inset 0 0 0 2px var(--coral); }
+/* Category colors — bold solid fills with white numerals, not pale tints, so
+   each card reads as its own vivid tile rather than a faint hint of color. */
+.streak-card.tint-coral { background: var(--coral); }
+.streak-card.tint-purple { background: var(--purple); }
+.streak-card.tint-teal { background: var(--teal); }
+.streak-card.tint-amber { background: var(--amber); }
+.streak-card.tint-coral .streak-num, .streak-card.tint-purple .streak-num, .streak-card.tint-teal .streak-num, .streak-card.tint-amber .streak-num { color: #fff; }
+.streak-card.tint-coral .streak-label, .streak-card.tint-purple .streak-label, .streak-card.tint-teal .streak-label, .streak-card.tint-amber .streak-label { color: rgba(255,255,255,0.85); }
+/* Tier escalation — a bright ring at 7+/14+ days, layered on top of the fill */
+.streak-card.tier-warm { box-shadow: 0 3px 10px rgba(0,0,0,0.10), inset 0 0 0 3px #FFD166; }
+.streak-card.tier-fire { box-shadow: 0 3px 10px rgba(0,0,0,0.14), inset 0 0 0 3px #fff; }
 @keyframes coach-confetti-fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0.15; } }
 @keyframes coach-page-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 .page.active { animation: coach-page-in 0.25s ease; }
 
 /* SCORE */
-.score-card { background: var(--white); border-radius: 20px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: transform 0.1s; }
+.score-card { background: var(--white); border-radius: 20px; border: none; box-shadow: 0 4px 14px rgba(0,0,0,0.09); padding: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: transform 0.1s; }
 .score-card:active { transform: scale(0.98); }
-.score-ring-wrap { position: relative; width: 68px; height: 68px; flex-shrink: 0; }
+.score-ring-wrap { position: relative; width: 84px; height: 84px; flex-shrink: 0; }
 .score-ring-svg circle:last-child { transition: stroke-dashoffset 0.6s ease, stroke 0.3s ease; }
 .score-ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.score-num { font-size: 20px; font-weight: 700; line-height: 1; }
-.score-denom { font-size: 9px; color: var(--gray); }
+.score-num { font-size: 24px; font-weight: 800; line-height: 1; }
+.score-denom { font-size: 10px; color: var(--gray); font-weight: 600; }
 .score-body { flex: 1; }
-.score-title { font-size: 14px; font-weight: 700; color: var(--card-text); margin-bottom: 4px; }
+.score-title { font-size: 15px; font-weight: 800; color: var(--card-text); margin-bottom: 4px; }
 .score-detail { font-size: 12px; color: var(--gray); line-height: 1.5; }
 
 /* CHECKLIST */
 .section-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; margin-top: 4px; }
-.check-card { background: var(--white); border-radius: 20px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+.check-card { background: var(--white); border-radius: 20px; border: none; box-shadow: 0 4px 14px rgba(0,0,0,0.09); overflow: hidden; margin-bottom: 14px; }
 .check-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid var(--border-soft); cursor: pointer; transition: background 0.1s, transform 0.1s; }
 .check-item:last-child { border-bottom: none; }
 .check-item:active { background: var(--cream); transform: scale(0.99); }
-.check-box { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 14px; }
-.check-box.done { background: var(--teal); border-color: var(--teal); color: white; }
-.check-box.failed { background: var(--red); border-color: var(--red); color: white; }
+.check-box { width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--ring-track); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 15px; font-weight: 800; }
+.check-box.done { background: var(--teal); border-color: var(--teal); color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.check-box.failed { background: var(--red); border-color: var(--red); color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 .check-body { flex: 1; }
 .check-title { font-size: 13px; font-weight: 600; color: var(--card-text); margin-bottom: 1px; }
 .check-sub { font-size: 11px; color: var(--gray); }
-.check-icon { font-size: 18px; flex-shrink: 0; }
+.check-icon { flex-shrink: 0; color: var(--gray); display: flex; align-items: center; }
 
 /* CRAVING BUTTON */
 .craving-btn { background: var(--coral); color: white; border: none; border-radius: 20px; padding: 16px; width: 100%; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.1s, opacity 0.1s; }
@@ -193,8 +199,9 @@ body { font-family: -apple-system, Arial, sans-serif; background: var(--off); co
 .craving-back { background: none; border: none; color: var(--gray); font-size: 11px; text-decoration: underline; cursor: pointer; font-family: inherit; margin-bottom: 10px; }
 
 /* INPUT */
-.input-card { background: var(--white); border-radius: 20px; border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 14px; }
-.input-card h3 { font-size: 13px; font-weight: 700; color: var(--card-text); margin-bottom: 10px; }
+.input-card { background: var(--white); border-radius: 20px; border: none; box-shadow: 0 4px 14px rgba(0,0,0,0.09); padding: 16px 18px; margin-bottom: 14px; }
+.input-card h3 { font-size: 13px; font-weight: 700; color: var(--card-text); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+.input-card h3 svg { flex-shrink: 0; color: var(--coral); }
 .input-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border-soft); }
 .input-row:last-child { border-bottom: none; }
 .input-label { font-size: 12px; color: var(--dark-gray); flex: 1; font-weight: 500; }
@@ -243,7 +250,7 @@ textarea { resize: none; height: 70px; }
 .ms-entry-vals { color: var(--dark-gray); line-height: 1.6; }
 
 /* HISTORY */
-.hist-day { background: var(--white); border-radius: 14px; border: 0.5px solid var(--border); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
+.hist-day { background: var(--white); border-radius: 16px; border: none; box-shadow: 0 3px 10px rgba(0,0,0,0.08); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
 .hist-day:active { background: var(--cream); }
 .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .hist-date { font-size: 13px; font-weight: 700; color: var(--card-text); }
@@ -255,7 +262,7 @@ textarea { resize: none; height: 70px; }
 .hist-edit-hint { font-size: 10px; color: var(--gray); margin-top: 6px; }
 
 /* GOAL CARD */
-.goal-card { background: var(--dark); border-radius: 20px; padding: 16px 18px; margin-bottom: 14px; }
+.goal-card { background: var(--dark); border-radius: 20px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
 .goal-card h2 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
 .goal-card p { font-size: 11px; color: #d9a98f; margin-bottom: 12px; }
 .goal-progress { background: rgba(255,255,255,0.1); border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 6px; }
@@ -285,6 +292,62 @@ textarea { resize: none; height: 70px; }
 .sync-dot.off { background: var(--red); }
 .link-btn { background:none;border:none;color:var(--gray);font-size:11px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:6px 0; }
 .theme-toggle-btn { background: rgba(255,255,255,0.08); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* ============================================================
+   DESIGN REFINEMENT PASS — typography, depth & gradient polish
+   ============================================================ */
+
+/* Headline / numeric typography — a distinct heading face instead of
+   leaning on the system font for everything, so titles and numbers read
+   as designed rather than default. */
+.nav-title, .coach-label, .streak-num, .streak-label, .score-num, .score-title,
+.section-label, .check-title, .input-card h3, .goal-card h2, .hist-date, .hist-score,
+.craving-choice-btn .cc-label, .craving-panel h3, .auth-title, .macro-num, .macro-label,
+.nav-tab, .wt-val, .input-val { font-family: var(--font-head); }
+
+.nav-title { font-weight: 800; letter-spacing: -0.01em; font-size: 19px; }
+.nav-tab { font-weight: 700; letter-spacing: 0.02em; }
+.section-label { display: flex; align-items: center; gap: 6px; }
+.section-label::before { content: ''; display: inline-block; width: 3px; height: 12px; border-radius: 2px; background: var(--coral); }
+
+/* Nav bar — subtle gradient + stronger separation from content below */
+.nav { background: linear-gradient(160deg, var(--dark), color-mix(in srgb, var(--dark) 100%, black 20%)); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+
+/* Coach banner — soft gradient wash + richer badge instead of flat white/flat fill */
+.coach-banner { background: linear-gradient(155deg, var(--white), color-mix(in srgb, var(--coral-lt) 100%, var(--white) 35%)); }
+.coach-banner::before { width: 130px; height: 130px; right: -30px; top: -30px; background: linear-gradient(135deg, var(--coral-lt), color-mix(in srgb, var(--coral) 100%, white 55%)); }
+.coach-emoji { background: linear-gradient(135deg, var(--coral-mid), var(--coral) 55%, var(--coral-dark)); box-shadow: 0 4px 12px color-mix(in srgb, var(--coral) 55%, transparent), inset 0 1px 1px rgba(255,255,255,0.4); }
+
+/* Streak tiles — gradient fills with a small icon "badge" instead of flat
+   solid color + bare emoji, plus a touch more depth on the tier rings. */
+.streak-card.tint-coral { background: linear-gradient(150deg, var(--coral-mid), var(--coral) 55%, var(--coral-dark)); }
+.streak-card.tint-purple { background: linear-gradient(150deg, color-mix(in srgb, var(--purple) 100%, white 22%), var(--purple) 55%, color-mix(in srgb, var(--purple) 100%, black 20%)); }
+.streak-card.tint-teal { background: linear-gradient(150deg, var(--teal-mid), var(--teal) 55%, color-mix(in srgb, var(--teal) 100%, black 20%)); }
+.streak-card.tint-amber { background: linear-gradient(150deg, color-mix(in srgb, var(--amber) 100%, white 25%), var(--amber) 55%, color-mix(in srgb, var(--amber) 100%, black 18%)); }
+.streak-card .streak-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.22); margin: 0 auto 6px; color: #fff; }
+.streak-card.tier-fire .streak-icon { background: rgba(255,255,255,0.32); }
+
+/* Cards — soft gradient wash instead of flat white, so surfaces have a hint
+   of dimension without losing the clean look. */
+.score-card, .input-card, .check-card, .hist-day { background: linear-gradient(165deg, var(--white), color-mix(in srgb, var(--white) 100%, var(--cream) 55%)); }
+
+/* Goal card — radial glow + gradient progress fill instead of flat bar */
+.goal-card { background: linear-gradient(155deg, var(--dark), color-mix(in srgb, var(--dark) 100%, black 25%)); position: relative; overflow: hidden; }
+.goal-card::before { content: ''; position: absolute; right: -40px; bottom: -40px; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--coral) 55%, transparent), transparent 70%); pointer-events: none; }
+.goal-card > * { position: relative; }
+.goal-fill { background: linear-gradient(90deg, var(--coral-mid), var(--coral)); }
+
+/* Buttons — gradient fills with color-matched glow shadows, rather than a
+   single flat fill with a generic dark shadow. */
+.craving-btn { background: linear-gradient(135deg, var(--coral-mid), var(--coral) 60%, var(--coral-dark)); box-shadow: 0 4px 14px color-mix(in srgb, var(--coral) 45%, transparent); }
+.save-btn { background: linear-gradient(135deg, var(--teal-mid), var(--teal) 65%); box-shadow: 0 3px 10px color-mix(in srgb, var(--teal) 35%, transparent); }
+.save-btn.secondary { background: linear-gradient(135deg, var(--dark), color-mix(in srgb, var(--dark) 100%, black 20%)); box-shadow: 0 3px 10px rgba(0,0,0,0.25); }
+.save-btn.coral { background: linear-gradient(135deg, var(--coral-mid), var(--coral) 65%); box-shadow: 0 3px 10px color-mix(in srgb, var(--coral) 35%, transparent); }
+.auth-btn.primary { background: linear-gradient(135deg, var(--coral-mid), var(--coral) 65%); }
+
+/* Inputs/selects — deliberate focus glow instead of a plain border-color swap */
+input[type=number], input[type=text], input[type=email], input[type=password], input[type=date], textarea, select { border-radius: 10px; transition: border-color 0.15s, box-shadow 0.15s; }
+input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 22%, transparent); }
 </style>
 </head>
 <body>
@@ -292,7 +355,7 @@ textarea { resize: none; height: 70px; }
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
   <button class="theme-toggle-btn" id="authThemeToggleBtn" onclick="toggleTheme()" title="Switch theme" style="position:absolute;top:20px;right:20px;">🌙</button>
-  <div class="auth-logo">💪</div>
+  <div class="auth-logo" style="color:#fff;"><svg width="36" height="36" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2c.9 2.8-1.8 4.1-1.8 6.8a2.7 2.7 0 0 0 5.4 0c0-1.3-.5-2-1.1-2.7.4 2-.6 2.7-1.4 1.9-.7-.7-.3-1.9-1.1-6z"/></svg></div>
   <div class="auth-title" id="authTitle">Coach</div>
   <div class="auth-sub">This app is just for you. Create your account once, then sign in with the same email on any device to keep everything in sync.</div>
   <input type="text" id="auth-firstname" placeholder="First name" autocomplete="given-name">
@@ -350,27 +413,27 @@ textarea { resize: none; height: 70px; }
 
   <div class="streak-row">
     <div class="streak-card tint-coral" id="streakCardAlcohol">
-      <div class="streak-icon" id="streakIconAlcohol">🚫🍷</div>
+      <div class="streak-icon" id="streakIconAlcohol"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 3h7.6l-1 6.2a2.8 2.8 0 0 1-5.6 0L6.2 3zM10 9.5V16M7.3 16h5.4"/><path d="M3.5 3.5l13 13" stroke-width="1.9"/></svg></div>
       <div class="streak-num" id="streakAlcohol">0</div>
       <div class="streak-label">Alcohol<br>Free Days</div>
     </div>
     <div class="streak-card tint-purple" id="streakCardSugar">
-      <div class="streak-icon" id="streakIconSugar">🚫🍬</div>
+      <div class="streak-icon" id="streakIconSugar"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="4"/><path d="M3.5 3.5l13 13" stroke-width="1.9"/></svg></div>
       <div class="streak-num" id="streakSugar">0</div>
       <div class="streak-label">Sugar<br>Free Days</div>
     </div>
     <div class="streak-card tint-amber" id="streakCardWorkout">
-      <div class="streak-icon">💪</div>
+      <div class="streak-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h14M5 7.2v5.6M15 7.2v5.6M2 8.5v3M18 8.5v3"/></svg></div>
       <div class="streak-num" id="streakWorkout">0</div>
       <div class="streak-label">Workouts<br>This Week</div>
     </div>
     <div class="streak-card tint-teal" id="streakCardMobility">
-      <div class="streak-icon" id="streakIconMobility">🌅</div>
+      <div class="streak-icon" id="streakIconMobility"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h14M6.5 14a3.5 3.5 0 0 1 7 0M10 4v3.5M4.8 7.3l1.4 1.4M15.2 7.3l-1.4 1.4"/></svg></div>
       <div class="streak-num" id="streakMobility">0</div>
       <div class="streak-label">Mobility<br>Streak</div>
     </div>
     <div class="streak-card tint-teal" id="streakCardMindful">
-      <div class="streak-icon" id="streakIconMindful">🙏</div>
+      <div class="streak-icon" id="streakIconMindful"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2v13.6M6.2 6c0 4 1.2 7 3.8 8.8M13.8 6c0 4-1.2 7-3.8 8.8"/></svg></div>
       <div class="streak-num" id="streakMindful">0</div>
       <div class="streak-label">Mindful<br>Streak</div>
     </div>
@@ -379,9 +442,9 @@ textarea { resize: none; height: 70px; }
 
   <div class="score-card" id="scoreCard" onclick="toggleScoreBreakdownView()">
     <div class="score-ring-wrap">
-      <svg width="68" height="68" viewBox="0 0 68 68" class="score-ring-svg">
-        <circle cx="34" cy="34" r="28" fill="none" stroke="var(--ring-track)" stroke-width="8"></circle>
-        <circle cx="34" cy="34" r="28" fill="none" stroke="#e0e0e0" stroke-width="8" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 34 34)" id="scoreRingProgress"></circle>
+      <svg width="84" height="84" viewBox="0 0 84 84" class="score-ring-svg">
+        <circle cx="42" cy="42" r="34" fill="none" stroke="var(--ring-track)" stroke-width="9"></circle>
+        <circle cx="42" cy="42" r="34" fill="none" stroke="#e0e0e0" stroke-width="9" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6" transform="rotate(-90 42 42)" id="scoreRingProgress"></circle>
       </svg>
       <div class="score-ring-center">
         <div class="score-num" id="scoreNum">—</div>
@@ -398,16 +461,17 @@ textarea { resize: none; height: 70px; }
   <div class="check-card" id="todayChecklist"></div>
 
   <button class="craving-btn" onclick="toggleCravingChoice()">
-    🆘 I'm having a craving — help me
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3"/><path d="M10 3v4M10 13v4M3 10h4M13 10h4"/></svg>
+    I'm having a craving — help me
   </button>
 
   <div class="craving-choice hidden" id="cravingChoice">
     <div class="craving-choice-btn" onclick="openCraving('alcohol')">
-      <span class="cc-emoji">🍷</span>
+      <span class="cc-emoji"><svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 3h7.6l-1 6.2a2.8 2.8 0 0 1-5.6 0L6.2 3zM10 9.5V16M7.3 16h5.4"/></svg></span>
       <span class="cc-label">Alcohol</span>
     </div>
     <div class="craving-choice-btn" onclick="openCraving('sugar')">
-      <span class="cc-emoji">🍬</span>
+      <span class="cc-emoji"><svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="4"/><path d="M2.5 6.5L5 9M2.5 13.5L5 11M17.5 6.5L15 9M17.5 13.5L15 11"/></svg></span>
       <span class="cc-label">Something sweet</span>
     </div>
   </div>
@@ -426,13 +490,13 @@ textarea { resize: none; height: 70px; }
 <!-- CHECK-IN PAGE -->
 <div class="page" id="page-checkin">
   <div class="input-card">
-    <h3>📅 Which day is this for?</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.2" width="14" height="12.6" rx="1.5"/><path d="M3 8.2h14M7 2.2v4M13 2.2v4"/></svg> Which day is this for?</h3>
     <input type="date" id="ci-date" onchange="loadCheckinForm(this.value)" />
     <div style="font-size:11px;color:var(--gray);margin-top:6px;" id="ci-date-hint">Editing today</div>
   </div>
 
   <div class="input-card">
-    <h3>🌅 Morning</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h14M6.5 14a3.5 3.5 0 0 1 7 0M10 4v3.5M4.8 7.3l1.4 1.4M15.2 7.3l-1.4 1.4"/></svg> Morning</h3>
     <div style="margin-bottom:8px;" id="ci-mobility-wrap">
       <div class="input-label">Did you do morning mobility? (20 min)</div>
       <select id="ci-mobility">
@@ -462,7 +526,7 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card" id="ci-midday-card">
-    <h3>☀️ Midday</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3.2"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.9 4.9l1.4 1.4M13.7 13.7l1.4 1.4M4.9 15.1l1.4-1.4M13.7 6.3l1.4-1.4"/></svg> Midday</h3>
     <div style="margin-bottom:8px;" id="ci-lunch-wrap">
       <div class="input-label" id="lbl-lunch-app">Lunch logged in MyFitnessPal?</div>
       <select id="ci-lunch">
@@ -479,7 +543,7 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card" id="ci-workout-card">
-    <h3>💪 Workout</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h14M5 7.2v5.6M15 7.2v5.6M2 8.5v3M18 8.5v3"/></svg> Workout</h3>
     <div style="margin-bottom:8px;">
       <div class="input-label">Did you work out today?</div>
       <select id="ci-workout">
@@ -506,7 +570,7 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card" id="ci-commitments-card">
-    <h3>🚫 Commitments</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M6.8 10.2l2 2 4.4-4.4"/></svg> Commitments</h3>
     <div style="margin-bottom:8px;" id="ci-alcohol-wrap">
       <div class="input-label">Alcohol today?</div>
       <select id="ci-alcohol">
@@ -526,13 +590,13 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card" id="ci-mindful-card">
-    <h3>🙏 Mindful Moment</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2v13.6M6.2 6c0 4 1.2 7 3.8 8.8M13.8 6c0 4-1.2 7-3.8 8.8"/></svg> Mindful Moment</h3>
     <p style="font-size:11px;color:var(--gray);margin-bottom:10px;">Optional — check off whatever you did today. Doesn't affect your score, just yours to keep.</p>
     <div id="ci-mindful-list"></div>
   </div>
 
   <div class="input-card">
-    <h3>🌙 Evening Close</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M15.2 11.4a6 6 0 1 1-6.6-9.2 5.2 5.2 0 0 0 6.6 9.2z"/></svg> Evening Close</h3>
     <div style="margin-bottom:8px;" id="ci-dinner-wrap">
       <div class="input-label" id="lbl-dinner-app">Dinner logged in MyFitnessPal?</div>
       <select id="ci-dinner">
@@ -599,7 +663,7 @@ textarea { resize: none; height: 70px; }
   <div class="check-card" id="weightHistory"></div>
 
   <div class="input-card mt8">
-    <h3>📏 Body Measurements</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="16" height="4.2" rx="1"/><path d="M5.2 8v2M8.4 8v2M11.6 8v2M14.8 8v2"/></svg> Body Measurements</h3>
     <div style="margin-bottom:8px;">
       <div class="input-label">Units</div>
       <select id="ms-unit">
@@ -627,7 +691,7 @@ textarea { resize: none; height: 70px; }
 <!-- MACROS / PROFILE PAGE -->
 <div class="page" id="page-macros">
   <div class="input-card">
-    <h3>👤 Nutrition Profile</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.2" r="3"/><path d="M4 17c1-4 3.5-6 6-6s5 2 6 6"/></svg> Nutrition Profile</h3>
     <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Fill this in once — update it anytime your goal changes. Built to work for anyone using this app, not just one person.</p>
     <div style="margin-bottom:8px;">
       <div class="input-label">Sex (used in the calorie formula)</div>
@@ -690,7 +754,7 @@ textarea { resize: none; height: 70px; }
   <div class="empty" id="macroEmpty">Fill in your profile above (sex, age, height) to see your calorie and macro targets.</div>
 
   <div class="input-card">
-    <h3>⚙️ Preferences</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="2.6"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.1 5.1l1.4 1.4M13.5 13.5l1.4 1.4M5.1 14.9l1.4-1.4M13.5 6.5l1.4-1.4"/></svg> Preferences</h3>
     <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">These personalize your check-in labels, score, and coach messages.</p>
     <div style="margin-bottom:8px;">
       <div class="input-label">Daily step goal</div>
@@ -742,7 +806,7 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card">
-    <h3>🔔 Notification Schedule</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a4 4 0 0 0-4 4c0 4-1.5 5-1.5 5h11S14 11 14 7a4 4 0 0 0-4-4z"/><path d="M8.3 15a1.7 1.7 0 0 0 3.4 0"/></svg> Notification Schedule</h3>
     <p style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.6;">Pick up to 7 reminders and what time each should land. Times follow your phone's current timezone automatically — no changes needed when you travel.</p>
     <div id="notif-schedule-list"></div>
     <button class="save-btn secondary" onclick="addNotifRow()" id="notif-add-btn" style="margin-top:8px;">+ Add reminder</button>
@@ -776,7 +840,7 @@ textarea { resize: none; height: 70px; }
   <div class="check-card" id="sprintRulesCard"></div>
 
   <div class="input-card">
-    <h3>🎯 Sprint Goals</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="4"/><circle cx="10" cy="10" r="1" fill="currentColor"/></svg> Sprint Goals</h3>
     <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Choose what counts toward your score this sprint. Turn anything off that's not your focus right now — you can turn it back on next sprint. This applies whichever button you tap below.</p>
     <div class="mindful-row"><input type="checkbox" id="goal-alcohol" /><label for="goal-alcohol">🚫 No alcohol</label></div>
     <div class="mindful-row"><input type="checkbox" id="goal-sugar" /><label for="goal-sugar">🍬 No sugar</label></div>
@@ -792,12 +856,12 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card" id="weeklyRecapCard" style="display:none;">
-    <h3>📊 This Week</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 16V11M10 16V5M16 16V9"/></svg> This Week</h3>
     <div class="goal-stats" id="weeklyRecapStats" style="margin-top:2px;flex-direction:column;gap:6px;align-items:flex-start;color:var(--dark-gray);"></div>
   </div>
 
   <div class="input-card">
-    <h3>📋 Push Notification Schedule</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a4 4 0 0 0-4 4c0 4-1.5 5-1.5 5h11S14 11 14 7a4 4 0 0 0-4-4z"/><path d="M8.3 15a1.7 1.7 0 0 0 3.4 0"/></svg> Push Notification Schedule</h3>
     <p style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.6;">These fire automatically from the server — no alarms needed. Make sure notifications are enabled above on Today.</p>
     <div class="input-row"><div class="input-label">6:00 AM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Mobility · Water</div></div>
     <div class="input-row"><div class="input-label">9:00 AM</div><div class="input-val" style="font-size:11px;color:var(--gray);">Log breakfast</div></div>
@@ -809,7 +873,7 @@ textarea { resize: none; height: 70px; }
   </div>
 
   <div class="input-card">
-    <h3>🔄 Your Sprint</h3>
+    <h3><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a6 6 0 0 1 9.5-4.9M16 10a6 6 0 0 1-9.5 4.9"/><path d="M13.5 2.8v3.3h-3.3M6.5 17.2v-3.3h3.3"/></svg> Your Sprint</h3>
     <p style="font-size:12px;color:var(--gray);margin-bottom:12px;line-height:1.6;">Two paths, pick the one that's true. Either way, your check-in history is never touched — that's your real record and it stays exactly as it happened.</p>
     <div style="margin-bottom:8px;">
       <div class="input-label">Sprint length (days) — any number</div>
@@ -841,6 +905,42 @@ textarea { resize: none; height: 70px; }
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
 <script src="./firebase-config.js"></script>
 <script>
+// ── ICON SYSTEM ──────────────────────────────────────────────────────────────
+// Small stroke-based SVG glyphs used in place of raw emoji throughout the app.
+// Emoji render inconsistently across OSes/browsers and read as casual; these
+// give every icon spot a consistent, deliberate look. Each is a bare <svg>
+// string sized via width/height and colored via currentColor so it inherits
+// whatever text color is set on its parent.
+const ICONS = {
+  sunrise: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h14M6.5 14a3.5 3.5 0 0 1 7 0M10 4v3.5M4.8 7.3l1.4 1.4M15.2 7.3l-1.4 1.4"/></svg>',
+  noAlcohol: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 3h7.6l-1 6.2a2.8 2.8 0 0 1-5.6 0L6.2 3zM10 9.5V16M7.3 16h5.4"/><path d="M3.5 3.5l13 13" stroke-width="1.9"/></svg>',
+  noSugar: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="4"/><path d="M3.5 3.5l13 13" stroke-width="1.9"/></svg>',
+  dumbbell: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h14M5 7.2v5.6M15 7.2v5.6M2 8.5v3M18 8.5v3"/></svg>',
+  steps: '<svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><ellipse cx="6.8" cy="6" rx="2.1" ry="3.1" transform="rotate(-10 6.8 6)"/><ellipse cx="13.2" cy="13.4" rx="2.1" ry="3.1" transform="rotate(12 13.2 13.4)"/></svg>',
+  phone: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="2.2" width="9" height="15.6" rx="2"/><path d="M8.8 15h2.4"/></svg>',
+  droplet: '<svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2.2c3 4.1 6 7.7 6 11a6 6 0 0 1-12 0c0-3.3 3-6.9 6-11z"/></svg>',
+  prayer: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2v13.6M6.2 6c0 4 1.2 7 3.8 8.8M13.8 6c0 4-1.2 7-3.8 8.8"/></svg>',
+  book: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.2c2.2-1 5-1 7 0v12c-2-1-4.8-1-7 0v-12zM17 4.2c-2.2-1-5-1-7 0v12c2-1 4.8-1 7 0v-12z"/></svg>',
+  journal: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 15.8l.9-3.6L13 4.3l2.7 2.7-7.9 7.9-3.6.9z"/></svg>',
+  meditation: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7.5" r="2.8"/><path d="M4 16.2c1.8-2.8 3.7-3.9 6-3.9s4.2 1.1 6 3.9"/></svg>',
+  sparkle: '<svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2l1.6 5.4L17 9l-5.4 1.6L10 16l-1.6-5.4L3 9l5.4-1.6L10 2z"/></svg>',
+  flame: '<svg width="22" height="22" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2c.9 2.8-1.8 4.1-1.8 6.8a2.7 2.7 0 0 0 5.4 0c0-1.3-.5-2-1.1-2.7.4 2-.6 2.7-1.4 1.9-.7-.7-.3-1.9-1.1-6z"/></svg>',
+  lifering: '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3"/><path d="M10 3v4M10 13v4M3 10h4M13 10h4"/></svg>',
+  calendar: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.2" width="14" height="12.6" rx="1.5"/><path d="M3 8.2h14M7 2.2v4M13 2.2v4"/></svg>',
+  sun: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3.2"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.9 4.9l1.4 1.4M13.7 13.7l1.4 1.4M4.9 15.1l1.4-1.4M13.7 6.3l1.4-1.4"/></svg>',
+  moon: '<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M15.2 11.4a6 6 0 1 1-6.6-9.2 5.2 5.2 0 0 0 6.6 9.2z"/></svg>',
+  person: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.2" r="3"/><path d="M4 17c1-4 3.5-6 6-6s5 2 6 6"/></svg>',
+  ruler: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="16" height="4.2" rx="1"/><path d="M5.2 8v2M8.4 8v2M11.6 8v2M14.8 8v2"/></svg>',
+  wine: '<svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 3h7.6l-1 6.2a2.8 2.8 0 0 1-5.6 0L6.2 3zM10 9.5V16M7.3 16h5.4"/></svg>',
+  candy: '<svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="4"/><path d="M2.5 6.5L5 9M2.5 13.5L5 11M17.5 6.5L15 9M17.5 13.5L15 11"/></svg>',
+};
+// svgIcon() wraps a glyph so it sits inline with text at a controlled size/color.
+// (Named to avoid colliding with the local `icon` var used for the theme-toggle emoji.)
+function svgIcon(key, size) {
+  const svg = ICONS[key] || '';
+  return size ? svg.replace(/width="\d+"/, `width="${size}"`).replace(/height="\d+"/, `height="${size}"`) : svg;
+}
+
 // ── FIREBASE INIT ───────────────────────────────────────────────────────────
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -1458,12 +1558,12 @@ function renderToday(){
     const card = document.getElementById(cardId);
     if(card){ card.classList.remove('tier-warm','tier-fire'); const t = tierClass(n); if(t) card.classList.add(t); }
     const icon = iconId ? document.getElementById(iconId) : null;
-    if(icon) icon.textContent = checkinsLoaded && n >= 7 ? hotIcon : baseIcon;
+    if(icon) icon.innerHTML = svgIcon(checkinsLoaded && n >= 7 ? hotIcon : baseIcon);
   };
-  applyTier('streakCardAlcohol', 'streakIconAlcohol', s.alcohol, '🔥', '🚫🍷');
-  applyTier('streakCardSugar', 'streakIconSugar', s.sugar, '🔥', '🚫🍬');
-  applyTier('streakCardMobility', 'streakIconMobility', s.mobility, '🔥', '🌅');
-  applyTier('streakCardMindful', 'streakIconMindful', s.mindful, '🔥', '🙏');
+  applyTier('streakCardAlcohol', 'streakIconAlcohol', s.alcohol, 'flame', 'noAlcohol');
+  applyTier('streakCardSugar', 'streakIconSugar', s.sugar, 'flame', 'noSugar');
+  applyTier('streakCardMobility', 'streakIconMobility', s.mobility, 'flame', 'sunrise');
+  applyTier('streakCardMindful', 'streakIconMindful', s.mindful, 'flame', 'prayer');
 
   const td = checkins[todayStr()];
   const scoreEl = document.getElementById('scoreNum');
@@ -1471,7 +1571,7 @@ function renderToday(){
   const scoreDenomEl = document.getElementById('scoreDenomEl');
   // SVG ring: r=28, circumference = 2*PI*28 ≈ 175.9. dashoffset counts down
   // from full (empty ring) to 0 (full ring) as the fraction completes.
-  const RING_CIRC = 175.9;
+  const RING_CIRC = 213.6;
   const setRing = (frac, color) => {
     if(!ringEl) return;
     const clamped = Math.max(0, Math.min(1, frac));
@@ -1519,14 +1619,14 @@ function renderToday(){
   const checks = [];
   if(ag.mobility){
     const perWeek = Math.min(7, Math.max(1, parseInt(ag.mobilityPerWeek) || 7));
-    checks.push({ label: perWeek < 7 ? `Mobility (${perWeek}x/week)` : 'Morning Mobility', sub: perWeek < 7 ? 'Any time of day works' : '20 min on the mat', icon:'🌅', done: td?.mobility === 'yes', partial: td?.mobility === 'partial' });
+    checks.push({ label: perWeek < 7 ? `Mobility (${perWeek}x/week)` : 'Morning Mobility', sub: perWeek < 7 ? 'Any time of day works' : '20 min on the mat', icon: svgIcon('sunrise'), done: td?.mobility === 'yes', partial: td?.mobility === 'partial' });
   }
-  if(ag.alcohol) checks.push({ label:'Alcohol Free', sub:'No exceptions', icon:'🚫', done: td?.alcohol === 'no', failed: td?.alcohol === 'yes' });
-  if(ag.sugar) checks.push({ label:'No Desserts / Candy', sub:'Natural sugar from fruit is fine', icon:'🍬', done: td?.sugar === 'no', failed: td?.sugar === 'yes' });
-  if(ag.workout) checks.push({ label:'Workout', sub: td?.workoutDetail || (td?.workout === 'rest' ? 'Planned rest day' : 'Push · Pull · Legs · Active'), icon:'💪', done: td?.workout === 'full' || td?.workout === 'rest', partial: td?.workout === 'partial' });
-  if(ag.steps) checks.push({ label:`${goal.toLocaleString()} Steps`, sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon:'🚶', done: (parseInt(td?.stepsFinal)||0) >= goal, partial: (parseInt(td?.stepsFinal)||0) >= goal*0.75 });
-  if(ag.meals) checks.push({ label:'All Meals Logged', sub: `Breakfast + lunch + dinner in ${foodAppName()}`, icon:'📱', done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' });
-  if(ag.water) checks.push({ label:`${waterGoal()} oz Water`, sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon:'💧', done: (parseInt(td?.waterOz)||0) >= waterGoal(), partial: (parseInt(td?.waterOz)||0) >= waterGoal()*0.67 });
+  if(ag.alcohol) checks.push({ label:'Alcohol Free', sub:'No exceptions', icon: svgIcon('noAlcohol'), done: td?.alcohol === 'no', failed: td?.alcohol === 'yes' });
+  if(ag.sugar) checks.push({ label:'No Desserts / Candy', sub:'Natural sugar from fruit is fine', icon: svgIcon('noSugar'), done: td?.sugar === 'no', failed: td?.sugar === 'yes' });
+  if(ag.workout) checks.push({ label:'Workout', sub: td?.workoutDetail || (td?.workout === 'rest' ? 'Planned rest day' : 'Push · Pull · Legs · Active'), icon: svgIcon('dumbbell'), done: td?.workout === 'full' || td?.workout === 'rest', partial: td?.workout === 'partial' });
+  if(ag.steps) checks.push({ label:`${goal.toLocaleString()} Steps`, sub: td?.stepsFinal ? `${parseInt(td.stepsFinal).toLocaleString()} steps logged` : 'Walking pad + gym + daily movement', icon: svgIcon('steps'), done: (parseInt(td?.stepsFinal)||0) >= goal, partial: (parseInt(td?.stepsFinal)||0) >= goal*0.75 });
+  if(ag.meals) checks.push({ label:'All Meals Logged', sub: `Breakfast + lunch + dinner in ${foodAppName()}`, icon: svgIcon('phone'), done: td?.breakfast === 'yes' && td?.lunch === 'yes' && td?.dinner === 'yes', partial: td?.breakfast === 'yes' || td?.lunch === 'yes' });
+  if(ag.water) checks.push({ label:`${waterGoal()} oz Water`, sub: td?.waterOz ? `${td.waterOz} oz logged` : '16 oz first thing every morning', icon: svgIcon('droplet'), done: (parseInt(td?.waterOz)||0) >= waterGoal(), partial: (parseInt(td?.waterOz)||0) >= waterGoal()*0.67 });
 
   const cl = document.getElementById('todayChecklist');
   cl.innerHTML = checks.map(c => `
@@ -2076,16 +2176,16 @@ function renderSprintRulesCard(){
   if(!card) return;
   const ag = activeGoals();
   const items = [];
-  if(ag.alcohol) items.push({ icon:'🚫', title:'Zero alcohol — dry till goal weight', sub:'No exceptions. Not even one.' });
-  if(ag.sugar) items.push({ icon:'🍬', title:'No desserts or candy', sub:'Fruit is fine. Natural sugars ok.' });
+  if(ag.alcohol) items.push({ icon: svgIcon('noAlcohol'), title:'Zero alcohol — dry till goal weight', sub:'No exceptions. Not even one.' });
+  if(ag.sugar) items.push({ icon: svgIcon('noSugar'), title:'No desserts or candy', sub:'Fruit is fine. Natural sugars ok.' });
   if(ag.mobility){
     const perWeek = Math.min(7, Math.max(1, parseInt(ag.mobilityPerWeek) || 7));
-    items.push({ icon:'🌅', title: perWeek < 7 ? `Mobility ${perWeek}x per week` : 'Morning mobility every single day', sub: perWeek < 7 ? 'Any time of day works.' : '20 min. No exceptions.' });
+    items.push({ icon: svgIcon('sunrise'), title: perWeek < 7 ? `Mobility ${perWeek}x per week` : 'Morning mobility every single day', sub: perWeek < 7 ? 'Any time of day works.' : '20 min. No exceptions.' });
   }
-  if(ag.steps) items.push({ icon:'🚶', title:`${stepGoal().toLocaleString()} steps every day`, sub:'Walking pad + gym + daily movement.' });
-  if(ag.workout) items.push({ icon:'💪', title:`${parseInt(settings.workoutDaysPerWeek)||4} workout sessions per week`, sub:'Rest days within your plan are full credit.' });
-  if(ag.meals) items.push({ icon:'📱', title:`Log every meal in ${foodAppName()}`, sub:'Every meal. No skipping.' });
-  if(ag.water) items.push({ icon:'💧', title:`${waterGoal()} oz water minimum daily`, sub:'Start with 16 oz before anything else.' });
+  if(ag.steps) items.push({ icon: svgIcon('steps'), title:`${stepGoal().toLocaleString()} steps every day`, sub:'Walking pad + gym + daily movement.' });
+  if(ag.workout) items.push({ icon: svgIcon('dumbbell'), title:`${parseInt(settings.workoutDaysPerWeek)||4} workout sessions per week`, sub:'Rest days within your plan are full credit.' });
+  if(ag.meals) items.push({ icon: svgIcon('phone'), title:`Log every meal in ${foodAppName()}`, sub:'Every meal. No skipping.' });
+  if(ag.water) items.push({ icon: svgIcon('droplet'), title:`${waterGoal()} oz water minimum daily`, sub:'Start with 16 oz before anything else.' });
 
   card.innerHTML = items.length ? items.map((i) => `
     <div class="check-item" style="cursor:default;">

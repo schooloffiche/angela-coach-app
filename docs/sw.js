@@ -3,7 +3,7 @@
    and (2) Firebase Cloud Messaging background push notifications.
    Keeping both in ONE file avoids the two-service-workers-fighting-over-one-scope problem. */
 
-const CACHE_NAME = 'coach-angela-v9';
+const CACHE_NAME = 'coach-angela-v12';
 const APP_SHELL = [
   './',
   './index.html',

@@ -169,18 +169,23 @@ const MESSAGE_BUILDERS = {
 };
 
 // ── MAIN SCHEDULED CHECK ─────────────────────────────────────────────────
+// NOTE: the app never writes to the top-level users/{uid} document itself —
+// only to its subcollections (meta/settings, checkins/*, etc). Firestore
+// won't return a document via collection('users').get() unless that exact
+// document has actual field data, so that query silently found nobody, ever.
+// A collectionGroup query on 'meta' finds the real settings docs directly.
 exports.checkNotifications = onSchedule({ schedule: 'every 15 minutes', timeZone: 'Etc/UTC' }, async () => {
-  const usersSnap = await db.collection('users').get();
-  if (usersSnap.empty) {
+  const settingsSnap = await db.collectionGroup('meta').get();
+  if (settingsSnap.empty) {
     logger.info('[notif] no users yet — nothing to check');
     return;
   }
 
-  for (const userDoc of usersSnap.docs) {
-    const uid = userDoc.id;
+  for (const settingsDoc of settingsSnap.docs) {
+    if (settingsDoc.id !== 'settings') continue; // meta/{docId} — only care about the settings doc
+    const uid = settingsDoc.ref.parent.parent.id; // users/{uid}/meta/settings
     try {
-      const settingsRef = db.collection('users').doc(uid).collection('meta').doc('settings');
-      const settingsDoc = await settingsRef.get();
+      const settingsRef = settingsDoc.ref;
       if (!settingsDoc.exists) continue;
       const settings = settingsDoc.data();
 
